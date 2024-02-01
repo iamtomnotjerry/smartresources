@@ -93,10 +93,15 @@ class CustomSearchView extends StatelessWidget {
           keyboardType: textInputType,
           maxLines: maxLines ?? 1,
           decoration: decoration,
-          validator: validator,
-          onChanged: (String value) {
-            onChanged!.call(value);
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter something';
+            }
+            return null;
           },
+          // onChanged: (String value) {
+          //   onChanged!.call(value);
+          // },
         ),
       );
   InputDecoration get decoration => InputDecoration(

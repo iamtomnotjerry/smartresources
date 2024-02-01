@@ -121,9 +121,10 @@ class BlogsScreen extends StatelessWidget {
             width: 48.adaptSize,
             padding: EdgeInsets.all(12.h),
             decoration: IconButtonStyleHelper.fillPrimaryTL12,
-            child: CustomImageView(
-              imagePath: ImageConstant.imgTune,
-            ),
+            // child: CustomImageView(
+            //   imagePath: ImageConstant.imgTune,
+            // ),
+            child: Icon(Icons.search, color: Colors.white),
           ),
         ),
       ],

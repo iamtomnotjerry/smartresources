@@ -86,14 +86,17 @@ class TutorialsScreen extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.only(left: 8.h),
+              // child: Icon(Icons.search),
               child: CustomIconButton(
                 height: 48.adaptSize,
                 width: 48.adaptSize,
                 padding: EdgeInsets.all(12.h),
                 decoration: IconButtonStyleHelper.fillPrimaryTL12,
-                child: CustomImageView(
-                  imagePath: ImageConstant.imgTune,
-                ),
+                // child: CustomImageView(
+                //   imagePath: ImageConstant.imgCheckmark,
+                //   color: Colors.white
+                // ),
+                child: Icon(Icons.search, color: Colors.white),
               ),
             ),
           ],

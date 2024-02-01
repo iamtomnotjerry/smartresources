@@ -1,3 +1,5 @@
+import 'package:smartresource/presentation/tutorial_details_screen/tutorial_details_screen.dart';
+
 import 'framenine1_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:smartresource/core/app_export.dart';
@@ -23,7 +25,7 @@ class TablelampItemWidget extends StatelessWidget {
           borderRadius: BorderRadiusStyle.roundedBorder12,
         ),
         child: Container(
-          height: 307.v,
+          height: 400.v,
           width: 382.h,
           padding: EdgeInsets.symmetric(
             horizontal: 16.h,
@@ -35,7 +37,14 @@ class TablelampItemWidget extends StatelessWidget {
           child: Stack(
             alignment: Alignment.bottomCenter,
             children: [
-              CustomImageView(
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context, 
+                    MaterialPageRoute(builder: (context) => TutorialDetailsScreen())
+                  );
+                },
+              child: CustomImageView(
                 imagePath: ImageConstant.imgUnsplash9okgevjitkk,
                 height: 200.v,
                 width: 350.h,
@@ -43,11 +52,11 @@ class TablelampItemWidget extends StatelessWidget {
                   10.h,
                 ),
                 alignment: Alignment.topCenter,
-              ),
+              ),),
               Align(
-                alignment: Alignment.bottomCenter,
+                alignment: Alignment.center,
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: 47.v),
+                  padding: EdgeInsets.only(top: 80.v),
                   child: Text(
                     "How to make a table lamp with plastic bottles",
                     style: theme.textTheme.titleMedium,
@@ -62,37 +71,45 @@ class TablelampItemWidget extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustomIconButton(
-                        height: 38.v,
-                        width: 37.h,
-                        padding: EdgeInsets.all(3.h),
-                        alignment: Alignment.center,
-                        child: CustomImageView(
-                          imagePath: ImageConstant.imgPlayCircle,
+                      // CustomIconButton(
+                      //   height: 38.v,
+                      //   width: 37.h,
+                      //   padding: EdgeInsets.all(3.h),
+                      //   alignment: Alignment.center,
+                      //   child: CustomImageView(
+                      //     imagePath: ImageConstant.imgPlayCircle,
+                      //   ),
+                      // ),
+                      // SizedBox(height: 59.v),
+                      // Align(
+                      //   alignment: Alignment.centerRight,
+                      //   child: Container(
+                      //     alignment: Alignment.bottomRight,
+                      //     width: 33.h,
+                      //     padding: EdgeInsets.symmetric(
+                      //       horizontal: 8.h,
+                      //       vertical: 1.v,
+                      //     ),
+                      //     decoration: AppDecoration.fillBlack,
+                      //     child: Text(
+                      //       "4:13",
+                      //       style: theme.textTheme.labelSmall,
+                      //       textAlign: TextAlign.right,
+                      //     ),
+                      //   ),
+                      // ),
+                      // const SizedBox(height: 83.0),
+                      
+                      Container(
+                        alignment: Alignment.bottomLeft,
+                        width: double.maxFinite, 
+                        height: 300.0,
+                        child: Wrap(
+                          runSpacing: 4.89.v,
+                          spacing: 4.89.h,
+                          children: List<Widget>.generate(
+                              5, (index) => const Framenine1ItemWidget()),
                         ),
-                      ),
-                      SizedBox(height: 59.v),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Container(
-                          width: 33.h,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 8.h,
-                            vertical: 1.v,
-                          ),
-                          decoration: AppDecoration.fillBlack,
-                          child: Text(
-                            "4:13",
-                            style: theme.textTheme.labelSmall,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 43.v),
-                      Wrap(
-                        runSpacing: 4.89.v,
-                        spacing: 4.89.h,
-                        children: List<Widget>.generate(
-                            5, (index) => const Framenine1ItemWidget()),
                       ),
                     ],
                   ),

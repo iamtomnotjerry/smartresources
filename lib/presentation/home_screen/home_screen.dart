@@ -52,6 +52,7 @@ class HomeScreen extends StatelessWidget {
                   context,
                   blogTitle: "Tutorials",
                   seeAllText: "See all",
+                  route: AppRoutes.tutorialsScreen
                 ),
               ),
               SizedBox(height: 9.v),
@@ -63,6 +64,7 @@ class HomeScreen extends StatelessWidget {
                   context,
                   blogTitle: "Blogs",
                   seeAllText: "See all",
+                  route: AppRoutes.blogsScreen
                 ),
               ),
               SizedBox(height: 7.v),
@@ -108,10 +110,7 @@ class HomeScreen extends StatelessWidget {
       child: ListView.separated(
         padding: EdgeInsets.only(left: 24.h),
         scrollDirection: Axis.horizontal,
-        separatorBuilder: (
-          context,
-          index,
-        ) {
+        separatorBuilder: (context, index,) {
           return SizedBox(
             width: 14.h,
           );
@@ -129,10 +128,7 @@ class HomeScreen extends StatelessWidget {
     return Align(
       alignment: Alignment.centerLeft,
       child: Padding(
-        padding: EdgeInsets.only(
-          left: 24.h,
-          right: 45.h,
-        ),
+        padding: EdgeInsets.only(left: 24.h, right: 45.h,),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -142,10 +138,15 @@ class HomeScreen extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 2.v),
-              child: Text(
-                "See all",
-                style: CustomTextStyles.titleSmallPrimary,
-              ),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, AppRoutes.shopScreen);
+                },
+                child: Text(
+                  "See all",
+                  style: CustomTextStyles.titleSmallPrimary,
+                ),
+              )
             ),
           ],
         ),
@@ -358,6 +359,7 @@ class HomeScreen extends StatelessWidget {
     BuildContext context, {
     required String blogTitle,
     required String seeAllText,
+    required String route,
   }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -368,15 +370,20 @@ class HomeScreen extends StatelessWidget {
             color: appTheme.black900,
           ),
         ),
-        Padding(
-          padding: EdgeInsets.only(bottom: 4.v),
-          child: Text(
-            seeAllText,
-            style: CustomTextStyles.titleSmallPrimary.copyWith(
-              color: theme.colorScheme.primary,
+        GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, route);
+          },
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 4.v),
+            child: Text(
+              seeAllText,
+              style: CustomTextStyles.titleSmallPrimary.copyWith(
+                color: theme.colorScheme.primary,
+              ),
             ),
           ),
-        ),
+        )
       ],
     );
   }
