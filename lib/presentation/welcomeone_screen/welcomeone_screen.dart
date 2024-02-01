@@ -24,11 +24,7 @@
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CustomImageView(
-                      imagePath: ImageConstant.imgBookmark,
-                      height: 48.adaptSize,
-                      width: 48.adaptSize,
-                    ),
+                    
                     Padding(
                       padding: EdgeInsets.only(
                         left: 14.h,
@@ -66,7 +62,7 @@
                 ),
                 SizedBox(height: 66.v),
                 CustomImageView(
-                  imagePath: ImageConstant.imgHandSewingPana,
+                  imagePath: ImageConstant.imgImage1,
                   height: 284.v,
                   width: 305.h,
                 ),

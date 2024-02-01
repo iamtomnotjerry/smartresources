@@ -25,11 +25,7 @@ class WelcomeScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CustomImageView(
-                    imagePath: ImageConstant.imgBookmark,
-                    height: 48.adaptSize,
-                    width: 48.adaptSize,
-                  ),
+                  
                   Padding(
                     padding: EdgeInsets.only(
                       left: 14.h,

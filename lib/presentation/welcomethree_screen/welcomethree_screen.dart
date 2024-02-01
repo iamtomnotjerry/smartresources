@@ -10,166 +10,156 @@ class WelcomethreeScreen extends StatelessWidget {
         );
 
   @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
-          width: double.maxFinite,
-          padding: EdgeInsets.only(
-            left: 24.h,
-            top: 62.v,
-            right: 24.h,
-          ),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomImageView(
-                    imagePath: ImageConstant.imgBookmark,
-                    height: 48.adaptSize,
-                    width: 48.adaptSize,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: 14.h,
-                      top: 12.v,
-                      bottom: 5.v,
+    Widget build(BuildContext context) {
+      return SafeArea(
+        child: Scaffold(
+          body: Container(
+            width: double.maxFinite,
+            padding: EdgeInsets.symmetric(
+              horizontal: 24.h,
+              vertical: 62.v,
+            ),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: 14.h,
+                        top: 12.v,
+                        bottom: 5.v,
+                      ),
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Smart",
+                              style: CustomTextStyles.headlineSmallBaloo,
+                            ),
+                            TextSpan(
+                              text: " ",
+                            ),
+                            TextSpan(
+                              text: "Resources",
+                              style: CustomTextStyles.headlineSmallBalooff6c757d,
+                            ),
+                          ],
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
                     ),
-                    child: RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: "Smart",
-                            style: CustomTextStyles.headlineSmallBaloo,
-                          ),
-                          const TextSpan(
-                            text: " ",
-                          ),
-                          TextSpan(
-                            text: "Resources",
-                            style: CustomTextStyles.headlineSmallBalooff6c757d,
-                          ),
-                        ],
-                      ),
-                      textAlign: TextAlign.left,
+                  ],
+                ),
+                SizedBox(height: 2.v),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    "Skip",
+                    style: CustomTextStyles.bodyLargePrimary,
+                  ),
+                ),
+                SizedBox(height: 66.v),
+                CustomImageView(
+                  imagePath: ImageConstant.imgImage1,
+                  height: 284.v,
+                  width: 305.h,
+                ),
+                SizedBox(height: 39.v),
+                Container(
+                  width: 311.h,
+                  margin: EdgeInsets.symmetric(horizontal: 35.h),
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Turn ",
+                          style: CustomTextStyles.headlineSmallff000000,
+                        ),
+                        TextSpan(
+                          text: "ideas",
+                          style: theme.textTheme.headlineSmall,
+                        ),
+                        TextSpan(
+                          text: " into ",
+                          style: CustomTextStyles.headlineSmallff000000,
+                        ),
+                        TextSpan(
+                          text: "reality with recycled materials",
+                          style: theme.textTheme.headlineSmall,
+                        ),
+                      ],
                     ),
+                    textAlign: TextAlign.center,
                   ),
-                ],
-              ),
-              SizedBox(height: 2.v),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  "Skip",
-                  style: CustomTextStyles.bodyLargePrimary,
                 ),
-              ),
-              SizedBox(height: 76.v),
-              CustomImageView(
-                imagePath: ImageConstant.imgBrandLoyaltyRafiki,
-                height: 300.v,
-                width: 373.h,
-              ),
-              SizedBox(height: 52.v),
-              Container(
-                width: 352.h,
-                margin: EdgeInsets.only(
-                  left: 10.h,
-                  right: 19.h,
-                ),
-                child: RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "Connect",
-                        style: theme.textTheme.headlineSmall,
-                      ),
-                      TextSpan(
-                        text: ", ",
-                        style: CustomTextStyles.headlineSmallff000000,
-                      ),
-                      TextSpan(
-                        text: "trade",
-                        style: theme.textTheme.headlineSmall,
-                      ),
-                      TextSpan(
-                        text: ", and ",
-                        style: CustomTextStyles.headlineSmallff000000,
-                      ),
-                      TextSpan(
-                        text: "exchange eco-friendly ideas",
-                        style: theme.textTheme.headlineSmall,
-                      ),
-                    ],
+                SizedBox(height: 43.v),
+                Container(
+                  width: 363.h,
+                  margin: EdgeInsets.only(
+                    left: 9.h,
+                    right: 10.h,
                   ),
-                  textAlign: TextAlign.center,
+                  child: Text(
+                    "Follow our easy-to-follow DIY tutorials, transforming everyday materials into unique, handmade creations that showcase your creativity",
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: CustomTextStyles.bodyLargeRobotoBlack900,
+                  ),
                 ),
-              ),
-              SizedBox(height: 43.v),
-              Container(
-                width: 333.h,
-                margin: EdgeInsets.only(
-                  left: 19.h,
-                  right: 28.h,
-                ),
-                child: Text(
-                  "Join a community of like-minded individuals dedicated to sustainability, where you can share ideas, learn new techniques, and collaborate on projects that make a difference.",
-                  maxLines: 4,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: CustomTextStyles.bodyLargeRobotoBlack900,
-                ),
-              ),
-              SizedBox(height: 46.v),
-              _buildFrameSeventeen(context),
-              SizedBox(height: 5.v),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildFrameSeventeen(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        CustomIconButton(
-          height: 48.adaptSize,
-          width: 48.adaptSize,
-          padding: EdgeInsets.all(12.h),
-          decoration: IconButtonStyleHelper.fillBlueGray,
-          child: CustomImageView(
-            imagePath: ImageConstant.imgArrowLeft,
-          ),
-        ),
-        Container(
-          height: 16.v,
-          margin: EdgeInsets.symmetric(vertical: 16.v),
-          child: AnimatedSmoothIndicator(
-            activeIndex: 0,
-            count: 3,
-            effect: ScrollingDotsEffect(
-              spacing: 12,
-              activeDotColor: theme.colorScheme.primary,
-              dotColor: appTheme.blueGray100,
-              dotHeight: 16.v,
-              dotWidth: 16.h,
+                Spacer(),
+                SizedBox(height: 27.v),
+                _buildFrameSeventeen(context),
+              ],
             ),
           ),
         ),
-        CustomIconButton(
-          height: 48.adaptSize,
-          width: 48.adaptSize,
-          padding: EdgeInsets.all(12.h),
-          decoration: IconButtonStyleHelper.fillPrimary,
-          child: CustomImageView(
-            imagePath: ImageConstant.imgArrowRight,
+      );
+    }
+
+    /// Section Widget
+    Widget _buildFrameSeventeen(BuildContext context) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          CustomIconButton(
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.welcomeScreen);
+            },
+            height: 48.adaptSize,
+            width: 48.adaptSize,
+            padding: EdgeInsets.all(12.h),
+            decoration: IconButtonStyleHelper.fillBlueGray,
+            child: Icon(Icons.arrow_back)
           ),
-        ),
-      ],
-    );
+          Container(
+            height: 16.v,
+            margin: EdgeInsets.symmetric(vertical: 16.v),
+            child: AnimatedSmoothIndicator(
+              activeIndex: 2,
+              count: 3,
+              effect: ScrollingDotsEffect(
+                spacing: 12,
+                activeDotColor: theme.colorScheme.primary,
+                // dotColor: appTheme.blueGray10001,
+                dotHeight: 16.v,
+                dotWidth: 16.h,
+              ),
+            ),
+          ),
+          CustomIconButton(
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.signInScreen);
+            },
+            height: 48.adaptSize,
+            width: 48.adaptSize,
+            padding: EdgeInsets.all(12.h),
+            decoration: IconButtonStyleHelper.fillPrimary,
+            child: Icon(Icons.arrow_forward)
+          ),
+        ],
+      );
+    }
   }
-}
