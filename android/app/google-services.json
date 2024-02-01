@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1003283949583",
+    "project_id": "smart-resources-d4f2e",
+    "storage_bucket": "smart-resources-d4f2e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1003283949583:android:35d75f8d8c89e398835b7a",
+        "android_client_info": {
+          "package_name": "com.example.smartresource"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTCd4yh-D5Q5hHEUoCPg8P-RZ-7Gmyp3U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

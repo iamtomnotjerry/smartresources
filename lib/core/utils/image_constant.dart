@@ -182,4 +182,6 @@ class ImageConstant {
   static String imgArrowRightPrimary = '$imagePath/img_arrow_right_primary.svg';
 
   static String imageNotFound = 'assets/images/image_not_found.png';
+
+  static String avatarPlaceholder = '$imagePath/avatar_placeholder.jpg';
 }
