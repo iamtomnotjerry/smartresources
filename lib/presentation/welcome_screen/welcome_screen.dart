@@ -10,92 +10,88 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
-          width: double.maxFinite,
-          padding: EdgeInsets.symmetric(
-            horizontal: 22.h,
-            vertical: 68.v,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: 20.v),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: 14.h,
-                      top: 12.v,
-                      bottom: 5.v,
-                    ),
-                    child: RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: "Smart",
-                            style: CustomTextStyles.headlineSmallBaloo,
-                          ),
-                          const TextSpan(
-                            text: " ",
-                          ),
-                          TextSpan(
-                            text: "Resources",
-                            style: CustomTextStyles.headlineSmallBalooff6c757d,
-                          ),
-                        ],
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
+    return Scaffold(
+      body: Container(
+        width: double.maxFinite,
+        padding: EdgeInsets.symmetric(
+          horizontal: 22.h,
+          vertical: 68.v,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: 20.v),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: 14.h,
+                    top: 12.v,
+                    bottom: 5.v,
                   ),
-                ],
-              ),
-              SizedBox(height: 22.v),
-              _buildOurPlanet(context),
-              SizedBox(height: 24.v),
-              Container(
-                width: 364.h,
-                margin: EdgeInsets.only(
-                  left: 10.h,
-                  right: 11.h,
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Smart",
+                          style: CustomTextStyles.headlineSmallBaloo,
+                        ),
+                        const TextSpan(
+                          text: " ",
+                        ),
+                        TextSpan(
+                          text: "Resources",
+                          style: CustomTextStyles.headlineSmallBalooff6c757d,
+                        ),
+                      ],
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
                 ),
+              ],
+            ),
+            SizedBox(height: 22.v),
+            _buildOurPlanet(context),
+            SizedBox(height: 24.v),
+            Container(
+              width: 364.h,
+              margin: EdgeInsets.only(
+                left: 10.h,
+                right: 11.h,
+              ),
+              child: Text(
+                "Cras vestibulum eros in lectus posuere cursus semper sit amet tortor.",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: CustomTextStyles.bodyLargeIBMPlexMonoBlack900ExtraLight,
+              ),
+            ),
+            SizedBox(height: 13.v),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: EdgeInsets.only(right: 3.h),
                 child: Text(
-                  "Cras vestibulum eros in lectus posuere cursus semper sit amet tortor.",
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style:
-                      CustomTextStyles.bodyLargeIBMPlexMonoBlack900ExtraLight,
+                  "- Anonymous -",
+                  style: CustomTextStyles.bodyLargeIBMPlexMonoBlack900,
                 ),
               ),
-              SizedBox(height: 13.v),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: EdgeInsets.only(right: 3.h),
-                  child: Text(
-                    "- Anonymous -",
-                    style: CustomTextStyles.bodyLargeIBMPlexMonoBlack900,
-                  ),
-                ),
-              ),
-              const Spacer(),
-              CustomElevatedButton(
-                onPressed: () {
+            ),
+            const Spacer(),
+            CustomElevatedButton(
+              onPressed: () {
                 // Navigate to welcomeoneScreen when the button is pressed
                 Navigator.pushNamed(context, AppRoutes.welcomeoneScreen);
               },
-                height: 56.v,
-                text: "Get Started",
-                buttonStyle: CustomButtonStyles.fillPrimary,
-                buttonTextStyle:
-                    CustomTextStyles.titleMediumOnPrimaryContainerSemiBold,
-              ),
-            ],
-          ),
+              height: 56.v,
+              text: "Get Started",
+              buttonStyle: CustomButtonStyles.fillPrimary,
+              buttonTextStyle:
+                  CustomTextStyles.titleMediumOnPrimaryContainerSemiBold,
+            ),
+          ],
         ),
       ),
     );

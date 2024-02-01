@@ -101,6 +101,7 @@ class CustomTextFormField extends StatelessWidget {
           validator: validator,
         ),
       );
+
   InputDecoration get decoration => InputDecoration(
         hintText: hintText ?? "",
         hintStyle: hintStyle ?? theme.textTheme.bodyLarge,
@@ -109,6 +110,11 @@ class CustomTextFormField extends StatelessWidget {
         suffixIcon: suffix,
         suffixIconConstraints: suffixConstraints,
         isDense: true,
+        errorStyle: const TextStyle(
+          color: Colors.red,
+          fontSize: 14,
+        ),
+        errorMaxLines: 2,
         contentPadding: contentPadding ?? EdgeInsets.all(18.h),
         fillColor: fillColor ?? appTheme.blueGray50.withOpacity(0.8),
         filled: filled,

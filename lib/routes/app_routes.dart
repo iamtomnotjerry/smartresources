@@ -1,31 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:smartresource/presentation/add_blog_one_screen/add_blog_one_screen.dart';
+import 'package:smartresource/presentation/add_blog_screen/add_blog_screen.dart';
+import 'package:smartresource/presentation/add_prpdcut_screen/add_prpdcut_screen.dart';
+import 'package:smartresource/presentation/app_navigation_screen/app_navigation_screen.dart';
 import 'package:smartresource/presentation/blog_details_screen/blog_details_screen.dart';
+import 'package:smartresource/presentation/blogs_screen/blogs_screen.dart';
+import 'package:smartresource/presentation/cart_screen/cart_screen.dart';
+import 'package:smartresource/presentation/change_password_screen/change_password_screen.dart';
+import 'package:smartresource/presentation/forgot_password_screen/forgot_password_screen.dart';
+import 'package:smartresource/presentation/home_screen/home_screen.dart';
 import 'package:smartresource/presentation/main_screen/main_screen.dart';
+import 'package:smartresource/presentation/product_details_two_screen/product_details_two_screen.dart';
+import 'package:smartresource/presentation/profile_screen/profile_screen.dart';
+import 'package:smartresource/presentation/settings_screen/settings_screen.dart';
+import 'package:smartresource/presentation/shop_screen/shop_screen.dart';
+import 'package:smartresource/presentation/sign_in_screen/sign_in_screen.dart';
+import 'package:smartresource/presentation/sign_up_screen/sign_up_screen.dart';
 import 'package:smartresource/presentation/splash_screen/splash_screen.dart';
+import 'package:smartresource/presentation/tutorial_details_screen/tutorial_details_screen.dart';
+import 'package:smartresource/presentation/tutorials_screen/tutorials_screen.dart';
 import 'package:smartresource/presentation/welcome_screen/welcome_screen.dart';
 import 'package:smartresource/presentation/welcomeone_screen/welcomeone_screen.dart';
-import 'package:smartresource/presentation/welcometwo_screen/welcometwo_screen.dart';
 import 'package:smartresource/presentation/welcomethree_screen/welcomethree_screen.dart';
-import 'package:smartresource/presentation/sign_up_screen/sign_up_screen.dart';
-import 'package:smartresource/presentation/sign_in_screen/sign_in_screen.dart';
-import 'package:smartresource/presentation/complete_profile_screen/complete_profile_screen.dart';
-import 'package:smartresource/presentation/forgot_password_screen/forgot_password_screen.dart';
-import 'package:smartresource/presentation/email_verification_screen/email_verification_screen.dart';
-import 'package:smartresource/presentation/home_screen/home_screen.dart';
-import 'package:smartresource/presentation/tutorials_screen/tutorials_screen.dart';
-import 'package:smartresource/presentation/tutorial_details_screen/tutorial_details_screen.dart';
-import 'package:smartresource/presentation/add_blog_one_screen/add_blog_one_screen.dart';
-import 'package:smartresource/presentation/blogs_screen/blogs_screen.dart';
-import 'package:smartresource/presentation/add_blog_screen/add_blog_screen.dart';
-import 'package:smartresource/presentation/shop_screen/shop_screen.dart';
-import 'package:smartresource/presentation/product_details_two_screen/product_details_two_screen.dart';
-import 'package:smartresource/presentation/cart_screen/cart_screen.dart';
-import 'package:smartresource/presentation/add_prpdcut_screen/add_prpdcut_screen.dart';
-import 'package:smartresource/presentation/profile_screen/profile_screen.dart';
+import 'package:smartresource/presentation/welcometwo_screen/welcometwo_screen.dart';
 import 'package:smartresource/presentation/your_profile_screen/your_profile_screen.dart';
-import 'package:smartresource/presentation/settings_screen/settings_screen.dart';
-import 'package:smartresource/presentation/change_password_screen/change_password_screen.dart';
-import 'package:smartresource/presentation/app_navigation_screen/app_navigation_screen.dart';
 
 class AppRoutes {
   static const String mainScreen = '/main_screen';
@@ -92,9 +90,7 @@ class AppRoutes {
     welcomethreeScreen: (context) => const WelcomethreeScreen(),
     signUpScreen: (context) => SignUpScreen(),
     signInScreen: (context) => SignInScreen(),
-    completeProfileScreen: (context) => CompleteProfileScreen(),
     forgotPasswordScreen: (context) => ForgotPasswordScreen(),
-    emailVerificationScreen: (context) => const EmailVerificationScreen(),
     homeScreen: (context) => HomeScreen(),
     tutorialsScreen: (context) => TutorialsScreen(),
     tutorialDetailsScreen: (context) => const TutorialDetailsScreen(),

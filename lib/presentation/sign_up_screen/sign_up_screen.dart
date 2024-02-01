@@ -1,165 +1,234 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as fs;
 import 'package:smartresource/core/app_export.dart';
+import 'package:smartresource/core/utils/validation_functions.dart';
+import 'package:smartresource/presentation/complete_profile_screen/complete_profile_screen.dart';
+import 'package:smartresource/presentation/email_verification_screen/email_verification_screen.dart';
+import 'package:smartresource/services/auth_service.dart';
 import 'package:smartresource/widgets/custom_checkbox_button.dart';
 import 'package:smartresource/widgets/custom_elevated_button.dart';
 import 'package:smartresource/widgets/custom_text_form_field.dart';
 
-class SignUpScreen extends StatelessWidget {
-  SignUpScreen({Key? key})
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({Key? key})
       : super(
           key: key,
         );
 
-  TextEditingController nameController = TextEditingController();
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
 
-  TextEditingController emailController = TextEditingController();
+class _SignUpScreenState extends State<SignUpScreen> {
+  final TextEditingController emailController = TextEditingController();
 
-  TextEditingController passwordController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
-  TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   bool agreeWithTerm = false;
+
+  bool isLoading = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SizedBox(
-          width: SizeUtils.width,
-          child: SingleChildScrollView(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-            ),
-            child: Form(
-              key: _formKey,
-              child: SizedBox(
-                width: double.maxFinite,
-                child: Column(
-                  children: [
-                    _buildFrameTen(context),
-                    SizedBox(height: 21.v),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 24.h),
-                        child: Text(
-                          "Name",
-                          style: theme.textTheme.titleMedium,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 7.v),
-                    _buildName(context),
-                    SizedBox(height: 11.v),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 24.h),
-                        child: Text(
-                          "Email",
-                          style: theme.textTheme.titleMedium,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 7.v),
-                    _buildEmail(context),
-                    SizedBox(height: 11.v),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 24.h),
-                        child: Text(
-                          "Password",
-                          style: theme.textTheme.titleMedium,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 7.v),
-                    _buildPassword(context),
-                    SizedBox(height: 11.v),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 24.h),
-                        child: Text(
-                          "Confirm Password",
-                          style: theme.textTheme.titleMedium,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 7.v),
-                    _buildConfirmPassword(context),
-                    SizedBox(height: 10.v),
-                    _buildAgreeWithTerm(context),
-                    SizedBox(height: 28.v),
-                    _buildSignUp(context),
-                    SizedBox(height: 13.v),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                            top: 6.v,
-                            bottom: 9.v,
-                          ),
-                          child: SizedBox(
-                            width: 79.h,
-                            child: const Divider(),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 12.h),
-                          child: Text(
-                            "Or sign up with",
-                            style: CustomTextStyles.bodyMediumBluegray200,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            top: 6.v,
-                            bottom: 9.v,
-                          ),
-                          child: SizedBox(
-                            width: 91.h,
-                            child: Divider(
-                              indent: 12.h,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 19.v),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildGoogle(context),
-                        _buildFacebook(context),
-                      ],
-                    ),
-                    SizedBox(height: 41.v),
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: "Already have an account? ",
-                            style: CustomTextStyles.bodyMediumff495057,
-                          ),
-                          TextSpan(
-                            text: "Sign in",
-                            style: CustomTextStyles.titleSmallff52b788,
-                          ),
-                        ],
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                    SizedBox(height: 5.v),
-                  ],
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  void _signUp() async {
+    if (_formKey.currentState!.validate()) {
+      if (!agreeWithTerm) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please agree with term & condition.'),
+          ),
+        );
+        return;
+      }
+
+      try {
+        setState(() {
+          isLoading = true;
+        });
+
+        final user = await AuthService().signUp(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => EmailVerificationScreen(
+              email: user['email'] as String,
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => CompleteProfileScreen(
+                    uid: user['uid'] as String,
+                  ),
                 ),
+              ),
+            ),
+          ),
+        );
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('The password provided is too weak.'),
+            ),
+          );
+        } else if (e.code == 'email-already-in-use') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('The account already exists for that email.'),
+            ),
+          );
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Something went wrong.'),
+          ),
+        );
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      bottomNavigationBar: isLoading ? const LinearProgressIndicator() : null,
+      body: SizedBox(
+        width: SizeUtils.width,
+        child: SingleChildScrollView(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Form(
+            key: _formKey,
+            child: SizedBox(
+              width: double.maxFinite,
+              child: Column(
+                children: [
+                  _buildFrameTen(context),
+                  SizedBox(height: 21.v),
+                  SizedBox(height: 11.v),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 24.h),
+                      child: Text(
+                        "Email",
+                        style: theme.textTheme.titleMedium,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 7.v),
+                  _buildEmail(context),
+                  SizedBox(height: 11.v),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 24.h),
+                      child: Text(
+                        "Password",
+                        style: theme.textTheme.titleMedium,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 7.v),
+                  _buildPassword(context),
+                  SizedBox(height: 11.v),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 24.h),
+                      child: Text(
+                        "Confirm Password",
+                        style: theme.textTheme.titleMedium,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 7.v),
+                  _buildConfirmPassword(context),
+                  SizedBox(height: 10.v),
+                  _buildAgreeWithTerm(context),
+                  SizedBox(height: 28.v),
+                  _buildSignUp(context),
+                  SizedBox(height: 13.v),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: 6.v,
+                          bottom: 9.v,
+                        ),
+                        child: SizedBox(
+                          width: 79.h,
+                          child: const Divider(),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 12.h),
+                        child: Text(
+                          "Or sign up with",
+                          style: CustomTextStyles.bodyMediumBluegray200,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: 6.v,
+                          bottom: 9.v,
+                        ),
+                        child: SizedBox(
+                          width: 91.h,
+                          child: Divider(
+                            indent: 12.h,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 19.v),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildGoogle(context),
+                      _buildFacebook(context),
+                    ],
+                  ),
+                  SizedBox(height: 41.v),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Already have an account? ",
+                        style: CustomTextStyles.bodyMediumff495057,
+                      ),
+                      GestureDetector(
+                        onTap: () => Navigator.of(context)
+                            .pushReplacementNamed(AppRoutes.signInScreen),
+                        child: Text(
+                          "Sign in",
+                          style: CustomTextStyles.titleSmallff52b788,
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 5.v),
+                ],
               ),
             ),
           ),
@@ -177,7 +246,7 @@ class SignUpScreen extends StatelessWidget {
           image: fs.Svg(
             ImageConstant.imgFrame10,
           ),
-          fit: BoxFit.cover,
+          fit: BoxFit.fill,
         ),
       ),
       child: Column(
@@ -222,21 +291,11 @@ class SignUpScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildName(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.h),
-      child: CustomTextFormField(
-        controller: nameController,
-        hintText: "John Doe",
-      ),
-    );
-  }
-
-  /// Section Widget
   Widget _buildEmail(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.h),
       child: CustomTextFormField(
+        validator: validateEmail,
         controller: emailController,
         hintText: "example@gmail.com",
         textInputType: TextInputType.emailAddress,
@@ -249,15 +308,16 @@ class SignUpScreen extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.h),
       child: CustomTextFormField(
+        validator: validatePassword,
         controller: passwordController,
         hintText: "********",
         textInputType: TextInputType.visiblePassword,
         suffix: Container(
           margin: EdgeInsets.fromLTRB(30.h, 18.v, 24.h, 18.v),
-          child: CustomImageView(
-            imagePath: ImageConstant.imgEye,
-            height: 20.adaptSize,
-            width: 20.adaptSize,
+          child: Icon(
+            Icons.visibility_off,
+            size: 20,
+            color: appTheme.gray600,
           ),
         ),
         suffixConstraints: BoxConstraints(
@@ -278,16 +338,20 @@ class SignUpScreen extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.h),
       child: CustomTextFormField(
+        validator: (value) => validateConfirmPassword(
+          value,
+          passwordController.text,
+        ),
         controller: confirmPasswordController,
         hintText: "********",
         textInputAction: TextInputAction.done,
         textInputType: TextInputType.visiblePassword,
         suffix: Container(
           margin: EdgeInsets.fromLTRB(30.h, 18.v, 24.h, 18.v),
-          child: CustomImageView(
-            imagePath: ImageConstant.imgEye,
-            height: 20.adaptSize,
-            width: 20.adaptSize,
+          child: Icon(
+            Icons.visibility_off,
+            size: 20,
+            color: appTheme.gray600,
           ),
         ),
         suffixConstraints: BoxConstraints(
@@ -314,7 +378,9 @@ class SignUpScreen extends StatelessWidget {
           text: "Agree with Term & condition.",
           value: agreeWithTerm,
           onChange: (value) {
-            agreeWithTerm = value;
+            setState(() {
+              agreeWithTerm = value;
+            });
           },
         ),
       ),
@@ -324,6 +390,9 @@ class SignUpScreen extends StatelessWidget {
   /// Section Widget
   Widget _buildSignUp(BuildContext context) {
     return CustomElevatedButton(
+      onPressed: () {
+        _signUp();
+      },
       height: 56.v,
       text: "Sign Up",
       margin: EdgeInsets.symmetric(horizontal: 24.h),

@@ -101,6 +101,13 @@ class CustomCheckboxButton extends StatelessWidget {
           onChanged: (value) {
             onChange(value!);
           },
+          checkColor: Colors.white,
+          fillColor: MaterialStateProperty.resolveWith((states) {
+            if (states.contains(MaterialState.selected)) {
+              return theme.colorScheme.primary;
+            }
+            return Colors.white;
+          }),
         ),
       );
 }
