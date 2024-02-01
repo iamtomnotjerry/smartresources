@@ -88,6 +88,10 @@ class WelcomeScreen extends StatelessWidget {
               ),
               const Spacer(),
               CustomElevatedButton(
+                onPressed: () {
+                // Navigate to welcomeoneScreen when the button is pressed
+                Navigator.pushNamed(context, AppRoutes.welcomeoneScreen);
+              },
                 height: 56.v,
                 text: "Get Started",
                 buttonStyle: CustomButtonStyles.fillPrimary,

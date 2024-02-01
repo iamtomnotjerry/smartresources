@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
           theme: theme,
           title: 'smart_resources',
           debugShowCheckedModeBanner: false,
-          initialRoute: AppRoutes.homeScreen,
+          initialRoute: AppRoutes.splashScreen,
           routes: AppRoutes.routes,
         );
       },
