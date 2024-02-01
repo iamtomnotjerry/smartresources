@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smartresource/core/app_export.dart';
+import 'package:smartresource/data/data_sources/blog/blog_source.dart';
+import 'package:smartresource/data/models/blog/blog_model.dart';
+import 'package:smartresource/presentation/blogs_screen/widgets/blog_post.dart';
 import 'package:smartresource/widgets/custom_bottom_bar.dart';
 import 'package:smartresource/widgets/custom_icon_button.dart';
 import 'package:smartresource/widgets/custom_search_view.dart';
@@ -29,11 +32,9 @@ class BlogsScreen extends StatelessWidget {
   //   );
   // }
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
         resizeToAvoidBottomInset: false,
-        body: SingleChildScrollView(
-          child: Container(
+        body: SingleChildScrollView(child:Container(
           width: double.maxFinite,
           padding: EdgeInsets.symmetric(horizontal: 23.h),
           child: Column(
@@ -46,33 +47,29 @@ class BlogsScreen extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(left: 1.h),
                 decoration: AppDecoration.outlineBlack,
-                child: Column(
-                  children: [
-                    _buildFrameFortyOne(
-                      context,
-                      thCHNhKhNg:
-                          "Thực hành không rác thải - Chúng ta đã thực sự hiểu?",
-                      authorAnonymous: "Author: Anonymous",
-                      twoMillionSixHundredTwelveThou: "26/1/2024",
-                    ),
-                    SizedBox(height: 24.v),
-                    _buildFrameFortyOne(
-                      context,
-                      thCHNhKhNg:
-                          "Thực hành không rác thải - Chúng ta đã thực sự hiểu?",
-                      authorAnonymous: "Author: Anonymous",
-                      twoMillionSixHundredTwelveThou: "26/1/2024",
-                    ),
-                  ],
-                ),
+                child: ListView.builder(itemCount: blogList.length, physics: const ScrollPhysics(), shrinkWrap: true, itemBuilder: (context, index) {
+                  BlogModel blogItem = blogList[index];
+                  return _buildFrameFortyOne(context, title: blogItem.title, content: blogItem.content, author: blogItem.author, image: blogItem.image);
+                })
+                    // _buildFrameFortyOne(
+                    //   context,
+                    //   content: "Thực hành không rác thải - Chúng ta đã thực sự hiểu?",
+                    //   authorAnonymous: "Jackie",
+                    //   twoMillionSixHundredTwelveThou: "26/1/2024",
+                    // ),
+                    // SizedBox(height: 24.v),
+                    // _buildFrameFortyOne(
+                    //   context,
+                    //   content: "Thực hành không rác thải - Chúng ta đã thực sự hiểu?",
+                    //   authorAnonymous: "Tom",
+                    //   twoMillionSixHundredTwelveThou: "26/1/2024",
+                    // ),
               ),
             ],
           ),
-        )
-        ),
+        ),),
         bottomNavigationBar: _buildBottomBar(context),
-      ),
-    );
+      );
   }
 
   /// Section Widget
@@ -142,11 +139,13 @@ class BlogsScreen extends StatelessWidget {
   /// Common widget
   Widget _buildFrameFortyOne(
     BuildContext context, {
-    required String thCHNhKhNg,
-    required String authorAnonymous,
-    required String twoMillionSixHundredTwelveThou,
+    required String title,
+    required String content,
+    required String author,
+    required String image,
   }) {
     return Container(
+      height: 400.v,
       decoration: AppDecoration.fillOnPrimaryContainer.copyWith(
         borderRadius: BorderRadiusStyle.roundedBorder12,
       ),
@@ -154,7 +153,7 @@ class BlogsScreen extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           CustomImageView(
-            imagePath: ImageConstant.imgUnsplashX8zstuks2pm,
+            imagePath: image,
             height: 217.v,
             width: 383.h,
           ),
@@ -166,7 +165,7 @@ class BlogsScreen extends StatelessWidget {
               right: 23.h,
             ),
             child: Text(
-              thCHNhKhNg,
+              title,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.titleMedium!.copyWith(
@@ -188,23 +187,25 @@ class BlogsScreen extends StatelessWidget {
                         style: CustomTextStyles.bodyMediumff495057,
                       ),
                       TextSpan(
-                        text: "Anonymous",
+                        // text: "Anonymous",
+                        text: author,
                         style: CustomTextStyles.titleSmallff52b788,
                       ),
                     ],
                   ),
                   textAlign: TextAlign.left,
                 ),
-                Text(
-                  twoMillionSixHundredTwelveThou,
-                  style: CustomTextStyles.bodyMediumGray600.copyWith(
-                    color: appTheme.gray600,
-                  ),
-                ),
+                // Text(
+                //   ,
+                //   style: CustomTextStyles.bodyMediumGray600.copyWith(
+                //     color: appTheme.gray600,
+                //   ),
+                // ),
               ],
             ),
           ),
-          SizedBox(height: 18.v),
+          // SizedBox(height: 18.v),
+          // SizedBox(height: 50.v),
         ],
       ),
     );

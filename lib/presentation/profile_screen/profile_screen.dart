@@ -27,7 +27,7 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
         body: SizedBox(
           width: double.infinity,
-          child: Column(
+          child:Column(
             children: [
               SizedBox(height: 85.v),
               _buildPlaylist(context),

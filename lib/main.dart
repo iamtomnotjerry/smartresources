@@ -45,6 +45,10 @@ class MyApp extends StatelessWidget {
           theme: theme,
           title: 'smart_resources',
           debugShowCheckedModeBanner: false,
+<<<<<<< Updated upstream
+=======
+          initialRoute: AppRoutes.homeScreen,
+>>>>>>> Stashed changes
           routes: AppRoutes.routes,
           home: StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),

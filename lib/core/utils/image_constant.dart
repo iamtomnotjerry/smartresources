@@ -1,6 +1,6 @@
 class ImageConstant {
   // Image folder path
-  static String imagePath = 'assets/images';
+  static const String imagePath = 'assets/images';
 
   // Blog details images
   static String imgUnsplashJe4ihjeKni =
@@ -76,19 +76,19 @@ class ImageConstant {
   static String imgPlus = '$imagePath/img_plus.svg';
 
   // Product details Two images
-  static String imgUnsplashNovnxxmdni0 =
+  static const String imgUnsplashNovnxxmdni0 =
       '$imagePath/img_unsplash_novnxxmdni0.png';
 
   static String imgArrowRightOnprimary =
       '$imagePath/img_arrow_right_onprimary.svg';
 
-  static String imgUnsplash76wEdo1u1e =
+  static const String imgUnsplash76wEdo1u1e =
       '$imagePath/img_unsplash_76w_edo1u1e.png';
 
   static String imgSettingsErrorcontainer =
       '$imagePath/img_settings_errorcontainer.svg';
 
-  static String imgUnsplashMhuk4se7pey =
+  static const String imgUnsplashMhuk4se7pey =
       '$imagePath/img_unsplash_mhuk4se7pey.png';
 
   static String imgUnsplashFur3lnii2jc =
