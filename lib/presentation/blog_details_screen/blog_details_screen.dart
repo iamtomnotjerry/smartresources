@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smartresource/core/app_export.dart';
 import 'package:smartresource/widgets/custom_icon_button.dart';
 
 class BlogDetailsScreen extends StatelessWidget {
-  const BlogDetailsScreen({Key? key})
-      : super(
-          key: key,
-        );
+  final String title;
+  final String content;
+  final String author;
+  final String image;
+
+  const BlogDetailsScreen({super.key, required this.title, required this.content, required this.author, required this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +31,7 @@ class BlogDetailsScreen extends StatelessWidget {
                       right: 43.h,
                     ),
                     child: Text(
-                      "Thực hành không rác thải - Chúng ta đã thực sự hiểu?",
+                      title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: CustomTextStyles.titleLargeBluegray70001,
@@ -45,11 +48,11 @@ class BlogDetailsScreen extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                     children: [
                       Align(
-                        alignment: Alignment.center,
+                        alignment: Alignment.topCenter,
                         child: SizedBox(
                           width: 382.h,
                           child: Text(
-                            "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.\nDonec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.\nAenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.\nEtiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante.\nEtiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus.\nNullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui. Aenean ut",
+                            content,
                             maxLines: 24,
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.justify,
@@ -90,7 +93,7 @@ class BlogDetailsScreen extends StatelessWidget {
         alignment: Alignment.topLeft,
         children: [
           CustomImageView(
-            imagePath: ImageConstant.imgUnsplashJe4ihjeKni,
+            imagePath: image,
             height: 240.v,
             width: 430.h,
             radius: BorderRadius.circular(
@@ -107,8 +110,13 @@ class BlogDetailsScreen extends StatelessWidget {
               height: 36.adaptSize,
               width: 36.adaptSize,
               alignment: Alignment.topLeft,
-              child: CustomImageView(),
-            ),
+              child: InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(Icons.arrow_back),
+              )
+            ),// child: Icon(Icons.arrow_back),
           ),
         ],
       ),
@@ -126,11 +134,11 @@ class BlogDetailsScreen extends StatelessWidget {
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: "By ",
+                  text: "By: ",
                   style: CustomTextStyles.bodyMediumff495057,
                 ),
                 TextSpan(
-                  text: "Anonymous",
+                  text: author,
                   style: CustomTextStyles.bodyMediumff52b788,
                 ),
               ],

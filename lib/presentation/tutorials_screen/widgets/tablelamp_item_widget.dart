@@ -1,4 +1,5 @@
 import 'package:smartresource/presentation/tutorial_details_screen/tutorial_details_screen.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import 'framenine1_item_widget.dart';
 import 'package:flutter/material.dart';
@@ -7,14 +8,51 @@ import 'package:smartresource/widgets/custom_icon_button.dart';
 
 // ignore: must_be_immutable
 class TablelampItemWidget extends StatelessWidget {
-  const TablelampItemWidget({Key? key})
-      : super(
-          key: key,
-        );
+  final String videoId;
+  final String title;
+  final List<String> materials;
+  final String instructions;
+
+  TablelampItemWidget({
+    super.key, 
+    required this.videoId, 
+    required this.title, 
+    required this.materials, 
+    required this.instructions
+  });
+
+  YoutubePlayerController _buildYoutubeController() {
+    return YoutubePlayerController(
+      initialVideoId: videoId,
+      flags: YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Align(
+    final YoutubePlayerController controller = _buildYoutubeController();
+
+    return SingleChildScrollView(child:InkWell(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => TutorialDetailsScreen(
+          videoId: videoId,
+          title: title,
+          materials: materials,
+          instructions: instructions
+        )));
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+          color: Colors.grey, // Set border color here
+          width: 2.0, // Set border width here
+        ),
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      margin: EdgeInsets.all(16.0),
       alignment: Alignment.center,
       child: Card(
         clipBehavior: Clip.antiAlias,
@@ -25,7 +63,7 @@ class TablelampItemWidget extends StatelessWidget {
           borderRadius: BorderRadiusStyle.roundedBorder12,
         ),
         child: Container(
-          height: 400.v,
+          // constraints: BoxConstraints (maxHeight: 700.v),
           width: 382.h,
           padding: EdgeInsets.symmetric(
             horizontal: 16.h,
@@ -34,37 +72,37 @@ class TablelampItemWidget extends StatelessWidget {
           decoration: AppDecoration.fillOnPrimaryContainer.copyWith(
             borderRadius: BorderRadiusStyle.roundedBorder12,
           ),
-          child: Stack(
-            alignment: Alignment.bottomCenter,
+          child: Column(
             children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context, 
-                    MaterialPageRoute(builder: (context) => TutorialDetailsScreen())
-                  );
-                },
-              child: CustomImageView(
-                imagePath: ImageConstant.imgUnsplash9okgevjitkk,
-                height: 200.v,
-                width: 350.h,
-                radius: BorderRadius.circular(
-                  10.h,
+              Container(
+                // alignment: Alignment.topCenter,
+                child: YoutubePlayer(
+                  controller: controller,
+                  showVideoProgressIndicator: true,
+                  progressIndicatorColor: Colors.blueAccent,
+                  progressColors: ProgressBarColors(
+                    playedColor: Colors.blue,
+                    handleColor: Colors.blueAccent,
+                  ),
+                  bottomActions: [
+                    
+                  ],
                 ),
-                alignment: Alignment.topCenter,
-              ),),
-              Align(
-                alignment: Alignment.center,
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 10.0),
+                // alignment: Alignment.center,
                 child: Padding(
-                  padding: EdgeInsets.only(top: 80.v),
+                  padding: EdgeInsets.only(top: 20.v),
                   child: Text(
-                    "How to make a table lamp with plastic bottles",
+                    title,
                     style: theme.textTheme.titleMedium,
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.bottomLeft,
+              Container(
+                // margin: EdgeInsets.symmetric(vertical: 10.0),
+                // alignment: Alignment.bottomLeft,
                 child: Padding(
                   padding: EdgeInsets.only(right: 14.h),
                   child: Column(
@@ -99,16 +137,15 @@ class TablelampItemWidget extends StatelessWidget {
                       //   ),
                       // ),
                       // const SizedBox(height: 83.0),
-                      
                       Container(
-                        alignment: Alignment.bottomLeft,
+                        // alignment: Alignment.bottomCenter,
                         width: double.maxFinite, 
-                        height: 300.0,
+                        // height: 200.0,
                         child: Wrap(
                           runSpacing: 4.89.v,
                           spacing: 4.89.h,
                           children: List<Widget>.generate(
-                              5, (index) => const Framenine1ItemWidget()),
+                              materials.length, (index) => Framenine1ItemWidget(materialItem: materials[index],)),
                         ),
                       ),
                     ],
@@ -119,6 +156,6 @@ class TablelampItemWidget extends StatelessWidget {
           ),
         ),
       ),
-    );
+    )));
   }
 }

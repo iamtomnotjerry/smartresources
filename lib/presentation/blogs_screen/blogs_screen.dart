@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smartresource/core/app_export.dart';
 import 'package:smartresource/data/data_sources/blog/blog_source.dart';
 import 'package:smartresource/data/models/blog/blog_model.dart';
-import 'package:smartresource/presentation/blogs_screen/widgets/blog_post.dart';
+import 'package:smartresource/presentation/blog_details_screen/blog_details_screen.dart';
 import 'package:smartresource/widgets/custom_bottom_bar.dart';
 import 'package:smartresource/widgets/custom_icon_button.dart';
 import 'package:smartresource/widgets/custom_search_view.dart';
@@ -18,19 +18,6 @@ class BlogsScreen extends StatelessWidget {
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
   @override
-  // Widget build (BuildContext context) {
-  //   return SafeArea(
-  //     child: Navigator(
-  //       key: navigatorKey,
-  //       onGenerateRoute: (settings) {
-  //         return MaterialPageRoute(
-  //           settings: settings,
-  //           builder: (context) => _buildBlogScreenContent(context),
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -51,19 +38,6 @@ class BlogsScreen extends StatelessWidget {
                   BlogModel blogItem = blogList[index];
                   return _buildFrameFortyOne(context, title: blogItem.title, content: blogItem.content, author: blogItem.author, image: blogItem.image);
                 })
-                    // _buildFrameFortyOne(
-                    //   context,
-                    //   content: "Thực hành không rác thải - Chúng ta đã thực sự hiểu?",
-                    //   authorAnonymous: "Jackie",
-                    //   twoMillionSixHundredTwelveThou: "26/1/2024",
-                    // ),
-                    // SizedBox(height: 24.v),
-                    // _buildFrameFortyOne(
-                    //   context,
-                    //   content: "Thực hành không rác thải - Chúng ta đã thực sự hiểu?",
-                    //   authorAnonymous: "Tom",
-                    //   twoMillionSixHundredTwelveThou: "26/1/2024",
-                    // ),
               ),
             ],
           ),
@@ -118,10 +92,7 @@ class BlogsScreen extends StatelessWidget {
             width: 48.adaptSize,
             padding: EdgeInsets.all(12.h),
             decoration: IconButtonStyleHelper.fillPrimaryTL12,
-            // child: CustomImageView(
-            //   imagePath: ImageConstant.imgTune,
-            // ),
-            child: Icon(Icons.search, color: Colors.white),
+            child: const Icon(Icons.search, color: Colors.white),
           ),
         ),
       ],
@@ -144,10 +115,27 @@ class BlogsScreen extends StatelessWidget {
     required String author,
     required String image,
   }) {
-    return Container(
+    return InkWell(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => BlogDetailsScreen(
+          title: title,
+          content: content,
+          author: author,
+          image: image
+        )));
+      },
+      child:Container(
       height: 400.v,
-      decoration: AppDecoration.fillOnPrimaryContainer.copyWith(
-        borderRadius: BorderRadiusStyle.roundedBorder12,
+      // decoration: AppDecoration.fillOnPrimaryContainer.copyWith(
+      //   borderRadius: BorderRadiusStyle.roundedBorder12,
+      // ),
+      margin: EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.grey, // Set border color here
+          width: 2.0, // Set border width here
+        ),
+        borderRadius: BorderRadius.circular(12.0),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -195,19 +183,11 @@ class BlogsScreen extends StatelessWidget {
                   ),
                   textAlign: TextAlign.left,
                 ),
-                // Text(
-                //   ,
-                //   style: CustomTextStyles.bodyMediumGray600.copyWith(
-                //     color: appTheme.gray600,
-                //   ),
-                // ),
               ],
             ),
           ),
-          // SizedBox(height: 18.v),
-          // SizedBox(height: 50.v),
         ],
       ),
-    );
+    ));
   }
 }

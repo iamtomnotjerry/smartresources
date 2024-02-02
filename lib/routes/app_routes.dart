@@ -82,7 +82,7 @@ class AppRoutes {
 
   static Map<String, WidgetBuilder> routes = {
     mainScreen: (context) => const MainScreen(),
-    blogDetailsScreen: (context) => const BlogDetailsScreen(),
+    // blogDetailsScreen: (context) => const BlogDetailsScreen(),
     splashScreen: (context) => const SplashScreen(),
     welcomeScreen: (context) => const WelcomeScreen(),
     welcomeoneScreen: (context) => const WelcomeoneScreen(),
@@ -93,7 +93,7 @@ class AppRoutes {
     forgotPasswordScreen: (context) => ForgotPasswordScreen(),
     homeScreen: (context) => HomeScreen(),
     tutorialsScreen: (context) => TutorialsScreen(),
-    tutorialDetailsScreen: (context) => const TutorialDetailsScreen(),
+    // tutorialDetailsScreen: (context) => TutorialDetailsScreen(),
     addBlogOneScreen: (context) => AddBlogOneScreen(),
     blogsScreen: (context) => BlogsScreen(),
     addBlogScreen: (context) => AddBlogScreen(),

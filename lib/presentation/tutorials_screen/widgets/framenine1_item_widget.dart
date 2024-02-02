@@ -3,10 +3,12 @@ import 'package:smartresource/core/app_export.dart';
 
 // ignore: must_be_immutable
 class Framenine1ItemWidget extends StatelessWidget {
-  const Framenine1ItemWidget({Key? key})
-      : super(
-          key: key,
-        );
+  final String materialItem;
+
+  Framenine1ItemWidget({
+    super.key,
+    required this.materialItem
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,7 @@ class Framenine1ItemWidget extends StatelessWidget {
         showCheckmark: false,
         labelPadding: EdgeInsets.zero,
         label: Text(
-          "Materials:  ",
+          materialItem,
           style: TextStyle(
             color: appTheme.gray600,
             fontSize: 12.fSize,

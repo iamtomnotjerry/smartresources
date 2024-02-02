@@ -1,3 +1,6 @@
+import 'package:smartresource/data/data_sources/tutorial/tutorial_source.dart';
+import 'package:smartresource/data/models/tutorial/tutorial_model.dart';
+
 import '../tutorials_screen/widgets/frameseven_item_widget.dart';
 import '../tutorials_screen/widgets/frametwentysix_item_widget.dart';
 import '../tutorials_screen/widgets/tablelamp_item_widget.dart';
@@ -58,7 +61,7 @@ class TutorialsScreen extends StatelessWidget {
                   alignment: Alignment.bottomCenter,
                   children: [
                     _buildTableLamp(context),
-                    _buildFrameSixteen(context),
+                    // _buildFrameSixteen(context),
                   ],
                 ),
               ),)
@@ -137,20 +140,13 @@ class TutorialsScreen extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 23.h),
         decoration: AppDecoration.outlineBlack,
-        child: ListView.separated(
-          // physics: const NeverScrollableScrollPhysics(),
+        child: ListView.builder(
+          physics: const ScrollPhysics(),
           shrinkWrap: true,
-          separatorBuilder: (
-            context,
-            index,
-          ) {
-            return SizedBox(
-              height: 16.v,
-            );
-          },
-          itemCount: 2,
+          itemCount: tutorialsList.length,
           itemBuilder: (context, index) {
-            return const TablelampItemWidget();
+            TutorialModel tutorialItem = tutorialsList[index];
+            return TablelampItemWidget(videoId: tutorialItem.videoId, title: tutorialItem.title, materials: tutorialItem.materials, instructions: tutorialItem.instructions,);
           },
         ),
       ),
@@ -158,176 +154,176 @@ class TutorialsScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildFrameSixteen(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        margin: EdgeInsets.only(top: 436.v),
-        padding: EdgeInsets.symmetric(
-          horizontal: 39.h,
-          vertical: 18.v,
-        ),
-        decoration: AppDecoration.outlineBlueGray,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              height: 40.v,
-              width: 29.h,
-              margin: EdgeInsets.only(top: 1.v),
-              child: Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      height: 40.v,
-                      width: 29.h,
-                      padding: EdgeInsets.symmetric(horizontal: 2.h),
-                      decoration: AppDecoration.fillOnPrimaryContainer,
-                      child: CustomImageView(
-                        imagePath: ImageConstant.imgHome,
-                        height: 24.adaptSize,
-                        width: 24.adaptSize,
-                        alignment: Alignment.topCenter,
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Text(
-                      "Home",
-                      style: CustomTextStyles.labelMediumPrimary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              height: 40.v,
-              width: 42.h,
-              margin: EdgeInsets.only(top: 1.v),
-              child: Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  CustomIconButton(
-                    height: 40.v,
-                    width: 42.h,
-                    alignment: Alignment.center,
-                    child: CustomImageView(
-                      imagePath: ImageConstant.imgForward,
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Text(
-                      "Tutorials",
-                      style: theme.textTheme.labelMedium,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              height: 41.v,
-              width: 27.h,
-              margin: EdgeInsets.only(top: 1.v),
-              child: Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                      height: 40.v,
-                      width: 27.h,
-                      padding: EdgeInsets.symmetric(horizontal: 1.h),
-                      decoration: AppDecoration.fillOnPrimaryContainer,
-                      child: CustomImageView(
-                        imagePath: ImageConstant.imgTelevision,
-                        height: 24.adaptSize,
-                        width: 24.adaptSize,
-                        alignment: Alignment.topCenter,
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Text(
-                      "Blogs",
-                      style: theme.textTheme.labelMedium,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              height: 41.v,
-              width: 25.h,
-              margin: EdgeInsets.only(top: 1.v),
-              child: Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                      height: 40.v,
-                      width: 25.h,
-                      decoration: AppDecoration.fillOnPrimaryContainer,
-                      child: CustomImageView(
-                        imagePath: ImageConstant.imgThumbsUp,
-                        height: 24.adaptSize,
-                        width: 24.adaptSize,
-                        alignment: Alignment.topCenter,
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Text(
-                      "Shop",
-                      style: theme.textTheme.labelMedium,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              height: 40.v,
-              width: 31.h,
-              margin: EdgeInsets.only(top: 1.v),
-              child: Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      height: 40.v,
-                      width: 31.h,
-                      padding: EdgeInsets.symmetric(horizontal: 3.h),
-                      decoration: AppDecoration.fillOnPrimaryContainer,
-                      child: CustomImageView(
-                        imagePath: ImageConstant.imgLock,
-                        height: 24.adaptSize,
-                        width: 24.adaptSize,
-                        alignment: Alignment.topCenter,
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Text(
-                      "Profile",
-                      style: theme.textTheme.labelMedium,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _buildFrameSixteen(BuildContext context) {
+  //   return Align(
+  //     alignment: Alignment.bottomCenter,
+  //     child: Container(
+  //       margin: EdgeInsets.only(top: 436.v),
+  //       padding: EdgeInsets.symmetric(
+  //         horizontal: 39.h,
+  //         vertical: 18.v,
+  //       ),
+  //       decoration: AppDecoration.outlineBlueGray,
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           Container(
+  //             height: 40.v,
+  //             width: 29.h,
+  //             margin: EdgeInsets.only(top: 1.v),
+  //             child: Stack(
+  //               alignment: Alignment.bottomCenter,
+  //               children: [
+  //                 Align(
+  //                   alignment: Alignment.center,
+  //                   child: Container(
+  //                     height: 40.v,
+  //                     width: 29.h,
+  //                     padding: EdgeInsets.symmetric(horizontal: 2.h),
+  //                     decoration: AppDecoration.fillOnPrimaryContainer,
+  //                     child: CustomImageView(
+  //                       imagePath: ImageConstant.imgHome,
+  //                       height: 24.adaptSize,
+  //                       width: 24.adaptSize,
+  //                       alignment: Alignment.topCenter,
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 Align(
+  //                   alignment: Alignment.bottomCenter,
+  //                   child: Text(
+  //                     "Home",
+  //                     style: CustomTextStyles.labelMediumPrimary,
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //           Container(
+  //             height: 40.v,
+  //             width: 42.h,
+  //             margin: EdgeInsets.only(top: 1.v),
+  //             child: Stack(
+  //               alignment: Alignment.bottomCenter,
+  //               children: [
+  //                 CustomIconButton(
+  //                   height: 40.v,
+  //                   width: 42.h,
+  //                   alignment: Alignment.center,
+  //                   child: CustomImageView(
+  //                     imagePath: ImageConstant.imgForward,
+  //                   ),
+  //                 ),
+  //                 Align(
+  //                   alignment: Alignment.bottomCenter,
+  //                   child: Text(
+  //                     "Tutorials",
+  //                     style: theme.textTheme.labelMedium,
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //           Container(
+  //             height: 41.v,
+  //             width: 27.h,
+  //             margin: EdgeInsets.only(top: 1.v),
+  //             child: Stack(
+  //               alignment: Alignment.bottomCenter,
+  //               children: [
+  //                 Align(
+  //                   alignment: Alignment.topCenter,
+  //                   child: Container(
+  //                     height: 40.v,
+  //                     width: 27.h,
+  //                     padding: EdgeInsets.symmetric(horizontal: 1.h),
+  //                     decoration: AppDecoration.fillOnPrimaryContainer,
+  //                     child: CustomImageView(
+  //                       imagePath: ImageConstant.imgTelevision,
+  //                       height: 24.adaptSize,
+  //                       width: 24.adaptSize,
+  //                       alignment: Alignment.topCenter,
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 Align(
+  //                   alignment: Alignment.bottomCenter,
+  //                   child: Text(
+  //                     "Blogs",
+  //                     style: theme.textTheme.labelMedium,
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //           Container(
+  //             height: 41.v,
+  //             width: 25.h,
+  //             margin: EdgeInsets.only(top: 1.v),
+  //             child: Stack(
+  //               alignment: Alignment.bottomCenter,
+  //               children: [
+  //                 Align(
+  //                   alignment: Alignment.topCenter,
+  //                   child: Container(
+  //                     height: 40.v,
+  //                     width: 25.h,
+  //                     decoration: AppDecoration.fillOnPrimaryContainer,
+  //                     child: CustomImageView(
+  //                       imagePath: ImageConstant.imgThumbsUp,
+  //                       height: 24.adaptSize,
+  //                       width: 24.adaptSize,
+  //                       alignment: Alignment.topCenter,
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 Align(
+  //                   alignment: Alignment.bottomCenter,
+  //                   child: Text(
+  //                     "Shop",
+  //                     style: theme.textTheme.labelMedium,
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //           Container(
+  //             height: 40.v,
+  //             width: 31.h,
+  //             margin: EdgeInsets.only(top: 1.v),
+  //             child: Stack(
+  //               alignment: Alignment.bottomCenter,
+  //               children: [
+  //                 Align(
+  //                   alignment: Alignment.center,
+  //                   child: Container(
+  //                     height: 40.v,
+  //                     width: 31.h,
+  //                     padding: EdgeInsets.symmetric(horizontal: 3.h),
+  //                     decoration: AppDecoration.fillOnPrimaryContainer,
+  //                     child: CustomImageView(
+  //                       imagePath: ImageConstant.imgLock,
+  //                       height: 24.adaptSize,
+  //                       width: 24.adaptSize,
+  //                       alignment: Alignment.topCenter,
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 Align(
+  //                   alignment: Alignment.bottomCenter,
+  //                   child: Text(
+  //                     "Profile",
+  //                     style: theme.textTheme.labelMedium,
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   /// Section Widget
   Widget _buildBottomBar(BuildContext context) {
