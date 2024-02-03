@@ -23,8 +23,8 @@ class _NavigationMenuState extends State<NavigationMenu> {
 
   @override
   void initState() {
-    super.initState();
     Provider.of<MyAuthProvider>(context, listen: false).refreshUser();
+    super.initState();
   }
 
   @override

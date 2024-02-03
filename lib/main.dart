@@ -1,14 +1,13 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smartresource/navigation_menu.dart';
 import 'package:smartresource/presentation/email_verification_screen/email_verification_screen.dart';
-import 'package:smartresource/presentation/home_screen/home_screen.dart';
 import 'package:smartresource/presentation/sign_in_screen/sign_in_screen.dart';
 import 'package:smartresource/presentation/welcome_screen/welcome_screen.dart';
 import 'package:smartresource/providers/auth_provider.dart';

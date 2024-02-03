@@ -31,7 +31,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  void onSubmit() async {
+  void onSubmit(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       try {
         setState(() {
@@ -60,10 +60,6 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
           );
         }
-
-        setState(() {
-          isLoading = false;
-        });
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -78,17 +74,13 @@ class _SignInScreenState extends State<SignInScreen> {
     }
   }
 
-  void onFacebookSignIn() async {
+  void onFacebookSignIn(BuildContext context) async {
     try {
       setState(() {
         isLoading = true;
       });
 
       await AuthService().signInWithFacebook();
-
-      setState(() {
-        isLoading = false;
-      });
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -108,7 +100,7 @@ class _SignInScreenState extends State<SignInScreen> {
     }
   }
 
-  void onGoogleSignIn() async {
+  void onGoogleSignIn(BuildContext context) async {
     try {
       setState(() {
         isLoading = true;
@@ -116,16 +108,14 @@ class _SignInScreenState extends State<SignInScreen> {
 
       await AuthService().signInWithGoogle();
 
-      setState(() {
-        isLoading = false;
-      });
-
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => NavigationMenu(),
         ),
       );
-    } catch (_) {
+    } catch (e) {
+      print(e.toString());
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Something went wrong.'),
@@ -404,7 +394,7 @@ class _SignInScreenState extends State<SignInScreen> {
   /// Section Widget
   Widget _buildSignInButton(BuildContext context) {
     return CustomElevatedButton(
-      onPressed: onSubmit,
+      onPressed: () => onSubmit(context),
       height: 56.v,
       text: "Sign In",
       margin: EdgeInsets.symmetric(horizontal: 24.h),
@@ -416,7 +406,7 @@ class _SignInScreenState extends State<SignInScreen> {
   /// Section Widget
   Widget _buildGoogleButton(BuildContext context) {
     return CustomElevatedButton(
-      onPressed: () => onGoogleSignIn(),
+      onPressed: () => onGoogleSignIn(context),
       width: 127.h,
       text: "Google",
       leftIcon: Container(
@@ -435,7 +425,7 @@ class _SignInScreenState extends State<SignInScreen> {
   /// Section Widget
   Widget _buildFacebookButton(BuildContext context) {
     return CustomElevatedButton(
-      onPressed: () => onFacebookSignIn(),
+      onPressed: () => onFacebookSignIn(context),
       width: 136.h,
       text: "Facebook",
       margin: EdgeInsets.only(left: 24.h),

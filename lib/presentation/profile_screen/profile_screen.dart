@@ -36,52 +36,65 @@ class ProfileScreen extends StatelessWidget {
                       Positioned(
                         left: 1,
                         right: 1,
-                        bottom: -48,
+                        bottom: -80,
                         child: Column(
                           children: [
-                            Stack(
+                            Column(
                               children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.white,
-                                      width: 4,
+                                Stack(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.white,
+                                          width: 4,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                      ),
+                                      child: user.avatar.isNotEmpty
+                                          ? CircleAvatar(
+                                              radius: 64,
+                                              backgroundImage:
+                                                  NetworkImage(user.avatar),
+                                            )
+                                          : CircleAvatar(
+                                              radius: 64,
+                                              backgroundImage: AssetImage(
+                                                ImageConstant.avatarPlaceholder,
+                                              ),
+                                            ),
                                     ),
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
-                                  child: user.avatar.isNotEmpty
-                                      ? CircleAvatar(
-                                          radius: 64,
-                                          backgroundImage:
-                                              NetworkImage(user.avatar),
-                                        )
-                                      : CircleAvatar(
-                                          radius: 64,
-                                          backgroundImage: AssetImage(
-                                            ImageConstant.avatarPlaceholder,
+                                    Positioned(
+                                      bottom: 0,
+                                      right: 0,
+                                      child: IconButton(
+                                        icon: const Icon(
+                                          Icons.camera_alt,
+                                          color: Colors.white,
+                                          size: 18,
+                                        ),
+                                        onPressed: () {},
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                            theme.colorScheme.primary,
                                           ),
                                         ),
-                                ),
-                                Positioned(
-                                  bottom: 0,
-                                  right: 0,
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.camera_alt,
-                                      color: Colors.white,
-                                      size: 18,
-                                    ),
-                                    onPressed: () {},
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                        theme.colorScheme.primary,
+                                        constraints: const BoxConstraints(
+                                          maxHeight: 48,
+                                          maxWidth: 48,
+                                        ),
                                       ),
                                     ),
-                                    constraints: const BoxConstraints(
-                                      maxHeight: 48,
-                                      maxWidth: 48,
-                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  user.name,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ],
@@ -93,45 +106,75 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 96),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: ListView(
-                      shrinkWrap: true,
-                      padding: EdgeInsets.zero,
-                      children: [
-                        const MenuItem(
-                          title: 'My Profile',
-                          icon: Icons.person_outline_rounded,
-                        ),
-                        const MenuItem(
-                          title: 'Purchase History',
-                          icon: Icons.assignment_outlined,
-                        ),
-                        const MenuItem(
-                          title: 'My Addresses',
-                          icon: Icons.location_on_outlined,
-                        ),
-                        const MenuItem(
-                          title: 'Payment Methods',
-                          icon: Icons.credit_card_outlined,
-                        ),
-                        const MenuItem(
-                          title: 'Account Settings',
-                          icon: Icons.settings_outlined,
-                        ),
-                        const MenuItem(
-                          title: 'Help & Support',
-                          icon: Icons.help_outline,
-                        ),
-                        MenuItem(
-                          title: 'Sign Out',
-                          icon: Icons.logout,
-                          onPressed: () {
-                            AuthService().signOut(context);
-                          },
-                        ),
-                      ],
+                    padding: const EdgeInsets.only(
+                      left: 24,
+                      right: 24,
+                      bottom: 24,
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 16,
+                              offset: const Offset(0, 4),
+                            ),
+                          ]),
+                      child: ListView(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.zero,
+                        children: [
+                          MenuItem(
+                            title: 'My Profile',
+                            icon: Icons.person_outline_rounded,
+                            onPressed: () => Navigator.pushNamed(
+                              context,
+                              AppRoutes.yourProfileScreen,
+                            ),
+                          ),
+                          const MenuItem(
+                            title: 'Purchase History',
+                            icon: Icons.assignment_outlined,
+                          ),
+                          const MenuItem(
+                            title: 'My Addresses',
+                            icon: Icons.location_on_outlined,
+                          ),
+                          const MenuItem(
+                            title: 'Payment Methods',
+                            icon: Icons.credit_card_outlined,
+                          ),
+                          MenuItem(
+                            title: 'Account Settings',
+                            icon: Icons.settings_outlined,
+                            onPressed: () => Navigator.pushNamed(
+                              context,
+                              AppRoutes.settingsScreen,
+                            ),
+                          ),
+                          const MenuItem(
+                            title: 'Help & Support',
+                            icon: Icons.help_outline,
+                          ),
+                          MenuItem(
+                            title: 'Sign Out',
+                            icon: Icons.logout,
+                            onPressed: () {
+                              AuthService().signOut(context);
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
+                  const SizedBox(height: 32),
                 ],
               ),
             ),
@@ -153,9 +196,15 @@ class MenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+    return Container(
+      padding: const EdgeInsets.only(bottom: 2, top: 8),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(width: 1, color: appTheme.gray100),
+        ),
+      ),
       child: ListTile(
+        contentPadding: EdgeInsets.zero,
         onTap: onPressed,
         horizontalTitleGap: 24,
         title: Text(

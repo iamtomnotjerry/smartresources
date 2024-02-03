@@ -35,16 +35,17 @@ class AuthService {
     return user;
   }
 
-  Future<void> completeProfile({
+  Future<void> updateProfile({
     required String uid,
     required String name,
     Uint8List? avatar,
     required String dateOfBirth,
     required String phoneNumber,
     required String gender,
+    bool avatarChanged = true,
   }) async {
     String _avatar = '';
-    if (avatar != null) {
+    if (avatar != null && avatarChanged) {
       final ref = _storage.ref().child('avatars').child(uid);
       final uploadTask = ref.putData(avatar);
       final snapshot = await uploadTask;
@@ -52,13 +53,22 @@ class AuthService {
       _avatar = url;
     }
 
-    await _firestore.collection('users').doc(uid).update({
-      'name': name,
-      'avatar': _avatar,
-      'dateOfBirth': dateOfBirth,
-      'phoneNumber': phoneNumber,
-      'gender': gender,
-    });
+    if (avatarChanged) {
+      await _firestore.collection('users').doc(uid).update({
+        'name': name,
+        'avatar': _avatar,
+        'dateOfBirth': dateOfBirth,
+        'phoneNumber': phoneNumber,
+        'gender': gender,
+      });
+    } else {
+      await _firestore.collection('users').doc(uid).update({
+        'name': name,
+        'dateOfBirth': dateOfBirth,
+        'phoneNumber': phoneNumber,
+        'gender': gender,
+      });
+    }
   }
 
   Future<void> signInWithFacebook() async {
@@ -81,7 +91,7 @@ class AuthService {
       final userCredential = await FirebaseAuth.instance
           .signInWithCredential(facebookAuthCredential);
 
-      await _firestore.collection('users').doc(userCredential.user!.uid).set({
+      _firestore.collection('users').doc(userCredential.user!.uid).set({
         'uid': userCredential.user!.uid,
         'email': userData['email'],
         'name': userData['name'],
@@ -126,7 +136,7 @@ class AuthService {
     final userCredential =
         await FirebaseAuth.instance.signInWithCredential(credential);
 
-    await _firestore.collection('users').doc(userCredential.user!.uid).set({
+    _firestore.collection('users').doc(userCredential.user!.uid).set({
       'uid': userCredential.user!.uid,
       'email': userCredential.additionalUserInfo!.profile!['email'],
       'name': userCredential.user!.displayName,
@@ -139,7 +149,27 @@ class AuthService {
   }
 
   void signOut(BuildContext context) {
-    _auth.signOut();
-    Navigator.of(context).pushReplacementNamed(AppRoutes.signInScreen);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Sign Out'),
+        content: const Text('Are you sure you want to sign out?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'Cancel'),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              _auth.signOut();
+
+              Navigator.of(context)
+                  .pushReplacementNamed(AppRoutes.signInScreen);
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 }
