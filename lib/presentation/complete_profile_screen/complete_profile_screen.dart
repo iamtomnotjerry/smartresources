@@ -44,6 +44,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
   @override
   void dispose() {
     phoneNumberController.dispose();
+    nameController.dispose();
     super.dispose();
   }
 
@@ -72,7 +73,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
           isLoading = true;
         });
 
-        await AuthService().completeProfile(
+        await AuthService().updateProfile(
           uid: widget.uid,
           name: nameController.text,
           dateOfBirth: dateOfBirth!.toString(),

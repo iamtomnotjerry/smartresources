@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smartresource/core/app_export.dart';
+import 'package:smartresource/presentation/onboarding_screen/onboarding_screen.dart';
 import 'package:smartresource/widgets/custom_elevated_button.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -83,7 +84,10 @@ class WelcomeScreen extends StatelessWidget {
             CustomElevatedButton(
               onPressed: () {
                 // Navigate to welcomeoneScreen when the button is pressed
-                Navigator.pushNamed(context, AppRoutes.welcomeoneScreen);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => OnboardingScreen()));
               },
               height: 56.v,
               text: "Get Started",

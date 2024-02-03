@@ -21,8 +21,9 @@ class BlogsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SingleChildScrollView(child:Container(
+      resizeToAvoidBottomInset: false,
+      body: SingleChildScrollView(
+        child: Container(
           width: double.maxFinite,
           padding: EdgeInsets.symmetric(horizontal: 23.h),
           child: Column(
@@ -42,9 +43,9 @@ class BlogsScreen extends StatelessWidget {
               ),
             ],
           ),
-        ),),
-        bottomNavigationBar: _buildBottomBar(context),
-      );
+        ),
+      ),
+    );
   }
 
   /// Section Widget

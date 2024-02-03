@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smartresource/navigation_menu.dart';
 import 'package:smartresource/presentation/add_blog_one_screen/add_blog_one_screen.dart';
 import 'package:smartresource/presentation/add_blog_screen/add_blog_screen.dart';
 import 'package:smartresource/presentation/add_prpdcut_screen/add_prpdcut_screen.dart';
@@ -91,7 +92,7 @@ class AppRoutes {
     signUpScreen: (context) => SignUpScreen(),
     signInScreen: (context) => SignInScreen(),
     forgotPasswordScreen: (context) => ForgotPasswordScreen(),
-    homeScreen: (context) => HomeScreen(),
+    homeScreen: (context) => NavigationMenu(),
     tutorialsScreen: (context) => TutorialsScreen(),
     // tutorialDetailsScreen: (context) => TutorialDetailsScreen(),
     addBlogOneScreen: (context) => AddBlogOneScreen(),
@@ -102,8 +103,8 @@ class AppRoutes {
     cartScreen: (context) => const CartScreen(),
     addPrpdcutScreen: (context) => AddPrpdcutScreen(),
     profileScreen: (context) => ProfileScreen(),
-    yourProfileScreen: (context) => YourProfileScreen(),
-    settingsScreen: (context) => SettingsScreen(),
+    yourProfileScreen: (context) => MyProfileScreen(),
+    settingsScreen: (context) => AccountSettingsScreen(),
     changePasswordScreen: (context) => ChangePasswordScreen(),
     appNavigationScreen: (context) => const AppNavigationScreen()
   };

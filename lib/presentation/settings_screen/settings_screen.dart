@@ -1,125 +1,139 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:smartresource/core/app_export.dart';
-import 'package:smartresource/widgets/custom_bottom_bar.dart';
 
-class SettingsScreen extends StatelessWidget {
-  SettingsScreen({Key? key})
-      : super(
-          key: key,
-        );
+class AccountSettingsScreen extends StatelessWidget {
+  const AccountSettingsScreen({super.key});
 
-  GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+  void onDeleteAccount(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirm Delete Account'),
+        content: const Text(
+          'Are you sure you want to delete your account? This action cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .delete();
+              FirebaseAuth.instance.currentUser!.delete();
+              Navigator.pushReplacementNamed(
+                context,
+                AppRoutes.signInScreen,
+              );
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
-          width: double.maxFinite,
-          padding: EdgeInsets.only(
-            left: 24.h,
-            top: 69.v,
-            right: 24.h,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 40.h),
-                child: Text(
-                  "Account Settings",
-                  style: theme.textTheme.titleLarge,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Account Settings',
+          style: TextStyle(color: theme.colorScheme.primary),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(24),
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: 8,
+            ),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 16,
+                    offset: const Offset(0, 4),
+                  ),
+                ]),
+            child: ListView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.zero,
+              children: [
+                FirebaseAuth.instance.currentUser!.providerData[0].providerId ==
+                        'password'
+                    ? MenuItem(
+                        title: 'Change Password',
+                        icon: Icons.lock_reset_outlined,
+                        onPressed: () => Navigator.pushNamed(
+                          context,
+                          AppRoutes.changePasswordScreen,
+                        ),
+                      )
+                    : Container(),
+                MenuItem(
+                  title: 'Delete Account',
+                  icon: Icons.delete_outlined,
+                  onPressed: () => onDeleteAccount(context),
                 ),
-              ),
-              SizedBox(height: 49.v),
-              _buildSettingsFrame(context),
-              SizedBox(height: 5.v),
-            ],
+              ],
+            ),
           ),
         ),
-        bottomNavigationBar: _buildBottomBar(context),
       ),
     );
   }
+}
 
-  /// Section Widget
-  Widget _buildSettingsFrame(BuildContext context) {
+class MenuItem extends StatelessWidget {
+  const MenuItem({
+    super.key,
+    required this.title,
+    required this.icon,
+    this.onPressed,
+  });
+
+  final String title;
+  final IconData icon;
+  final void Function()? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 16.h,
-        vertical: 24.v,
+      padding: const EdgeInsets.only(bottom: 2, top: 8),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(width: 1, color: appTheme.gray100),
+        ),
       ),
-      decoration: AppDecoration.shadow.copyWith(
-        borderRadius: BorderRadiusStyle.roundedBorder16,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildDeleteAccountFrame(
-            context,
-            thumbsUpImage: ImageConstant.imgContrast,
-            deleteAccountText: "Change Password",
-          ),
-          SizedBox(height: 28.v),
-          _buildDeleteAccountFrame(
-            context,
-            thumbsUpImage: ImageConstant.imgThumbsUpPrimary,
-            deleteAccountText: "Delete Account",
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildBottomBar(BuildContext context) {
-    return CustomBottomBar(
-      onChanged: (BottomBarEnum type) {},
-    );
-  }
-
-  /// Common widget
-  Widget _buildDeleteAccountFrame(
-    BuildContext context, {
-    required String thumbsUpImage,
-    required String deleteAccountText,
-  }) {
-    return Container(
-      decoration: AppDecoration.outlineBluegray50,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CustomImageView(
-            imagePath: thumbsUpImage,
-            height: 28.adaptSize,
-            width: 28.adaptSize,
-            margin: EdgeInsets.only(bottom: 16.v),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              left: 24.h,
-              top: 3.v,
-              bottom: 20.v,
-            ),
-            child: Text(
-              deleteAccountText,
-              style: CustomTextStyles.titleMediumBlack900.copyWith(
-                color: appTheme.black900,
-              ),
-            ),
-          ),
-          const Spacer(),
-          CustomImageView(
-            imagePath: ImageConstant.imgArrowRightPrimary,
-            height: 16.adaptSize,
-            width: 16.adaptSize,
-            margin: EdgeInsets.only(
-              top: 6.v,
-              bottom: 22.v,
-            ),
-          ),
-        ],
+      child: ListTile(
+        contentPadding: EdgeInsets.zero,
+        onTap: onPressed,
+        horizontalTitleGap: 24,
+        title: Text(
+          title,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
+        leading: Icon(
+          icon,
+          color: theme.colorScheme.primary,
+          size: 28,
+        ),
+        trailing: Icon(
+          Icons.arrow_forward_ios,
+          size: 16,
+          color: theme.colorScheme.primary,
+        ),
       ),
     );
   }

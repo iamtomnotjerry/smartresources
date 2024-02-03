@@ -49,5 +49,20 @@
 	<string>$(PRODUCT_NAME) uses photos</string>
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) uses camera</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb427968716234838</string>
+			</array>
+		</dict>
+	</array>
+	<key>FacebookAppID</key>
+	<string>427968716234838</string>
+	<key>FacebookClientToken</key>
+	<string>CLIENT-8891f521ecddc3b38c3b4b339e6a03eb</string>
+	<key>FacebookDisplayName</key>
+	<string>Smart Resource</string>
 </dict>
 </plist>

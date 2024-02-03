@@ -23,9 +23,12 @@ class CustomDropDown extends StatelessWidget {
     this.filled = true,
     this.validator,
     this.onChanged,
+    this.value,
   }) : super(
           key: key,
         );
+
+  final String? value;
 
   final Alignment? alignment;
 
@@ -78,6 +81,7 @@ class CustomDropDown extends StatelessWidget {
   Widget get dropDownWidget => SizedBox(
         width: width ?? double.maxFinite,
         child: DropdownButtonFormField(
+          value: value,
           focusNode: focusNode ?? FocusNode(),
           icon: icon,
           autofocus: autofocus!,

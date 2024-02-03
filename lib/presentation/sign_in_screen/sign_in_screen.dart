@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as fs;
 import 'package:smartresource/core/app_export.dart';
 import 'package:smartresource/core/utils/validation_functions.dart';
+import 'package:smartresource/navigation_menu.dart';
+import 'package:smartresource/services/auth_service.dart';
 import 'package:smartresource/widgets/custom_checkbox_button.dart';
 import 'package:smartresource/widgets/custom_elevated_button.dart';
 import 'package:smartresource/widgets/custom_text_form_field.dart';
@@ -28,7 +31,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  void onSubmit() async {
+  void onSubmit(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       try {
         setState(() {
@@ -39,8 +42,17 @@ class _SignInScreenState extends State<SignInScreen> {
           email: emailController.text,
           password: passwordController.text,
         );
+
+        setState(() {
+          isLoading = false;
+        });
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => NavigationMenu(),
+          ),
+        );
       } on FirebaseAuthException catch (e) {
-        print('code: ' + e.code);
         if (e.code == 'invalid-credential') {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -54,12 +66,73 @@ class _SignInScreenState extends State<SignInScreen> {
             content: Text('Something went wrong.'),
           ),
         );
-      } finally {
+
         setState(() {
           isLoading = false;
         });
       }
     }
+  }
+
+  void onFacebookSignIn(BuildContext context) async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      await AuthService().signInWithFacebook();
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => NavigationMenu(),
+        ),
+      );
+    } catch (_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Something went wrong.'),
+        ),
+      );
+
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void onGoogleSignIn(BuildContext context) async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      await AuthService().signInWithGoogle();
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => NavigationMenu(),
+        ),
+      );
+    } catch (e) {
+      print(e.toString());
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Something went wrong.'),
+        ),
+      );
+
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    emailController.dispose();
+    passwordController.dispose();
   }
 
   @override
@@ -200,10 +273,10 @@ class _SignInScreenState extends State<SignInScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CustomImageView(
-                    imagePath: ImageConstant.imgSettings,
-                    height: 45.adaptSize,
-                    width: 45.adaptSize,
+                  SvgPicture.asset(
+                    ImageConstant.imgSettings,
+                    height: 45,
+                    width: 45,
                   ),
                   SizedBox(height: 21.v),
                   Text(
@@ -302,10 +375,14 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
           Padding(
             padding: EdgeInsets.only(top: 3.v),
-            child: Text(
-              "Forgot password?",
-              style: CustomTextStyles.titleSmallPrimary.copyWith(
-                decoration: TextDecoration.underline,
+            child: InkWell(
+              onTap: () => Navigator.of(context)
+                  .pushNamed(AppRoutes.forgotPasswordScreen),
+              child: Text(
+                "Forgot password?",
+                style: CustomTextStyles.titleSmallPrimary.copyWith(
+                  decoration: TextDecoration.underline,
+                ),
               ),
             ),
           ),
@@ -317,7 +394,7 @@ class _SignInScreenState extends State<SignInScreen> {
   /// Section Widget
   Widget _buildSignInButton(BuildContext context) {
     return CustomElevatedButton(
-      onPressed: onSubmit,
+      onPressed: () => onSubmit(context),
       height: 56.v,
       text: "Sign In",
       margin: EdgeInsets.symmetric(horizontal: 24.h),
@@ -329,14 +406,15 @@ class _SignInScreenState extends State<SignInScreen> {
   /// Section Widget
   Widget _buildGoogleButton(BuildContext context) {
     return CustomElevatedButton(
+      onPressed: () => onGoogleSignIn(context),
       width: 127.h,
       text: "Google",
       leftIcon: Container(
         margin: EdgeInsets.only(right: 16.h),
-        child: CustomImageView(
-          imagePath: ImageConstant.imgGoogle,
-          height: 21.v,
-          width: 20.h,
+        child: SvgPicture.asset(
+          ImageConstant.imgGoogle,
+          height: 20,
+          width: 20,
         ),
       ),
       buttonStyle: CustomButtonStyles.fillOnPrimaryContainer,
@@ -347,15 +425,16 @@ class _SignInScreenState extends State<SignInScreen> {
   /// Section Widget
   Widget _buildFacebookButton(BuildContext context) {
     return CustomElevatedButton(
+      onPressed: () => onFacebookSignIn(context),
       width: 136.h,
       text: "Facebook",
       margin: EdgeInsets.only(left: 24.h),
       leftIcon: Container(
         margin: EdgeInsets.only(right: 16.h),
-        child: CustomImageView(
-          imagePath: ImageConstant.imgFacebook,
-          height: 21.v,
-          width: 11.h,
+        child: SvgPicture.asset(
+          ImageConstant.imgFacebook,
+          height: 20,
+          width: 20,
         ),
       ),
       buttonStyle: CustomButtonStyles.fillIndigo,

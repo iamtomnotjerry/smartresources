@@ -1,230 +1,211 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:smartresource/core/app_export.dart';
+import 'package:smartresource/core/utils/validation_functions.dart';
 import 'package:smartresource/widgets/custom_elevated_button.dart';
 import 'package:smartresource/widgets/custom_text_form_field.dart';
 
-class ChangePasswordScreen extends StatelessWidget {
-  ChangePasswordScreen({Key? key})
-      : super(
-          key: key,
+class ChangePasswordScreen extends StatefulWidget {
+  const ChangePasswordScreen({super.key});
+
+  @override
+  State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
+}
+
+class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
+  final formkey = GlobalKey<FormState>();
+
+  final currentPasswordController = TextEditingController();
+  final newPasswordController = TextEditingController();
+  final confirmNewPasswordController = TextEditingController();
+
+  bool isLoading = false;
+
+  @override
+  void dispose() {
+    currentPasswordController.dispose();
+    newPasswordController.dispose();
+    confirmNewPasswordController.dispose();
+    super.dispose();
+  }
+
+  void onSubmit() async {
+    if (formkey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+
+      final user = FirebaseAuth.instance.currentUser!;
+      final credential = EmailAuthProvider.credential(
+          email: user.email!, password: currentPasswordController.text);
+
+      await user.reauthenticateWithCredential(credential).then((_) {
+        setState(() {
+          isLoading = false;
+        });
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Confirm Password Change'),
+            content:
+                const Text('Are you sure you want to change your password?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, 'Cancel'),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  try {
+                    setState(() {
+                      isLoading = true;
+                    });
+
+                    await user.updatePassword(newPasswordController.text);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Password changed successfully.'),
+                      ),
+                    );
+
+                    Navigator.pop(context);
+
+                    confirmNewPasswordController.clear();
+                    newPasswordController.clear();
+                    currentPasswordController.clear();
+
+                    setState(() {
+                      isLoading = false;
+                    });
+                  } catch (e) {
+                    setState(() {
+                      isLoading = false;
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content:
+                            Text('Something went wrong. Please try again.'),
+                      ),
+                    );
+                  }
+                },
+                child: const Text('OK'),
+              )
+            ],
+          ),
         );
-
-  TextEditingController newPasswordSectionController = TextEditingController();
-
-  TextEditingController confirmNewPasswordSectionController =
-      TextEditingController();
-
-  TextEditingController currentPasswordSectionController =
-      TextEditingController();
-
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+      }).catchError((_) {
+        setState(() {
+          isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Current password is incorrect.'),
+          ),
+        );
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SizedBox(
-          width: SizeUtils.width,
-          child: SingleChildScrollView(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-            ),
-            child: Form(
-              key: _formKey,
-              child: Container(
-                width: double.maxFinite,
-                padding: EdgeInsets.only(
-                  left: 24.h,
-                  top: 69.v,
-                  right: 24.h,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 40.h),
-                      child: Text(
-                        "Change Password",
-                        style: theme.textTheme.titleLarge,
-                      ),
-                    ),
-                    SizedBox(height: 44.v),
-                    _buildFrameOneSection(context),
-                    SizedBox(height: 5.v),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-        bottomNavigationBar: _buildBottomNavigationSection(context),
-      ),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildNewPasswordSection(BuildContext context) {
-    return CustomTextFormField(
-      controller: newPasswordSectionController,
-      hintText: "********",
-      textInputType: TextInputType.visiblePassword,
-      suffix: Container(
-        margin: EdgeInsets.fromLTRB(30.h, 18.v, 24.h, 18.v),
-        child: CustomImageView(
-          imagePath: ImageConstant.imgEye,
-          height: 20.adaptSize,
-          width: 20.adaptSize,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Change Password',
+          style: TextStyle(color: theme.colorScheme.primary),
         ),
       ),
-      suffixConstraints: BoxConstraints(
-        maxHeight: 56.v,
-      ),
-      obscureText: true,
-      contentPadding: EdgeInsets.only(
-        left: 24.h,
-        top: 18.v,
-        bottom: 18.v,
-      ),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildConfirmNewPasswordSection(BuildContext context) {
-    return CustomTextFormField(
-      controller: confirmNewPasswordSectionController,
-      hintText: "********",
-      textInputType: TextInputType.visiblePassword,
-      suffix: Container(
-        margin: EdgeInsets.fromLTRB(30.h, 18.v, 24.h, 18.v),
-        child: CustomImageView(
-          imagePath: ImageConstant.imgEye,
-          height: 20.adaptSize,
-          width: 20.adaptSize,
-        ),
-      ),
-      suffixConstraints: BoxConstraints(
-        maxHeight: 56.v,
-      ),
-      obscureText: true,
-      contentPadding: EdgeInsets.only(
-        left: 24.h,
-        top: 18.v,
-        bottom: 18.v,
-      ),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildCurrentPasswordSection(BuildContext context) {
-    return CustomTextFormField(
-      controller: currentPasswordSectionController,
-      hintText: "********",
-      textInputAction: TextInputAction.done,
-      textInputType: TextInputType.visiblePassword,
-      suffix: Container(
-        margin: EdgeInsets.fromLTRB(30.h, 18.v, 24.h, 18.v),
-        child: CustomImageView(
-          imagePath: ImageConstant.imgEye,
-          height: 20.adaptSize,
-          width: 20.adaptSize,
-        ),
-      ),
-      suffixConstraints: BoxConstraints(
-        maxHeight: 56.v,
-      ),
-      obscureText: true,
-      contentPadding: EdgeInsets.only(
-        left: 24.h,
-        top: 18.v,
-        bottom: 18.v,
-      ),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildFrameOneSection(BuildContext context) {
-    return SizedBox(
-      height: 301.v,
-      width: 382.h,
-      child: Stack(
-        alignment: Alignment.topCenter,
+      body: Column(
         children: [
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              decoration: AppDecoration.outlineBlack,
+          isLoading ? const LinearProgressIndicator() : Container(),
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: Form(
+              key: formkey,
               child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 118.v),
-                  Text(
-                    "New Password",
-                    style: theme.textTheme.titleMedium,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Current Password',
+                        style: theme.textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 8),
+                      CustomTextFormField(
+                        validator: (v) => validatePassword(v, strong: false),
+                        controller: currentPasswordController,
+                        hintText: '********',
+                        obscureText: true,
+                        suffix: Icon(
+                          Icons.visibility_off,
+                          size: 20,
+                          color: appTheme.gray600,
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 7.v),
-                  _buildNewPasswordSection(context),
-                  SizedBox(height: 15.v),
-                  Text(
-                    "Confirm New Password",
-                    style: theme.textTheme.titleMedium,
+                  const SizedBox(height: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'New Password',
+                        style: theme.textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 8),
+                      CustomTextFormField(
+                        controller: newPasswordController,
+                        validator: validatePassword,
+                        hintText: '********',
+                        obscureText: true,
+                        suffix: Icon(
+                          Icons.visibility_off,
+                          size: 20,
+                          color: appTheme.gray600,
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 7.v),
-                  _buildConfirmNewPasswordSection(context),
+                  const SizedBox(height: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Confirm New Password',
+                        style: theme.textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 8),
+                      CustomTextFormField(
+                        controller: confirmNewPasswordController,
+                        validator: (v) => validateConfirmPassword(
+                          v,
+                          newPasswordController.text,
+                        ),
+                        hintText: '********',
+                        obscureText: true,
+                        suffix: Icon(
+                          Icons.visibility_off,
+                          size: 20,
+                          color: appTheme.gray600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 56),
+                  CustomElevatedButton(
+                    text: 'Change Password',
+                    onPressed: onSubmit,
+                    height: 56,
+                  )
                 ],
               ),
             ),
           ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Current Password",
-                  style: theme.textTheme.titleMedium,
-                ),
-                SizedBox(height: 7.v),
-                _buildCurrentPasswordSection(context),
-                SizedBox(height: 5.v),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    "Forgot password?",
-                    style: CustomTextStyles.bodyMediumPrimary.copyWith(
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildChangePasswordButtonSection(BuildContext context) {
-    return const CustomElevatedButton(
-      text: "Change Password",
-    );
-  }
-
-  /// Section Widget
-  Widget _buildBottomNavigationSection(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(
-        left: 24.h,
-        right: 24.h,
-        bottom: 32.v,
-      ),
-      decoration: AppDecoration.fillOnPrimaryContainer.copyWith(
-        borderRadius: BorderRadiusStyle.customBorderTL24,
-      ),
-      child: _buildChangePasswordButtonSection(context),
     );
   }
 }
