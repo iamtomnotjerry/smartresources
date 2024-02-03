@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as fs;
 import 'package:smartresource/core/app_export.dart';
 import 'package:smartresource/core/utils/validation_functions.dart';
@@ -33,6 +34,48 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool isLoading = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  void onFacebookSignIn() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      await AuthService().signInWithFacebook();
+
+      Navigator.of(context).pushReplacementNamed(AppRoutes.homeScreen);
+    } catch (_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Something went wrong.'),
+        ),
+      );
+      setState(() {
+        isLoading = false;
+      });
+    } finally {}
+  }
+
+  void onGoogleSignIn() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      await AuthService().signInWithGoogle();
+
+      Navigator.of(context).pushReplacementNamed(AppRoutes.homeScreen);
+    } catch (_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Something went wrong.'),
+        ),
+      );
+      setState(() {
+        isLoading = false;
+      });
+    } finally {}
+  }
 
   @override
   void dispose() {
@@ -258,21 +301,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
               children: [
                 CustomImageView(
                   imagePath: ImageConstant.imgEllipse1,
-                  height: 114.v,
+                  height: 50.v,
                   width: 146.h,
                   margin: EdgeInsets.only(bottom: 25.v),
                 ),
-                CustomImageView(
-                  imagePath: ImageConstant.imgSettings,
-                  height: 45.adaptSize,
-                  width: 45.adaptSize,
-                  margin: EdgeInsets.only(
-                    left: 45.h,
-                    top: 94.v,
-                  ),
-                ),
               ],
             ),
+          ),
+          SvgPicture.asset(
+            ImageConstant.imgSettings,
+            height: 45,
+            width: 45,
           ),
           SizedBox(height: 21.v),
           Text(
@@ -404,14 +443,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
   /// Section Widget
   Widget _buildGoogle(BuildContext context) {
     return CustomElevatedButton(
+      onPressed: onGoogleSignIn,
       width: 127.h,
       text: "Google",
       leftIcon: Container(
         margin: EdgeInsets.only(right: 16.h),
-        child: CustomImageView(
-          imagePath: ImageConstant.imgGoogle,
-          height: 21.v,
-          width: 20.h,
+        child: SvgPicture.asset(
+          ImageConstant.imgGoogle,
+          width: 20,
+          height: 20,
         ),
       ),
       buttonStyle: CustomButtonStyles.fillOnPrimaryContainer,
@@ -422,15 +462,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
   /// Section Widget
   Widget _buildFacebook(BuildContext context) {
     return CustomElevatedButton(
+      onPressed: onFacebookSignIn,
       width: 136.h,
       text: "Facebook",
       margin: EdgeInsets.only(left: 24.h),
       leftIcon: Container(
         margin: EdgeInsets.only(right: 16.h),
-        child: CustomImageView(
-          imagePath: ImageConstant.imgFacebook,
-          height: 21.v,
-          width: 11.h,
+        child: SvgPicture.asset(
+          ImageConstant.imgFacebook,
+          width: 20,
+          height: 20,
         ),
       ),
       buttonStyle: CustomButtonStyles.fillIndigo,

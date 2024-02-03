@@ -216,6 +216,7 @@ class CustomTextStyles {
       );
   static get titleSmallPrimary => theme.textTheme.titleSmall!.copyWith(
         color: theme.colorScheme.primary,
+        decorationColor: theme.colorScheme.primary,
       );
   static get titleSmallSemiBold => theme.textTheme.titleSmall!.copyWith(
         fontWeight: FontWeight.w600,
