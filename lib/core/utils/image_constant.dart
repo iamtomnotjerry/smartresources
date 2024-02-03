@@ -170,7 +170,7 @@ class ImageConstant {
 
   static String imgCalendarOnerror = '$imagePath/img_calendar_onerror.svg';
 
-  static String imgUnsplashN7wmtrqv5am =
+  static const String imgUnsplashN7wmtrqv5am =
       '$imagePath/img_unsplash_n7wmtrqv5am.png';
 
   static String imgCartOnprimarycontainer =
@@ -184,4 +184,10 @@ class ImageConstant {
   static String imageNotFound = 'assets/images/image_not_found.png';
 
   static String avatarPlaceholder = '$imagePath/avatar_placeholder.jpg';
+
+  static const String sofa = '../../../assets/images/maxresdefault.jpg';
+
+  static const String clothes = '../../../assets/images/quanao.jpg';
+
+  static const String bottle = '../../../assets/images/binh_nuoc.png';
 }

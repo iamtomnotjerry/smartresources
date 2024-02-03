@@ -1,4 +1,7 @@
-import '../shop_screen/widgets/userprofilelist_item_widget.dart';
+import 'package:smartresource/data/data_sources/product/product_source.dart';
+import 'package:smartresource/data/models/product/product_model.dart';
+
+import 'widgets/shop_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:smartresource/core/app_export.dart';
 import 'package:smartresource/widgets/custom_bottom_bar.dart';
@@ -33,7 +36,7 @@ class ShopScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        body: SingleChildScrollView(child: Container(
+        body: SingleChildScrollView(child:Container(
           width: double.maxFinite,
           padding: EdgeInsets.symmetric(horizontal: 23.h),
           child: Column(
@@ -42,78 +45,72 @@ class ShopScreen extends StatelessWidget {
               _buildShopRow(context),
               SizedBox(height: 11.v),
               _buildSearchBarRow(context),
-              SizedBox(height: 60.v),
-              SizedBox(
-                height: 688.v,
-                width: 381.h,
-                child: Stack(
-                  alignment: Alignment.bottomRight,
-                  children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        decoration: AppDecoration.outlineBlack,
-                        child: _buildUserProfileList(context),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: Card(
-                        clipBehavior: Clip.antiAlias,
-                        elevation: 0,
-                        margin: EdgeInsets.only(bottom: 66.v),
-                        color: theme.colorScheme.primary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadiusStyle.circleBorder22,
-                        ),
-                        child: Container(
-                          height: 44.adaptSize,
-                          width: 44.adaptSize,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 8.h,
-                            vertical: 10.v,
-                          ),
-                          decoration: AppDecoration.outlineBlack900.copyWith(
-                            borderRadius: BorderRadiusStyle.circleBorder22,
-                          ),
-                          child: Stack(
-                            alignment: Alignment.topRight,
-                            children: [
-                              CustomImageView(
-                                imagePath:
-                                    ImageConstant.imgCartOnprimarycontainer,
-                                height: 24.adaptSize,
-                                width: 24.adaptSize,
-                                alignment: Alignment.centerLeft,
-                              ),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Container(
-                                  width: 10.adaptSize,
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 3.h),
-                                  decoration: AppDecoration.fillGreen.copyWith(
-                                    borderRadius:
-                                        BorderRadiusStyle.circleBorder5,
-                                  ),
-                                  child: Text(
-                                    "1",
-                                    style: CustomTextStyles.labelSmallGray600,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              SizedBox(height: 10.v),
+              // SizedBox(
+              //   height: 688.v,
+              //   width: 381.h,
+              //   child: 
+              // Stack(
+              //     alignment: Alignment.bottomRight,
+              //     children: [
+              _buildProductsList(context),
+                    // Align(
+                    //   alignment: Alignment.bottomRight,
+                    //   child: Card(
+                    //     clipBehavior: Clip.antiAlias,
+                    //     elevation: 0,
+                    //     margin: EdgeInsets.only(bottom: 66.v),
+                    //     color: theme.colorScheme.primary,
+                    //     shape: RoundedRectangleBorder(
+                    //       borderRadius: BorderRadiusStyle.circleBorder22,
+                    //     ),
+                    //     child: Container(
+                    //       height: 44.adaptSize,
+                    //       width: 44.adaptSize,
+                    //       padding: EdgeInsets.symmetric(
+                    //         horizontal: 8.h,
+                    //         vertical: 10.v,
+                    //       ),
+                    //       decoration: AppDecoration.outlineBlack900.copyWith(
+                    //         borderRadius: BorderRadiusStyle.circleBorder22,
+                    //       ),
+                    //       child: Stack(
+                    //         alignment: Alignment.topRight,
+                    //         children: [
+                    //           CustomImageView(
+                    //             imagePath:
+                    //                 ImageConstant.imgCartOnprimarycontainer,
+                    //             height: 24.adaptSize,
+                    //             width: 24.adaptSize,
+                    //             alignment: Alignment.centerLeft,
+                    //           ),
+                    //           Align(
+                    //             alignment: Alignment.topRight,
+                    //             child: Container(
+                    //               width: 10.adaptSize,
+                    //               padding:
+                    //                   EdgeInsets.symmetric(horizontal: 3.h),
+                    //               decoration: AppDecoration.fillGreen.copyWith(
+                    //                 borderRadius:
+                    //                     BorderRadiusStyle.circleBorder5,
+                    //               ),
+                    //               child: Text(
+                    //                 "1",
+                    //                 style: CustomTextStyles.labelSmallGray600,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                  // ],
+                // ),
+              // ),
             ],
           ),
-        ),
-        ),
+        ),),
         bottomNavigationBar: _buildBottomBar(context),
       );
   }
@@ -198,22 +195,28 @@ class ShopScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildUserProfileList(BuildContext context) {
-    return ListView.separated(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      separatorBuilder: (
-        context,
-        index,
-      ) {
-        return SizedBox(
-          height: 16.v,
-        );
-      },
-      itemCount: 4,
-      itemBuilder: (context, index) {
-        return const UserprofilelistItemWidget();
-      },
+  Widget _buildProductsList(BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: Container (
+        decoration: AppDecoration.outlineBlack,
+        child: ListView.builder(
+          physics: const ScrollPhysics(),
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemCount: productslist.length,
+          itemBuilder: (context, index) {
+            ProductModel prodInfo = productslist[index];
+            return ShopItemWidget(
+              prodname: prodInfo.prodname,
+              description: prodInfo.description,
+              seller: prodInfo.seller,
+              price: prodInfo.price * 1000,
+              image: prodInfo.image,
+            );
+          },
+        )
+      )
     );
   }
 

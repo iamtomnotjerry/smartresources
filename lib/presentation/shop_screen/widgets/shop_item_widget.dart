@@ -3,11 +3,21 @@ import 'package:smartresource/core/app_export.dart';
 import 'package:smartresource/widgets/custom_icon_button.dart';
 
 // ignore: must_be_immutable
-class UserprofilelistItemWidget extends StatelessWidget {
-  const UserprofilelistItemWidget({Key? key})
-      : super(
-          key: key,
-        );
+class ShopItemWidget extends StatelessWidget {
+  final String prodname;
+  final String description;
+  final String seller;
+  final double price;
+  final String image;
+
+  ShopItemWidget({
+    super.key, 
+    required this.prodname, 
+    required this.description, 
+    required this.seller, 
+    required this.price, 
+    required this.image
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,18 +33,19 @@ class UserprofilelistItemWidget extends StatelessWidget {
           SizedBox(
             height: 140.adaptSize,
             width: 140.adaptSize,
-            child: Stack(
+              child: Stack(
               alignment: Alignment.topRight,
               children: [
                 CustomImageView(
-                  imagePath: ImageConstant.imgUnsplashN7wmtrqv5am,
-                  height: 140.adaptSize,
-                  width: 140.adaptSize,
+                  imagePath: image,
+                  height: 100.0,
+                  width: 100.0,
                   radius: BorderRadius.circular(
                     8.h,
                   ),
                   alignment: Alignment.center,
                 ),
+                // Image.asset(image),
                 Padding(
                   padding: EdgeInsets.only(
                     top: 7.v,
@@ -62,7 +73,8 @@ class UserprofilelistItemWidget extends StatelessWidget {
                 SizedBox(
                   width: 182.h,
                   child: Text(
-                    "Đèn trang trí làm bằng chai nhựa",
+                    // "Đèn trang trí làm bằng chai nhựa",
+                    prodname,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: CustomTextStyles.titleSmallSemiBold,
@@ -72,7 +84,8 @@ class UserprofilelistItemWidget extends StatelessWidget {
                 SizedBox(
                   width: 210.h,
                   child: Text(
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut congue scelerisque sodales. Praesent non arcu erat. Aliquam erat volutpat. Praesent facilisis felis sed convallis venenatis. Mauris sit amet quam ultrices ipsum viverra dignissim. Donec risus lorem, euismod quis quam id, sagittis varius neque. Nunc eu dapibus nisi, non efficitur nibh. Donec et leo vitae eros semper dictum. Nulla interdum et tortor quis eleifend. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Ut ut volutpat justo. Phasellus non ipsum vitae nunc varius interdum. Morbi malesuada sit amet velit a tristique. In hac habitasse platea dictumst.",
+                    // "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut congue scelerisque sodales. Praesent non arcu erat. Aliquam erat volutpat. Praesent facilisis felis sed convallis venenatis. Mauris sit amet quam ultrices ipsum viverra dignissim. Donec risus lorem, euismod quis quam id, sagittis varius neque. Nunc eu dapibus nisi, non efficitur nibh. Donec et leo vitae eros semper dictum. Nulla interdum et tortor quis eleifend. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Ut ut volutpat justo. Phasellus non ipsum vitae nunc varius interdum. Morbi malesuada sit amet velit a tristique. In hac habitasse platea dictumst.",
+                    description,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: CustomTextStyles.bodySmallGray600_1,
@@ -92,7 +105,8 @@ class UserprofilelistItemWidget extends StatelessWidget {
                               style: CustomTextStyles.bodySmallff495057,
                             ),
                             TextSpan(
-                              text: "Anonymous",
+                              text: seller,
+                              // text: "Jackie",
                               style: CustomTextStyles.bodySmallff6c757d,
                             ),
                           ],
@@ -108,7 +122,8 @@ class UserprofilelistItemWidget extends StatelessWidget {
                 ),
                 SizedBox(height: 9.v),
                 Text(
-                  "24,000đ",
+                  "$priceđ",
+                  // "20",
                   style: theme.textTheme.labelLarge,
                 ),
               ],

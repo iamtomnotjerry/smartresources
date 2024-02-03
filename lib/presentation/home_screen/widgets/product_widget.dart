@@ -2,20 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:smartresource/core/app_export.dart';
 
 // ignore: must_be_immutable
-class PlaylistItemWidget extends StatelessWidget {
-  const PlaylistItemWidget({Key? key})
-      : super(
-          key: key,
-        );
+class ProductWidget extends StatelessWidget {
+  final String prodname;
+  final String description;
+  final String seller;
+  final double price;
+  final String image;
+  
+  ProductWidget({super.key, required this.prodname, required this.description, required this.seller, required this.price, required this.image});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 10.0),
       width: 170.h,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomImageView(
-            imagePath: ImageConstant.imgUnsplashGgtwjdt6dci,
+            imagePath: image,
             height: 134.v,
             width: 170.h,
             radius: BorderRadius.circular(
@@ -26,7 +31,7 @@ class PlaylistItemWidget extends StatelessWidget {
           SizedBox(
             width: 170.h,
             child: Text(
-              "Lorem ipsum dolor sit amet, consectetur adipiscing",
+              prodname,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.justify,
@@ -34,6 +39,11 @@ class PlaylistItemWidget extends StatelessWidget {
                 height: 1.14,
               ),
             ),
+          ),
+          SizedBox(height: 2.v),
+          Text(
+            "24,000đ",
+            style: theme.textTheme.labelLarge,
           ),
         ],
       ),

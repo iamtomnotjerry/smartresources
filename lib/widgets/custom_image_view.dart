@@ -130,6 +130,14 @@ class CustomImageView extends StatelessWidget {
               fit: fit ?? BoxFit.cover,
             ),
           );
+        case ImageType.jpg:
+          return Image.file(
+            File(imagePath!),
+            height: height,
+            width: width,
+            fit: fit ?? BoxFit.cover,
+            color: color,
+          );
         case ImageType.png:
         default:
           return Image.asset(
@@ -151,6 +159,8 @@ extension ImageTypeExtension on String {
       return ImageType.network;
     } else if (endsWith('.svg')) {
       return ImageType.svg;
+    } else if (endsWith('.jpg')) {
+      return ImageType.jpg;
     } else if (startsWith('file://')) {
       return ImageType.file;
     } else {
@@ -159,4 +169,4 @@ extension ImageTypeExtension on String {
   }
 }
 
-enum ImageType { svg, png, network, file, unknown }
+enum ImageType { svg, png, jpg, network, file, unknown }
