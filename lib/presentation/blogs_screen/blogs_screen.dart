@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:smartresource/core/app_export.dart';
 import 'package:smartresource/data/data_sources/blog/blog_source.dart';
 import 'package:smartresource/data/models/blog/blog_model.dart';
-import 'package:smartresource/presentation/blogs_screen/widgets/blog_post.dart';
 import 'package:smartresource/widgets/custom_bottom_bar.dart';
 import 'package:smartresource/widgets/custom_icon_button.dart';
 import 'package:smartresource/widgets/custom_search_view.dart';
@@ -33,8 +32,9 @@ class BlogsScreen extends StatelessWidget {
   // }
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SingleChildScrollView(child:Container(
+      resizeToAvoidBottomInset: false,
+      body: SingleChildScrollView(
+        child: Container(
           width: double.maxFinite,
           padding: EdgeInsets.symmetric(horizontal: 23.h),
           child: Column(
@@ -45,31 +45,39 @@ class BlogsScreen extends StatelessWidget {
               _buildSearchBar(context),
               SizedBox(height: 33.v),
               Container(
-                margin: EdgeInsets.only(left: 1.h),
-                decoration: AppDecoration.outlineBlack,
-                child: ListView.builder(itemCount: blogList.length, physics: const ScrollPhysics(), shrinkWrap: true, itemBuilder: (context, index) {
-                  BlogModel blogItem = blogList[index];
-                  return _buildFrameFortyOne(context, title: blogItem.title, content: blogItem.content, author: blogItem.author, image: blogItem.image);
-                })
-                    // _buildFrameFortyOne(
-                    //   context,
-                    //   content: "Thực hành không rác thải - Chúng ta đã thực sự hiểu?",
-                    //   authorAnonymous: "Jackie",
-                    //   twoMillionSixHundredTwelveThou: "26/1/2024",
-                    // ),
-                    // SizedBox(height: 24.v),
-                    // _buildFrameFortyOne(
-                    //   context,
-                    //   content: "Thực hành không rác thải - Chúng ta đã thực sự hiểu?",
-                    //   authorAnonymous: "Tom",
-                    //   twoMillionSixHundredTwelveThou: "26/1/2024",
-                    // ),
-              ),
+                  margin: EdgeInsets.only(left: 1.h),
+                  decoration: AppDecoration.outlineBlack,
+                  child: ListView.builder(
+                      itemCount: blogList.length,
+                      physics: const ScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        BlogModel blogItem = blogList[index];
+                        return _buildFrameFortyOne(context,
+                            title: blogItem.title,
+                            content: blogItem.content,
+                            author: blogItem.author,
+                            image: blogItem.image);
+                      })
+                  // _buildFrameFortyOne(
+                  //   context,
+                  //   content: "Thực hành không rác thải - Chúng ta đã thực sự hiểu?",
+                  //   authorAnonymous: "Jackie",
+                  //   twoMillionSixHundredTwelveThou: "26/1/2024",
+                  // ),
+                  // SizedBox(height: 24.v),
+                  // _buildFrameFortyOne(
+                  //   context,
+                  //   content: "Thực hành không rác thải - Chúng ta đã thực sự hiểu?",
+                  //   authorAnonymous: "Tom",
+                  //   twoMillionSixHundredTwelveThou: "26/1/2024",
+                  // ),
+                  ),
             ],
           ),
-        ),),
-        bottomNavigationBar: _buildBottomBar(context),
-      );
+        ),
+      ),
+    );
   }
 
   /// Section Widget

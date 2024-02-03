@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:smartresource/navigation_menu.dart';
 import 'package:smartresource/presentation/email_verification_screen/email_verification_screen.dart';
 import 'package:smartresource/presentation/home_screen/home_screen.dart';
 import 'package:smartresource/presentation/sign_in_screen/sign_in_screen.dart';
@@ -83,14 +84,18 @@ class MyApp extends StatelessWidget {
                     if (auth.currentUser!.email == null ||
                         auth.currentUser!.email!.isEmpty ||
                         auth.currentUser!.emailVerified) {
-                      return HomeScreen();
+                      return NavigationMenu();
                     } else {
                       if (auth.currentUser != null) {
                         auth.currentUser!.sendEmailVerification();
 
                         return EmailVerificationScreen(
-                          onPressed: () => Navigator.of(context)
-                              .pushReplacementNamed(AppRoutes.homeScreen),
+                          onPressed: () =>
+                              Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => NavigationMenu(),
+                            ),
+                          ),
                           email: auth.currentUser!.email!,
                         );
                       }

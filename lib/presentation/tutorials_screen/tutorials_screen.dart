@@ -20,37 +20,36 @@ class TutorialsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SizedBox(
-            child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // const Spacer(),
-              SizedBox(height: 40.0),
-              _buildSearchBar(context),
-              SizedBox(height: 23.v),
-              Padding(
-                padding: EdgeInsets.only(left: 27.h),
-                child: Text(
-                  "Materials",
-                  style: theme.textTheme.titleMedium,
-                ),
+      body: SizedBox(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // const Spacer(),
+            SizedBox(height: 40.0),
+            _buildSearchBar(context),
+            SizedBox(height: 23.v),
+            Padding(
+              padding: EdgeInsets.only(left: 27.h),
+              child: Text(
+                "Materials",
+                style: theme.textTheme.titleMedium,
               ),
-              SizedBox(height: 8.v),
-              _buildFrameSeven(context),
-              SizedBox(height: 10.v),
-              Padding(
-                padding: EdgeInsets.only(left: 25.h),
-                child: Text(
-                  "Purposes",
-                  style: theme.textTheme.titleMedium,
-                ),
+            ),
+            SizedBox(height: 8.v),
+            _buildFrameSeven(context),
+            SizedBox(height: 10.v),
+            Padding(
+              padding: EdgeInsets.only(left: 25.h),
+              child: Text(
+                "Purposes",
+                style: theme.textTheme.titleMedium,
               ),
-              SizedBox(height: 7.v),
-              _buildFrameTwentySix(context),
-              SizedBox(height: 28.v),
-              Expanded(
-                child:Container(
+            ),
+            SizedBox(height: 7.v),
+            _buildFrameTwentySix(context),
+            SizedBox(height: 28.v),
+            Expanded(
+              child: Container(
                 height: 516.v,
                 width: 429.h,
                 margin: EdgeInsets.only(left: 1.h),
@@ -61,12 +60,12 @@ class TutorialsScreen extends StatelessWidget {
                     _buildFrameSixteen(context),
                   ],
                 ),
-              ),)
-            ],
-          ),
+              ),
+            )
+          ],
         ),
-        bottomNavigationBar: _buildBottomBar(context),
-      );
+      ),
+    );
   }
 
   /// Section Widget
@@ -112,7 +111,8 @@ class TutorialsScreen extends StatelessWidget {
       child: Wrap(
         runSpacing: 8.v,
         spacing: 8.h,
-        children: List<Widget>.generate(7, (index) => const FramesevenItemWidget()),
+        children:
+            List<Widget>.generate(7, (index) => const FramesevenItemWidget()),
       ),
     );
   }
@@ -124,8 +124,8 @@ class TutorialsScreen extends StatelessWidget {
       child: Wrap(
         runSpacing: 8.v,
         spacing: 8.h,
-        children:
-          List<Widget>.generate(7, (index) => const FrametwentysixItemWidget()),
+        children: List<Widget>.generate(
+            7, (index) => const FrametwentysixItemWidget()),
       ),
     );
   }

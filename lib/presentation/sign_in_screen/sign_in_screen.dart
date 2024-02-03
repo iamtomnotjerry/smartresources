@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as fs;
 import 'package:smartresource/core/app_export.dart';
 import 'package:smartresource/core/utils/validation_functions.dart';
+import 'package:smartresource/navigation_menu.dart';
 import 'package:smartresource/services/auth_service.dart';
 import 'package:smartresource/widgets/custom_checkbox_button.dart';
 import 'package:smartresource/widgets/custom_elevated_button.dart';
@@ -41,6 +42,16 @@ class _SignInScreenState extends State<SignInScreen> {
           email: emailController.text,
           password: passwordController.text,
         );
+
+        setState(() {
+          isLoading = false;
+        });
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => NavigationMenu(),
+          ),
+        );
       } on FirebaseAuthException catch (e) {
         if (e.code == 'invalid-credential') {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -49,6 +60,10 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
           );
         }
+
+        setState(() {
+          isLoading = false;
+        });
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -59,7 +74,7 @@ class _SignInScreenState extends State<SignInScreen> {
         setState(() {
           isLoading = false;
         });
-      } finally {}
+      }
     }
   }
 
@@ -70,6 +85,16 @@ class _SignInScreenState extends State<SignInScreen> {
       });
 
       await AuthService().signInWithFacebook();
+
+      setState(() {
+        isLoading = false;
+      });
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => NavigationMenu(),
+        ),
+      );
     } catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -80,7 +105,7 @@ class _SignInScreenState extends State<SignInScreen> {
       setState(() {
         isLoading = false;
       });
-    } finally {}
+    }
   }
 
   void onGoogleSignIn() async {
@@ -90,13 +115,23 @@ class _SignInScreenState extends State<SignInScreen> {
       });
 
       await AuthService().signInWithGoogle();
+
+      setState(() {
+        isLoading = false;
+      });
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => NavigationMenu(),
+        ),
+      );
     } catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Something went wrong.'),
         ),
       );
-    } finally {
+
       setState(() {
         isLoading = false;
       });

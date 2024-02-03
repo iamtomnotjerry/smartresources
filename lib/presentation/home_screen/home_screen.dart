@@ -73,12 +73,9 @@ class HomeScreen extends StatelessWidget {
                 _buildDoctorReviews(context),
                 SizedBox(height: 9.v),
                 _buildRecentOrders(context),
-                SizedBox(height: 8.v),
-                _buildUserProfile(context),
               ],
             ),
           )),
-      bottomNavigationBar: _buildBottomBar(context),
     );
   }
 

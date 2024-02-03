@@ -1,9 +1,10 @@
-import '../shop_screen/widgets/userprofilelist_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:smartresource/core/app_export.dart';
 import 'package:smartresource/widgets/custom_bottom_bar.dart';
 import 'package:smartresource/widgets/custom_icon_button.dart';
 import 'package:smartresource/widgets/custom_search_view.dart';
+
+import '../shop_screen/widgets/userprofilelist_item_widget.dart';
 
 class ShopScreen extends StatelessWidget {
   ShopScreen({Key? key})
@@ -32,8 +33,9 @@ class ShopScreen extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SingleChildScrollView(child: Container(
+      resizeToAvoidBottomInset: false,
+      body: SingleChildScrollView(
+        child: Container(
           width: double.maxFinite,
           padding: EdgeInsets.symmetric(horizontal: 23.h),
           child: Column(
@@ -113,9 +115,8 @@ class ShopScreen extends StatelessWidget {
             ],
           ),
         ),
-        ),
-        bottomNavigationBar: _buildBottomBar(context),
-      );
+      ),
+    );
   }
 
   /// Section Widget

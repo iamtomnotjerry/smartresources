@@ -5,7 +5,7 @@ class UsersService {
   final _firestore = FirebaseFirestore.instance;
 
   Future<UserModel> getUser(String uid) async {
-    final snapshot = await _firestore.collection('user').doc(uid).get();
+    final snapshot = await _firestore.collection('users').doc(uid).get();
     return UserModel.fromMap(snapshot.data()!);
   }
 }

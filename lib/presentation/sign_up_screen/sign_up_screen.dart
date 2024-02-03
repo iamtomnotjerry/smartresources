@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as fs;
 import 'package:smartresource/core/app_export.dart';
 import 'package:smartresource/core/utils/validation_functions.dart';
+import 'package:smartresource/navigation_menu.dart';
 import 'package:smartresource/presentation/complete_profile_screen/complete_profile_screen.dart';
 import 'package:smartresource/presentation/email_verification_screen/email_verification_screen.dart';
 import 'package:smartresource/services/auth_service.dart';
@@ -43,7 +44,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       await AuthService().signInWithFacebook();
 
-      Navigator.of(context).pushReplacementNamed(AppRoutes.homeScreen);
+      setState(() {
+        isLoading = false;
+      });
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => NavigationMenu(),
+        ),
+      );
     } catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -53,7 +62,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       setState(() {
         isLoading = false;
       });
-    } finally {}
+    }
   }
 
   void onGoogleSignIn() async {
@@ -64,7 +73,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       await AuthService().signInWithGoogle();
 
-      Navigator.of(context).pushReplacementNamed(AppRoutes.homeScreen);
+      setState(() {
+        isLoading = false;
+      });
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => NavigationMenu(),
+        ),
+      );
     } catch (_) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -74,7 +91,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       setState(() {
         isLoading = false;
       });
-    } finally {}
+    }
   }
 
   @override
@@ -105,6 +122,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
           email: emailController.text,
           password: passwordController.text,
         );
+
+        setState(() {
+          isLoading = false;
+        });
+
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => EmailVerificationScreen(
@@ -133,13 +155,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
           );
         }
+
+        setState(() {
+          isLoading = false;
+        });
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Something went wrong.'),
           ),
         );
-      } finally {
+
         setState(() {
           isLoading = false;
         });
