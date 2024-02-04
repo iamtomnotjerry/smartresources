@@ -5,5 +5,11 @@ class ProductModel {
   final double price;
   final String image;
 
-  const ProductModel(this.prodname, this.description, this.seller, this.price, this.image);
+  const ProductModel(
+    this.prodname,
+    this.description,
+    this.seller,
+    this.price,
+    this.image,
+  );
 }
