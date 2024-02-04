@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smartresource/presentation/tutorial_details_screen/tutorial_details_screen.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-// ignore: must_be_immutable
-class TutorialItem extends StatelessWidget {
+class TutorialItem extends StatefulWidget {
   final String videoId;
   final String title;
   final List<String> materials;
@@ -15,6 +15,31 @@ class TutorialItem extends StatelessWidget {
     required this.materials,
     required this.instructions,
   });
+
+  @override
+  State<TutorialItem> createState() => _TutorialItemState();
+}
+
+class _TutorialItemState extends State<TutorialItem> {
+  late YoutubePlayerController videoController;
+
+  @override
+  void initState() {
+    videoController = YoutubePlayerController(
+      initialVideoId: widget.videoId,
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+      ),
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    videoController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +65,10 @@ class TutorialItem extends StatelessWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => TutorialDetailsScreen(
-                    videoId: videoId,
-                    title: title,
-                    materials: materials,
-                    instructions: instructions,
+                    videoId: widget.videoId,
+                    title: widget.title,
+                    materials: widget.materials,
+                    instructions: widget.instructions,
                   ),
                 ),
               );
@@ -51,20 +76,16 @@ class TutorialItem extends StatelessWidget {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: Image.network(
-                      'http://i3.ytimg.com/vi/$videoId/hqdefault.jpg',
-                      fit: BoxFit.cover,
-                    ),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: YoutubePlayer(
+                    controller: videoController,
+                    bottomActions: [
+                      CurrentPosition(),
+                      ProgressBar(isExpanded: true),
+                      RemainingDuration(),
+                    ],
                   ),
-                ),
-                Icon(
-                  Icons.play_circle,
-                  size: 44,
-                  color: Colors.white.withOpacity(0.5),
                 ),
                 const Positioned(
                   top: 12,
@@ -81,9 +102,20 @@ class TutorialItem extends StatelessWidget {
             height: 8,
           ),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => TutorialDetailsScreen(
+                    videoId: widget.videoId,
+                    title: widget.title,
+                    materials: widget.materials,
+                    instructions: widget.instructions,
+                  ),
+                ),
+              );
+            },
             child: Text(
-              title,
+              widget.title,
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
@@ -95,11 +127,32 @@ class TutorialItem extends StatelessWidget {
           const SizedBox(
             height: 8,
           ),
+          Row(
+            children: [
+              const CircleAvatar(
+                backgroundImage: NetworkImage('https://i.pravatar.cc/100'),
+                radius: 16,
+              ),
+              const SizedBox(
+                width: 8,
+              ),
+              Text(
+                'John Doe',
+                style: TextStyle(
+                  color: Colors.blueGrey.shade700,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 12,
+          ),
           Wrap(
             runSpacing: 8,
             spacing: 8,
             children: List<Widget>.generate(
-              materials.length,
+              widget.materials.length,
               (index) => Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
@@ -109,7 +162,7 @@ class TutorialItem extends StatelessWidget {
                   horizontal: 12,
                   vertical: 4,
                 ),
-                child: Text(materials[index]),
+                child: Text(widget.materials[index]),
               ),
             ),
           ),

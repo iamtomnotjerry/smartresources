@@ -2,6 +2,7 @@ import 'package:flutter/material.dart' hide SearchBar;
 import 'package:smartresource/core/app_export.dart';
 import 'package:smartresource/data/data_sources/tutorial/tutorial_source.dart';
 import 'package:smartresource/data/models/tutorial/tutorial_model.dart';
+import 'package:smartresource/presentation/add_tutorial_screen/add_tutorial_screen.dart';
 import 'package:smartresource/widgets/search_bar.dart';
 
 import 'widgets/chip.dart';
@@ -50,6 +51,23 @@ class TutorialsScreen extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddTutorialScreen(),
+                ),
+              );
+            },
+            icon: Icon(
+              Icons.add_rounded,
+              size: 32,
+              color: theme.colorScheme.primary,
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),

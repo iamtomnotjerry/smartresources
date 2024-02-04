@@ -164,39 +164,40 @@ class _CompleteProfileScreenState extends State<MyProfileScreen> {
     final user = Provider.of<MyAuthProvider>(context).user;
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(
           "My profile",
           style: TextStyle(color: Theme.of(context).colorScheme.primary),
         ),
       ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.only(
-          top: 20,
-          bottom: 32,
-          left: 24,
-          right: 24,
-        ),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              offset: const Offset(0, -4),
-              blurRadius: 8,
-            ),
-          ],
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: CustomElevatedButton(
-          onPressed: () => onSubmit(),
-          height: 56.v,
-          text: "Complete Profile",
-          margin: EdgeInsets.only(left: 2.h),
-          buttonStyle: CustomButtonStyles.fillPrimary,
-          buttonTextStyle:
-              CustomTextStyles.titleMediumOnPrimaryContainerSemiBold,
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.only(
+            top: 20,
+            bottom: 24,
+            left: 24,
+            right: 24,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                offset: const Offset(0, -4),
+                blurRadius: 8,
+              ),
+            ],
+            borderRadius: BorderRadius.circular(32),
+          ),
+          child: CustomElevatedButton(
+            onPressed: () => onSubmit(),
+            height: 56.v,
+            text: "Complete Profile",
+            margin: EdgeInsets.only(left: 2.h),
+            buttonStyle: CustomButtonStyles.fillPrimary,
+            buttonTextStyle:
+                CustomTextStyles.titleMediumOnPrimaryContainerSemiBold,
+          ),
         ),
       ),
       body: user == null

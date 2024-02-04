@@ -26,6 +26,8 @@ class CustomTextFormField extends StatelessWidget {
     this.fillColor,
     this.filled = true,
     this.validator,
+    this.minLines,
+    this.textCapitalization = TextCapitalization.none,
   }) : super(
           key: key,
         );
@@ -42,6 +44,8 @@ class CustomTextFormField extends StatelessWidget {
 
   final bool? autofocus;
 
+  final TextCapitalization textCapitalization;
+
   final TextStyle? textStyle;
 
   final bool? obscureText;
@@ -57,6 +61,8 @@ class CustomTextFormField extends StatelessWidget {
   final TextStyle? hintStyle;
 
   final Widget? prefix;
+
+  final int? minLines;
 
   final BoxConstraints? prefixConstraints;
 
@@ -99,6 +105,8 @@ class CustomTextFormField extends StatelessWidget {
           maxLines: maxLines ?? 1,
           decoration: decoration,
           validator: validator,
+          minLines: minLines,
+          textCapitalization: textCapitalization,
         ),
       );
 

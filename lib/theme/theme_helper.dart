@@ -48,6 +48,10 @@ class ThemeHelper {
       colorScheme: colorScheme,
       textTheme: TextThemes.textTheme(colorScheme),
       scaffoldBackgroundColor: colorScheme.onPrimaryContainer,
+      appBarTheme: AppBarTheme().copyWith(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+      ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: colorScheme.primary,

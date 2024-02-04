@@ -13,17 +13,20 @@ class SearchBar extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
-          child: CustomTextFormField(
-            hintText: 'Search...',
-            prefix: Padding(
-              padding: const EdgeInsets.only(
-                left: 20,
-                right: 12,
-              ),
-              child: Icon(
-                Icons.search,
-                color: theme.colorScheme.primary,
-                size: 24,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: CustomTextFormField(
+              hintText: 'Search...',
+              prefix: Padding(
+                padding: const EdgeInsets.only(
+                  left: 20,
+                  right: 12,
+                ),
+                child: Icon(
+                  Icons.search,
+                  color: theme.colorScheme.primary,
+                  size: 24,
+                ),
               ),
             ),
           ),
