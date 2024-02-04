@@ -60,6 +60,9 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
           );
         }
+        setState(() {
+          isLoading = false;
+        });
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

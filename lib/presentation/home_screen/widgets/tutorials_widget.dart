@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-// ignore: must_be_immutable
 class TutorialWidget extends StatelessWidget {
   final String videoId;
   final String title;
@@ -9,28 +7,17 @@ class TutorialWidget extends StatelessWidget {
   final String instructions;
   Function()? onTap;
 
-  TutorialWidget(
-      {super.key,
-      required this.videoId,
-      required this.title,
-      required this.materials,
-      required this.instructions,
-      required this.onTap});
-
-  YoutubePlayerController _buildYoutubeController() {
-    return YoutubePlayerController(
-      initialVideoId: videoId,
-      flags: const YoutubePlayerFlags(
-        autoPlay: false,
-        mute: false,
-      ),
-    );
-  }
+  TutorialWidget({
+    super.key,
+    required this.videoId,
+    required this.title,
+    required this.materials,
+    required this.instructions,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final YoutubePlayerController videocontroller = _buildYoutubeController();
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Column(
@@ -45,15 +32,16 @@ class TutorialWidget extends StatelessWidget {
                   aspectRatio: 16 / 9,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
-                    child: YoutubePlayer(
-                        controller: videocontroller,
-                        showVideoProgressIndicator: true,
-                        progressIndicatorColor: Colors.blueAccent,
-                        progressColors: const ProgressBarColors(
-                          playedColor: Colors.blue,
-                          handleColor: Colors.blueAccent,
-                        )),
+                    child: Image.network(
+                      'http://i3.ytimg.com/vi/$videoId/hqdefault.jpg',
+                      fit: BoxFit.cover,
+                    ),
                   ),
+                ),
+                Icon(
+                  Icons.play_circle,
+                  size: 44,
+                  color: Colors.white.withOpacity(0.5),
                 ),
                 const Positioned(
                   top: 12,
@@ -62,7 +50,7 @@ class TutorialWidget extends StatelessWidget {
                     Icons.more_vert,
                     color: Colors.white,
                   ),
-                )
+                ),
               ],
             ),
           ),

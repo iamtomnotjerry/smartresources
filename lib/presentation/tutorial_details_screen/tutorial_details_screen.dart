@@ -1,133 +1,184 @@
-import '../tutorial_details_screen/widgets/framenine2_item_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:smartresource/core/app_export.dart';
-import 'package:smartresource/widgets/app_bar/appbar_leading_iconbutton.dart';
-import 'package:smartresource/widgets/app_bar/custom_app_bar.dart';
-import 'package:smartresource/widgets/custom_icon_button.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class TutorialDetailsScreen extends StatelessWidget {
+import '../tutorial_details_screen/widgets/framenine2_item_widget.dart';
+
+class TutorialDetailsScreen extends StatefulWidget {
   final String videoId;
   final String title;
   final List<String> materials;
   final String instructions;
-  
-  TutorialDetailsScreen({
-    super.key, 
-    required this.videoId, 
-    required this.title, 
-    required this.materials, 
-    required this.instructions
+
+  const TutorialDetailsScreen({
+    super.key,
+    required this.videoId,
+    required this.title,
+    required this.materials,
+    required this.instructions,
   });
 
-  YoutubePlayerController _buildYoutubeController() {
-    return YoutubePlayerController(
-      initialVideoId: videoId,
-      flags: YoutubePlayerFlags(
-        autoPlay: false,
+  @override
+  State<TutorialDetailsScreen> createState() => _TutorialDetailsScreenState();
+}
+
+class _TutorialDetailsScreenState extends State<TutorialDetailsScreen> {
+  late YoutubePlayerController videoController;
+
+  @override
+  void initState() {
+    videoController = YoutubePlayerController(
+      initialVideoId: widget.videoId,
+      flags: const YoutubePlayerFlags(
+        autoPlay: true,
         mute: false,
       ),
     );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    videoController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final YoutubePlayerController controller = _buildYoutubeController();
-    return SafeArea(
-      child: Scaffold(
-        appBar: _buildAppBar(context),
-        body: SizedBox(
-          width: SizeUtils.width,
-          child: SingleChildScrollView(
-            padding: EdgeInsets.only(top: 6.v),
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 24.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildNine(context, controller),
-                  SizedBox(height: 15.v),
-                  Padding(
-                    padding: EdgeInsets.only(left: 2.h),
-                    child: Text(
-                      title,
-                      style: theme.textTheme.titleMedium,
+    return YoutubePlayerBuilder(
+      onExitFullScreen: () {
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+      },
+      player: YoutubePlayer(
+        controller: videoController,
+        showVideoProgressIndicator: true,
+        progressIndicatorColor: theme.colorScheme.primary,
+        progressColors: ProgressBarColors(
+          playedColor: theme.colorScheme.primary,
+          handleColor: theme.colorScheme.primary,
+        ),
+        bottomActions: [
+          CurrentPosition(),
+          ProgressBar(isExpanded: true),
+          RemainingDuration(),
+          FullScreenButton(),
+        ],
+      ),
+      builder: (context, player) => Scaffold(
+        appBar: AppBar(
+          actions: const [
+            Icon(Icons.more_vert),
+          ],
+          title: Text(
+            'Tutorial',
+            style: TextStyle(
+              color: theme.colorScheme.primary,
+            ),
+          ),
+          centerTitle: true,
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.only(bottom: 64),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              player,
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.title,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 6.v),
-                  _buildFrameNine(context),
-                  SizedBox(height: 37.v),
-                  Padding(
-                    padding: EdgeInsets.only(left: 2.h),
-                    child: Text(
+                    const SizedBox(height: 4),
+                    Wrap(
+                      runSpacing: -8,
+                      spacing: 8,
+                      children: List<Widget>.generate(
+                        widget.materials.length,
+                        (index) {
+                          return Framenine2ItemWidget(
+                            materialItem: widget.materials[index],
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Row(
+                          children: [
+                            CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage('https://picsum.photos/200'),
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              'John Doe',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.thumb_up_outlined,
+                              color: appTheme.blueGray200,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              '10',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: appTheme.gray600,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Icon(
+                              Icons.more_vert,
+                              color: appTheme.gray600,
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 32),
+                    Text(
                       "Instruction",
-                      style: theme.textTheme.titleMedium,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: theme.colorScheme.primary,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 14.v),
-                  SizedBox(
-                    width: 382.h,
-                    child: Text(
-                      instructions,
+                    SizedBox(height: 14.v),
+                    Text(
+                      widget.instructions,
                       maxLines: 21,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.justify,
-                      style: CustomTextStyles.bodyLargeBlack900.copyWith(
-                        height: 1.50,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: appTheme.gray600,
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
         ),
-      ),
-    );
-  }
-
-  /// Section Widget
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return CustomAppBar(
-      leadingWidth: double.maxFinite,
-      leading: AppbarLeadingIconbutton(
-        margin: EdgeInsets.fromLTRB(24.h, 10.v, 370.h, 10.v),
-      ),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildNine(BuildContext context, YoutubePlayerController videocontroller) {
-    return Container(
-      height: 200.v,
-      width: 380.h,
-      margin: EdgeInsets.only(left: 2.h),
-      child: YoutubePlayer(
-        controller: videocontroller,
-        showVideoProgressIndicator: true,
-        progressIndicatorColor: Colors.blueAccent,
-        progressColors: ProgressBarColors(
-          playedColor: Colors.blue,
-          handleColor: Colors.blueAccent,
-        )
-      ),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildFrameNine(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 2.h),
-      child: Wrap(
-        runSpacing: 4.89.v,
-        spacing: 4.89.h,
-        children: List<Widget>.generate(materials.length, (index) { 
-          return Framenine2ItemWidget(materialItem: materials[index]);
-        }),
-        // children: [
-        //   GridView.builder(itemCount: 32, physics: const ScrollPhysics(), shrinkWrap: true, gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 5, mainAxisSpacing: 5), itemBuilder: (context, index) {
-        //     return Framenine2ItemWidget(materialItem: materials[index]);
-        // })]
       ),
     );
   }

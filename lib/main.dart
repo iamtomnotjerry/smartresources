@@ -57,30 +57,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => MyAuthProvider())
       ],
       child: Sizer(
-      builder: (context, orientation, deviceType) {
-        return MaterialApp(
-          theme: theme,
-          title: 'smart_resources',
-          debugShowCheckedModeBanner: false,
-          initialRoute: AppRoutes.homeScreen,
-          routes: AppRoutes.routes,
-          home: StreamBuilder(
-            stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-    // FirebaseAuth.instance.signOut();
-
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => MyAuthProvider(),
-        )
-      ],
-      child: Sizer(
         builder: (context, orientation, deviceType) {
           return MaterialApp(
             theme: theme,
@@ -137,10 +113,5 @@ class MyApp extends StatelessWidget {
         },
       ),
     );
-            }
-          )
-        );
-      }
-    ));
   }
 }
