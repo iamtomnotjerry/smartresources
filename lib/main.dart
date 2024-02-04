@@ -52,6 +52,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // FirebaseAuth.instance.signOut();
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => MyAuthProvider())

@@ -184,12 +184,11 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                           alignment: Alignment.bottomRight,
                           children: [
                             avatar == null
-                                ? CustomImageView(
-                                    imagePath: ImageConstant.avatarPlaceholder,
-                                    height: 128.adaptSize,
-                                    width: 128.adaptSize,
-                                    alignment: Alignment.center,
-                                    radius: BorderRadius.circular(100),
+                                ? CircleAvatar(
+                                    backgroundImage: AssetImage(
+                                      ImageConstant.avatarPlaceholder,
+                                    ),
+                                    radius: 64,
                                   )
                                 : ClipRRect(
                                     borderRadius: BorderRadius.circular(100),

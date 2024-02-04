@@ -183,7 +183,7 @@ class ImageConstant {
 
   static String imageNotFound = 'assets/images/image_not_found.png';
 
-  static String avatarPlaceholder = '$imagePath/avatar_placeholder.jpg';
+  static String avatarPlaceholder = 'assets/images/avatar_placeholder.jpg';
 
   static const String sofa = '../../../assets/images/maxresdefault.jpg';
 
