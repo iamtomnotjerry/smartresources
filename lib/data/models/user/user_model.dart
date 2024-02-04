@@ -33,11 +33,11 @@ class UserModel {
     return UserModel(
       uid: data['uid'],
       email: data['email'],
-      name: data['name'],
-      avatar: data['avatar'],
-      phoneNumber: data['phoneNumber'],
-      gender: data['gender'],
-      dateOfBirth: data['dateOfBirth'],
+      name: data['name'] ?? 'Default Name',
+      avatar: data['avatar'] ?? 'avatar',
+      phoneNumber: data['phoneNumber'] ?? 'phoneNumber',
+      gender: data['gender'] ?? 'gender',
+      dateOfBirth: data['dateOfBirth'] ?? 'dateOfBirth',
     );
   }
 }
