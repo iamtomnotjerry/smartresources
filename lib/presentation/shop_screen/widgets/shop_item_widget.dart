@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:smartresource/core/app_export.dart';
 import 'package:smartresource/widgets/custom_icon_button.dart';
 
@@ -10,7 +11,7 @@ class ShopItemWidget extends StatelessWidget {
   final double price;
   final String image;
 
-  ShopItemWidget({
+  const ShopItemWidget({
     super.key, 
     required this.prodname, 
     required this.description, 
@@ -122,10 +123,51 @@ class ShopItemWidget extends StatelessWidget {
                 ),
                 SizedBox(height: 9.v),
                 Text(
-                  "$priceđ",
+                  NumberFormat.currency(locale: 'vi-VN').format(price),
                   // "20",
                   style: theme.textTheme.labelLarge,
                 ),
+                Row(
+                  children: [
+                      ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: appTheme.gray50,
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text(
+                        'Buy',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black.withOpacity(0.6),
+                        )
+                      ),
+                    ),
+                    const SizedBox(width: 30.0,),
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: appTheme.gray50,
+                          shadowColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text(
+                        'Add to cart',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black.withOpacity(0.6),
+                        )
+                      )
+                    ),
+                  ],
+                )
               ],
             ),
           ),

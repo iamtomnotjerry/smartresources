@@ -38,87 +38,22 @@ class ShopScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        body: SingleChildScrollView(child:Container(
-          // resizeToAvoidBottomInset: false,
-          // body: SingleChildScrollView(
-        child: Container(
-          width: double.maxFinite,
-          padding: EdgeInsets.symmetric(horizontal: 23.h),
-          child: Column(
-            children: [
+        body: SingleChildScrollView (
+          child: Container(
+            width: double.maxFinite,
+            padding: EdgeInsets.symmetric(horizontal: 23.h),
+            child: Column(
+              children: [
               SizedBox(height: 54.v),
               _buildShopRow(context),
               SizedBox(height: 11.v),
               _buildSearchBarRow(context),
               SizedBox(height: 10.v),
-              // SizedBox(
-              //   height: 688.v,
-              //   width: 381.h,
-              //   child: 
-              // Stack(
-              //     alignment: Alignment.bottomRight,
-              //     children: [
               _buildProductsList(context),
-                    // Align(
-                    //   alignment: Alignment.bottomRight,
-                    //   child: Card(
-                    //     clipBehavior: Clip.antiAlias,
-                    //     elevation: 0,
-                    //     margin: EdgeInsets.only(bottom: 66.v),
-                    //     color: theme.colorScheme.primary,
-                    //     shape: RoundedRectangleBorder(
-                    //       borderRadius: BorderRadiusStyle.circleBorder22,
-                    //     ),
-                    //     child: Container(
-                    //       height: 44.adaptSize,
-                    //       width: 44.adaptSize,
-                    //       padding: EdgeInsets.symmetric(
-                    //         horizontal: 8.h,
-                    //         vertical: 10.v,
-                    //       ),
-                    //       decoration: AppDecoration.outlineBlack900.copyWith(
-                    //         borderRadius: BorderRadiusStyle.circleBorder22,
-                    //       ),
-                    //       child: Stack(
-                    //         alignment: Alignment.topRight,
-                    //         children: [
-                    //           CustomImageView(
-                    //             imagePath:
-                    //                 ImageConstant.imgCartOnprimarycontainer,
-                    //             height: 24.adaptSize,
-                    //             width: 24.adaptSize,
-                    //             alignment: Alignment.centerLeft,
-                    //           ),
-                    //           Align(
-                    //             alignment: Alignment.topRight,
-                    //             child: Container(
-                    //               width: 10.adaptSize,
-                    //               padding:
-                    //                   EdgeInsets.symmetric(horizontal: 3.h),
-                    //               decoration: AppDecoration.fillGreen.copyWith(
-                    //                 borderRadius:
-                    //                     BorderRadiusStyle.circleBorder5,
-                    //               ),
-                    //               child: Text(
-                    //                 "1",
-                    //                 style: CustomTextStyles.labelSmallGray600,
-                    //               ),
-                    //             ),
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                  // ],
-                // ),
-              // ),
             ],
           ),
-        // ),
         ),
-      )),
-      bottomNavigationBar: _buildBottomBar(context),
+      ),
     );
   }
 
@@ -138,32 +73,10 @@ class ShopScreen extends StatelessWidget {
           height: 28.adaptSize,
           width: 28.adaptSize,
           margin: EdgeInsets.only(bottom: 3.v),
-          child: Stack(
+          child: const Stack(
             alignment: Alignment.topRight,
             children: [
-              CustomImageView(
-                imagePath: ImageConstant.imgCart,
-                height: 28.adaptSize,
-                width: 28.adaptSize,
-                alignment: Alignment.center,
-              ),
-              Align(
-                alignment: Alignment.topRight,
-                child: Container(
-                  width: 10.adaptSize,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 3.h,
-                    vertical: 1.v,
-                  ),
-                  decoration: AppDecoration.outlineOnPrimaryContainer.copyWith(
-                    borderRadius: BorderRadiusStyle.circleBorder5,
-                  ),
-                  child: Text(
-                    "1",
-                    style: CustomTextStyles.interOnPrimaryContainer,
-                  ),
-                ),
-              ),
+              Icon(Icons.shopping_cart),
             ],
           ),
         ),
@@ -191,10 +104,7 @@ class ShopScreen extends StatelessWidget {
             width: 48.adaptSize,
             padding: EdgeInsets.all(12.h),
             decoration: IconButtonStyleHelper.fillPrimaryTL12,
-            child: Icon(Icons.search, color: Colors.white),
-            // child: CustomImageView(
-            //   imagePath: ImageConstant.imgTune,
-            // ),
+            child: const Icon(Icons.search, color: Colors.white),
           ),
         ),
       ],
@@ -218,20 +128,12 @@ class ShopScreen extends StatelessWidget {
               prodname: prodInfo.prodname,
               description: prodInfo.description,
               seller: prodInfo.seller,
-              price: prodInfo.price * 1000,
+              price: prodInfo.price,
               image: prodInfo.image,
             );
           },
         )
       )
-    );
-  }
-
-  /// Section Widget
-  Widget _buildBottomBar(BuildContext context) {
-    return CustomBottomBar(
-      onChanged: (BottomBarEnum type) {},
-      currentIndex: 3,
     );
   }
 }
