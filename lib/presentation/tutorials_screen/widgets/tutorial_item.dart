@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smartresource/core/app_export.dart';
 import 'package:smartresource/presentation/tutorial_details_screen/tutorial_details_screen.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-
-import 'framenine1_item_widget.dart';
 
 // ignore: must_be_immutable
 class TutorialItem extends StatelessWidget {
@@ -12,7 +8,7 @@ class TutorialItem extends StatelessWidget {
   final List<String> materials;
   final String instructions;
 
-  TutorialItem({
+  const TutorialItem({
     super.key,
     required this.videoId,
     required this.title,
@@ -20,70 +16,105 @@ class TutorialItem extends StatelessWidget {
     required this.instructions,
   });
 
-  YoutubePlayerController _buildYoutubeController() {
-    return YoutubePlayerController(
-      initialVideoId: videoId,
-      flags: const YoutubePlayerFlags(
-        autoPlay: false,
-        mute: false,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final YoutubePlayerController controller = _buildYoutubeController();
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        InkWell(
-          onTap: () {},
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              AspectRatio(
-                aspectRatio: 16 / 9,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: Image.network(
-                    'http://i3.ytimg.com/vi/$videoId/hqdefault.jpg',
-                    fit: BoxFit.cover,
+    return Container(
+      padding: const EdgeInsets.only(
+        bottom: 32,
+        top: 24,
+      ),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            width: 1,
+            color: Colors.blueGrey.shade50,
+          ),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          InkWell(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => TutorialDetailsScreen(
+                    videoId: videoId,
+                    title: title,
+                    materials: materials,
+                    instructions: instructions,
                   ),
                 ),
-              ),
-              Icon(
-                Icons.play_circle,
-                size: 44,
-                color: Colors.white.withOpacity(0.5),
-              ),
-              const Positioned(
-                top: 12,
-                right: 8,
-                child: Icon(
-                  Icons.more_vert,
-                  color: Colors.white,
+              );
+            },
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.network(
+                      'http://i3.ytimg.com/vi/$videoId/hqdefault.jpg',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        InkWell(
-          onTap: () {},
-          child: Text(
-            title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
+                Icon(
+                  Icons.play_circle,
+                  size: 44,
+                  color: Colors.white.withOpacity(0.5),
+                ),
+                const Positioned(
+                  top: 12,
+                  right: 8,
+                  child: Icon(
+                    Icons.more_vert,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
           ),
-        ),
-      ],
+          const SizedBox(
+            height: 8,
+          ),
+          InkWell(
+            onTap: () {},
+            child: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Wrap(
+            runSpacing: 8,
+            spacing: 8,
+            children: List<Widget>.generate(
+              materials.length,
+              (index) => Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.blueGrey.shade50,
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
+                child: Text(materials[index]),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

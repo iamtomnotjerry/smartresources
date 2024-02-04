@@ -17,7 +17,7 @@ class NavigationMenu extends StatefulWidget {
 }
 
 class _NavigationMenuState extends State<NavigationMenu> {
-  final PageController pageController = PageController(initialPage: 1);
+  final PageController pageController = PageController();
 
   int page = 0;
 

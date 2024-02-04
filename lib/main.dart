@@ -7,7 +7,6 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smartresource/navigation_menu.dart';
-import 'package:smartresource/presentation/email_verification_screen/email_verification_screen.dart';
 import 'package:smartresource/presentation/sign_in_screen/sign_in_screen.dart';
 import 'package:smartresource/presentation/welcome_screen/welcome_screen.dart';
 import 'package:smartresource/providers/auth_provider.dart';
@@ -78,25 +77,7 @@ class MyApp extends StatelessWidget {
                   final auth = FirebaseAuth.instance;
 
                   if (snapshot.hasData) {
-                    if (auth.currentUser!.email == null ||
-                        auth.currentUser!.email!.isEmpty ||
-                        auth.currentUser!.emailVerified) {
-                      return NavigationMenu();
-                    } else {
-                      if (auth.currentUser != null) {
-                        auth.currentUser!.sendEmailVerification();
-
-                        return EmailVerificationScreen(
-                          onPressed: () =>
-                              Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => NavigationMenu(),
-                            ),
-                          ),
-                          email: auth.currentUser!.email!,
-                        );
-                      }
-                    }
+                    return NavigationMenu();
                   }
                   if (snapshot.hasError) {
                     return Center(
