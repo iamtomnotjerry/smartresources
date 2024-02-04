@@ -23,7 +23,7 @@ class TutorialItem extends StatelessWidget {
   YoutubePlayerController _buildYoutubeController() {
     return YoutubePlayerController(
       initialVideoId: videoId,
-      flags: YoutubePlayerFlags(
+      flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
       ),
@@ -34,97 +34,56 @@ class TutorialItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final YoutubePlayerController controller = _buildYoutubeController();
 
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => TutorialDetailsScreen(
-                    videoId: videoId,
-                    title: title,
-                    materials: materials,
-                    instructions: instructions)));
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.grey,
-            width: 2.0,
-          ),
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        margin: EdgeInsets.all(16.0),
-        alignment: Alignment.center,
-        child: Card(
-          clipBehavior: Clip.antiAlias,
-          elevation: 0,
-          margin: const EdgeInsets.all(0),
-          color: theme.colorScheme.onPrimaryContainer,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadiusStyle.roundedBorder12,
-          ),
-          child: Container(
-            width: 382.h,
-            padding: EdgeInsets.symmetric(
-              horizontal: 16.h,
-              vertical: 15.v,
-            ),
-            decoration: AppDecoration.fillOnPrimaryContainer.copyWith(
-              borderRadius: BorderRadiusStyle.roundedBorder12,
-            ),
-            child: Column(
-              children: [
-                Container(
-                  child: YoutubePlayer(
-                    controller: controller,
-                    showVideoProgressIndicator: true,
-                    progressIndicatorColor: Colors.blueAccent,
-                    progressColors: ProgressBarColors(
-                      playedColor: Colors.blue,
-                      handleColor: Colors.blueAccent,
-                    ),
-                    bottomActions: [],
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        InkWell(
+          onTap: () {},
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              AspectRatio(
+                aspectRatio: 16 / 9,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Image.network(
+                    'http://i3.ytimg.com/vi/$videoId/hqdefault.jpg',
+                    fit: BoxFit.cover,
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 10.0),
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 20.v),
-                    child: Text(
-                      title,
-                      style: theme.textTheme.titleMedium,
-                    ),
-                  ),
+              ),
+              Icon(
+                Icons.play_circle,
+                size: 44,
+                color: Colors.white.withOpacity(0.5),
+              ),
+              const Positioned(
+                top: 12,
+                right: 8,
+                child: Icon(
+                  Icons.more_vert,
+                  color: Colors.white,
                 ),
-                Container(
-                  child: Padding(
-                    padding: EdgeInsets.only(right: 14.h),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: double.maxFinite,
-                          child: Wrap(
-                            runSpacing: 4.89.v,
-                            spacing: 4.89.h,
-                            children: List<Widget>.generate(
-                              materials.length,
-                              (index) => Framenine1ItemWidget(
-                                materialItem: materials[index],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      ),
+        const SizedBox(
+          height: 8,
+        ),
+        InkWell(
+          onTap: () {},
+          child: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
     );
   }
 }
