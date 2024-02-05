@@ -10,19 +10,23 @@ class ShopItemWidget extends StatelessWidget {
   final String seller;
   final double price;
   final String image;
+  Function() ? onTap;
 
-  const ShopItemWidget({
+  ShopItemWidget({
     super.key, 
     required this.prodname, 
     required this.description, 
     required this.seller, 
     required this.price, 
-    required this.image
+    required this.image,
+    required this.onTap
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return InkWell(
+      onTap: onTap,
+      child:Container(
       padding: EdgeInsets.symmetric(vertical: 9.v),
       decoration: AppDecoration.fillOnPrimaryContainer.copyWith(
         borderRadius: BorderRadiusStyle.roundedBorder12,
@@ -173,6 +177,6 @@ class ShopItemWidget extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 }

@@ -99,7 +99,7 @@ class AppRoutes {
     blogsScreen: (context) => BlogsScreen(),
     addBlogScreen: (context) => AddBlogScreen(),
     shopScreen: (context) => ShopScreen(),
-    productDetailsTwoScreen: (context) => ProductDetailsTwoScreen(),
+    // productDetailsTwoScreen: (context) => ProductDetailsTwoScreen(),
     cartScreen: (context) => const CartScreen(),
     addPrpdcutScreen: (context) => AddPrpdcutScreen(),
     profileScreen: (context) => ProfileScreen(),

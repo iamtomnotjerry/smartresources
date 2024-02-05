@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 import '../product_details_two_screen/widgets/thirtyfour_item_widget.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -7,14 +9,44 @@ import 'package:smartresource/widgets/app_bar/custom_app_bar.dart';
 import 'package:smartresource/widgets/custom_elevated_button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class ProductDetailsTwoScreen extends StatelessWidget {
-  ProductDetailsTwoScreen({Key? key})
-      : super(
-          key: key,
-        );
-
+class ProductDetailsTwoScreen extends StatefulWidget {
   int sliderIndex = 1;
+  
+  final String prodname;
+  final String description;
+  final String seller;
+  final double price;
+  final List<String> image;
 
+  ProductDetailsTwoScreen({
+    super.key, 
+    required this.prodname, 
+    required this.description, 
+    required this.seller, 
+    required this.price, 
+    required this.image
+  });
+
+  @override
+  _ProductDetailsTwoScreenState createState() => _ProductDetailsTwoScreenState();
+}
+
+class _ProductDetailsTwoScreenState extends State<ProductDetailsTwoScreen> {
+  int quantity = 1;
+  
+  void incrementQuantity() {
+    setState(() {
+      quantity++;
+    });
+  }
+
+  void decrementQuantity() {
+    if (quantity > 1) {
+      setState(() {
+        quantity--;
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -34,7 +66,8 @@ class ProductDetailsTwoScreen extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(left: 11.h),
                 child: Text(
-                  "Đèn trang trí làm bằng chai nhựa",
+                  // "Đèn trang trí làm bằng chai nhựa",
+                  widget.prodname,
                   style: CustomTextStyles.titleLargeBluegray7000123,
                 ),
               ),
@@ -51,7 +84,8 @@ class ProductDetailsTwoScreen extends StatelessWidget {
                 width: 382.h,
                 margin: EdgeInsets.symmetric(horizontal: 9.h),
                 child: Text(
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dapibus suscipit augue sit amet suscipit.\nSed sollicitudin mauris et eros imperdiet ullamcorper.\nAliquam risus metus, maximus eu mauris vel, gravida vulputate velit.\nNullam in mi dictum, dictum libero sed, auctor nunc. Sed ut tincidunt augue, eget convallis sapien. Ut fringilla volutpat finibus.",
+                  // "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dapibus suscipit augue sit amet suscipit.\nSed sollicitudin mauris et eros imperdiet ullamcorper.\nAliquam risus metus, maximus eu mauris vel, gravida vulputate velit.\nNullam in mi dictum, dictum libero sed, auctor nunc. Sed ut tincidunt augue, eget convallis sapien. Ut fringilla volutpat finibus.",
+                  widget.description,
                   maxLines: 11,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.justify,
@@ -73,7 +107,7 @@ class ProductDetailsTwoScreen extends StatelessWidget {
                   ),
                   child: Container(
                     height: 44.adaptSize,
-                    width: 44.adaptSize,
+                    width: 150.adaptSize,
                     padding: EdgeInsets.symmetric(
                       horizontal: 8.h,
                       vertical: 10.v,
@@ -81,29 +115,31 @@ class ProductDetailsTwoScreen extends StatelessWidget {
                     decoration: AppDecoration.outlineBlack900.copyWith(
                       borderRadius: BorderRadiusStyle.circleBorder22,
                     ),
-                    child: Stack(
-                      alignment: Alignment.topRight,
+                    child: Row(
+                      // alignment: Alignment.topRight,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        CustomImageView(
-                          imagePath: ImageConstant.imgCartOnprimarycontainer,
-                          height: 24.adaptSize,
-                          width: 24.adaptSize,
-                          alignment: Alignment.centerLeft,
-                        ),
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: Container(
-                            width: 10.adaptSize,
-                            padding: EdgeInsets.symmetric(horizontal: 3.h),
-                            decoration: AppDecoration.fillGreen.copyWith(
-                              borderRadius: BorderRadiusStyle.circleBorder5,
-                            ),
-                            child: Text(
-                              "1",
-                              style: CustomTextStyles.labelSmallGray600,
-                            ),
+                        SizedBox(width: 15.h),
+                        Container(
+                          alignment: Alignment.center,
+                          child: InkWell(
+                            onTap: decrementQuantity,
+                            child: const Icon(Icons.remove, color: Colors.white),
                           ),
                         ),
+                        SizedBox(width: 15.h),
+                        Text(
+                          '$quantity',
+                          style: const TextStyle(fontSize: 18, color: Colors.white),
+                        ),
+                        SizedBox(width: 15.h),
+                        Container(
+                          alignment: Alignment.center,
+                          child: InkWell(
+                            onTap: incrementQuantity,
+                            child: const Icon(Icons.add, color: Colors.white),
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -140,21 +176,25 @@ class ProductDetailsTwoScreen extends StatelessWidget {
           Align(
             alignment: Alignment.bottomCenter,
             child: SizedBox(
-              height: 11.v,
-              child: AnimatedSmoothIndicator(
-                activeIndex: 0,
-                count: 5,
-                effect: ScrollingDotsEffect(
-                  spacing: 4.64,
-                  activeDotColor: theme.colorScheme.primary,
-                  dotColor: appTheme.gray30001,
-                  activeDotScale: 1.375,
-                  dotHeight: 8.v,
-                  dotWidth: 9.h,
-                ),
-              ),
+              height: 20.v,
+              child: Text(
+                "Seller: ${widget.seller}",
+              )
+              // AnimatedSmoothIndicator(
+              //   activeIndex: widget.sliderIndex,
+              //   count: 5,
+              //   effect: ScrollingDotsEffect(
+              //     spacing: 4.64,
+              //     activeDotColor: theme.colorScheme.primary,
+              //     dotColor: appTheme.gray30001,
+              //     activeDotScale: 1.375,
+              //     dotHeight: 8.v,
+              //     dotWidth: 9.h,
+              //   ),
+              // ),
             ),
           ),
+          // SizedBox(height: 100.v, child: const Text("Seller"),),
           CarouselSlider.builder(
             options: CarouselOptions(
               height: 260.v,
@@ -163,16 +203,14 @@ class ProductDetailsTwoScreen extends StatelessWidget {
               viewportFraction: 1.0,
               enableInfiniteScroll: false,
               scrollDirection: Axis.horizontal,
-              onPageChanged: (
-                index,
-                reason,
-              ) {
-                sliderIndex = index;
+              onPageChanged: (index,reason,) {
+                widget.sliderIndex = index;
               },
             ),
-            itemCount: 6,
+            itemCount: widget.image.length,
             itemBuilder: (context, index, realIndex) {
-              return const ThirtyfourItemWidget();
+              widget.sliderIndex = index;
+              return ThirtyfourItemWidget(image: widget.image[index]);
             },
           ),
         ],
@@ -207,7 +245,8 @@ class ProductDetailsTwoScreen extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(top: 3.v),
                   child: Text(
-                    "24,000đ",
+                    // "24,000đ",
+                    NumberFormat.currency(locale: 'vi-VN').format(widget.price),
                     style: CustomTextStyles.titleMediumPrimary,
                   ),
                 ),
@@ -216,15 +255,16 @@ class ProductDetailsTwoScreen extends StatelessWidget {
           ),
           CustomElevatedButton(
             height: 44.v,
-            width: 175.h,
+            width: 150.h,
             text: "Add to cart",
             leftIcon: Container(
-              margin: EdgeInsets.only(right: 4.h),
-              child: CustomImageView(
-                imagePath: ImageConstant.imgGrid,
-                height: 24.adaptSize,
-                width: 24.adaptSize,
-              ),
+              margin: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: const Icon(Icons.shopping_cart, color: Colors.white,),
+              // CustomImageView(
+              //   imagePath: ImageConstant.imgGrid,
+              //   height: 24.adaptSize,
+              //   width: 24.adaptSize,
+              // ),
             ),
           ),
         ],

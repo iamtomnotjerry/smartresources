@@ -3,7 +3,7 @@ class ProductModel {
   final String description;
   final String seller;
   final double price;
-  final String image;
+  final List<String> image;
 
   const ProductModel(
     this.prodname,

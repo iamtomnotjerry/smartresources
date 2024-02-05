@@ -1,5 +1,6 @@
 import 'package:smartresource/data/data_sources/product/product_source.dart';
 import 'package:smartresource/data/models/product/product_model.dart';
+import 'package:smartresource/presentation/product_details_two_screen/product_details_two_screen.dart';
 
 import 'widgets/shop_item_widget.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +77,7 @@ class ShopScreen extends StatelessWidget {
           child: const Stack(
             alignment: Alignment.topRight,
             children: [
-              Icon(Icons.shopping_cart),
+                Icon(Icons.shopping_cart),
             ],
           ),
         ),
@@ -129,7 +130,10 @@ class ShopScreen extends StatelessWidget {
               description: prodInfo.description,
               seller: prodInfo.seller,
               price: prodInfo.price,
-              image: prodInfo.image,
+              image: prodInfo.image[0],
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailsTwoScreen(prodname: prodInfo.prodname, description: prodInfo.description, seller: prodInfo.seller, price: prodInfo.price, image: prodInfo.image, )));
+              },
             );
           },
         )

@@ -185,7 +185,7 @@ class HomeScreen extends StatelessWidget {
                           description: prodItem.description,
                           seller: prodItem.seller,
                           price: prodItem.price,
-                          image: prodItem.image,
+                          image: prodItem.image[0],
                         );
                       },
                     ),
