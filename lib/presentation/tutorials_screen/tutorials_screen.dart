@@ -76,9 +76,12 @@ class TutorialsScreen extends StatelessWidget {
           children: [
             const SearchBar(),
             const SizedBox(height: 32),
-            Text(
+            const Text(
               "Materials",
-              style: theme.textTheme.titleMedium,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             const SizedBox(height: 8),
             Wrap(
@@ -90,9 +93,12 @@ class TutorialsScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            Text(
+            const Text(
               "Purposes",
-              style: theme.textTheme.titleMedium,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             const SizedBox(height: 8),
             Wrap(

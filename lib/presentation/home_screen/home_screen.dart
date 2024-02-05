@@ -8,6 +8,7 @@ import 'package:smartresource/data/data_sources/tutorial/tutorial_source.dart';
 import 'package:smartresource/data/models/blog/blog_model.dart';
 import 'package:smartresource/data/models/product/product_model.dart';
 import 'package:smartresource/data/models/tutorial/tutorial_model.dart';
+import 'package:smartresource/navigation_menu.dart';
 import 'package:smartresource/presentation/blog_details_screen/blog_details_screen.dart';
 import 'package:smartresource/presentation/tutorial_details_screen/tutorial_details_screen.dart';
 import 'package:smartresource/providers/auth_provider.dart';
@@ -86,6 +87,14 @@ class HomeScreen extends StatelessWidget {
                   ),
                   buildSection(
                     title: 'Tutorials',
+                    onSeeAll: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NavigationMenu(
+                          initialPage: 1,
+                        ),
+                      ),
+                    ),
                     body: CarouselSlider.builder(
                       options: CarouselOptions(
                         autoPlay: true,
@@ -126,6 +135,14 @@ class HomeScreen extends StatelessWidget {
                   ),
                   buildSection(
                     title: 'Blogs',
+                    onSeeAll: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NavigationMenu(
+                          initialPage: 2,
+                        ),
+                      ),
+                    ),
                     body: CarouselSlider.builder(
                         options: CarouselOptions(
                           autoPlay: true,
@@ -167,6 +184,14 @@ class HomeScreen extends StatelessWidget {
                   ),
                   buildSection(
                     title: 'Products',
+                    onSeeAll: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NavigationMenu(
+                          initialPage: 3,
+                        ),
+                      ),
+                    ),
                     body: GridView.builder(
                       itemCount: productslist.length,
                       shrinkWrap: true,

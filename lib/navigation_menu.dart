@@ -10,19 +10,23 @@ import 'package:smartresource/presentation/tutorials_screen/tutorials_screen.dar
 import 'package:smartresource/providers/auth_provider.dart';
 
 class NavigationMenu extends StatefulWidget {
-  NavigationMenu({super.key});
+  NavigationMenu({super.key, this.initialPage = 0});
+
+  final int initialPage;
 
   @override
   State<NavigationMenu> createState() => _NavigationMenuState();
 }
 
 class _NavigationMenuState extends State<NavigationMenu> {
-  final PageController pageController = PageController(initialPage: 0);
+  late PageController pageController;
 
-  int page = 0;
+  late int page;
 
   @override
   void initState() {
+    pageController = PageController(initialPage: widget.initialPage);
+    page = widget.initialPage;
     Provider.of<MyAuthProvider>(context, listen: false).refreshUser();
     super.initState();
   }
@@ -64,27 +68,27 @@ class _NavigationMenuState extends State<NavigationMenu> {
               onTap: (page) => pageController.jumpToPage(page),
               items: const [
                 BottomNavigationBarItem(
-                  activeIcon: Icon(Icons.home),
+                  activeIcon: Icon(Icons.home_rounded),
                   icon: Icon(Icons.home_outlined),
                   label: 'Home',
                 ),
                 BottomNavigationBarItem(
-                  activeIcon: Icon(Icons.smart_display),
+                  activeIcon: Icon(Icons.smart_display_rounded),
                   icon: Icon(Icons.smart_display_outlined),
                   label: 'Tutorials',
                 ),
                 BottomNavigationBarItem(
-                  activeIcon: Icon(Icons.feed),
+                  activeIcon: Icon(Icons.feed_rounded),
                   icon: Icon(Icons.feed_outlined),
                   label: 'Blogs',
                 ),
                 BottomNavigationBarItem(
-                  activeIcon: Icon(Icons.storefront),
+                  activeIcon: Icon(Icons.storefront_rounded),
                   icon: Icon(Icons.storefront_outlined),
                   label: 'Shop',
                 ),
                 BottomNavigationBarItem(
-                  activeIcon: Icon(Icons.account_circle),
+                  activeIcon: Icon(Icons.account_circle_rounded),
                   icon: Icon(Icons.account_circle_outlined),
                   label: 'Profile',
                 ),
