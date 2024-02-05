@@ -74,11 +74,10 @@ class MyApp extends StatelessWidget {
                 }
 
                 if (snapshot.connectionState == ConnectionState.active) {
-                  final auth = FirebaseAuth.instance;
-
                   if (snapshot.hasData) {
                     return NavigationMenu();
                   }
+
                   if (snapshot.hasError) {
                     return Center(
                       child: Text('${snapshot.error}'),

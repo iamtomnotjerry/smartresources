@@ -66,11 +66,11 @@ class ProductWidget extends StatelessWidget {
           height: 16,
         ),
         SizedBox(
-          width: double.infinity,
           height: 40,
           child: ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               backgroundColor: appTheme.gray50,
               shadowColor: Colors.transparent,
               shape: RoundedRectangleBorder(

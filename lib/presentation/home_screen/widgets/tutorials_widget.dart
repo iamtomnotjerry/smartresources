@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class TutorialWidget extends StatelessWidget {
+class TutorialWidget extends StatefulWidget {
   final String videoId;
   final String title;
   final List<String> materials;
@@ -17,6 +18,31 @@ class TutorialWidget extends StatelessWidget {
   });
 
   @override
+  State<TutorialWidget> createState() => _TutorialWidgetState();
+}
+
+class _TutorialWidgetState extends State<TutorialWidget> {
+  late YoutubePlayerController videoController;
+
+  @override
+  void initState() {
+    videoController = YoutubePlayerController(
+      initialVideoId: widget.videoId,
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+      ),
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    videoController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -24,24 +50,20 @@ class TutorialWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           InkWell(
-            onTap: onTap,
+            onTap: widget.onTap,
             child: Stack(
               alignment: Alignment.center,
               children: [
-                AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: Image.network(
-                      'http://i3.ytimg.com/vi/$videoId/hqdefault.jpg',
-                      fit: BoxFit.cover,
-                    ),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: YoutubePlayer(
+                    controller: videoController,
+                    bottomActions: [
+                      CurrentPosition(),
+                      ProgressBar(isExpanded: true),
+                      RemainingDuration(),
+                    ],
                   ),
-                ),
-                Icon(
-                  Icons.play_circle,
-                  size: 44,
-                  color: Colors.white.withOpacity(0.5),
                 ),
                 const Positioned(
                   top: 12,
@@ -58,9 +80,9 @@ class TutorialWidget extends StatelessWidget {
             height: 8,
           ),
           InkWell(
-            onTap: onTap,
+            onTap: widget.onTap,
             child: Text(
-              title,
+              widget.title,
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
