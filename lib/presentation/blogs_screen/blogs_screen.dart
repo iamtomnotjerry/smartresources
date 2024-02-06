@@ -79,5 +79,66 @@ class BlogsScreen extends StatelessWidget {
     );
   }
 
+<<<<<<< Updated upstream
+=======
+  /// Section Widget
+  Widget _buildBlogsFrame(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 2.h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 3.v),
+            child: Text(
+              "Blogs",
+              style: CustomTextStyles.headlineSmallPrimary,
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.addBlogOneScreen);
+            },
+            child: const Icon(Icons.add)
+          ),
+          // CustomIconButton(
+          //   height: 32.v,
+          //   width: 40.h,
+          //   padding: EdgeInsets.all(8.h),
+          //   decoration: IconButtonStyleHelper.fillBlueGrayTL10,
+          //   child: CustomImageView(
+          //     imagePath: ImageConstant.imgEdit,
+          //   ),
+          // ),
+        ],
+      ),
+    );
+  }
+
+  /// Section Widget
+  Widget _buildSearchBar(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Expanded(
+          child: CustomSearchView(
+            controller: searchController,
+            hintText: "Search",
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 8.h),
+          child: CustomIconButton(
+            height: 48.adaptSize,
+            width: 48.adaptSize,
+            padding: EdgeInsets.all(12.h),
+            decoration: IconButtonStyleHelper.fillPrimaryTL12,
+            child: const Icon(Icons.search, color: Colors.white),
+          ),
+        ),
+      ],
+    );
+  }
+>>>>>>> Stashed changes
 }
 

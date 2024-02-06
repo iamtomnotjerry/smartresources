@@ -14,7 +14,7 @@ class SingleBlogWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => BlogDetailsScreen(
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => BlogDetailsScreen(
           title: title,
           content: content,
           author: author,

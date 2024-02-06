@@ -1,6 +1,7 @@
 import 'package:smartresource/data/data_sources/product/product_source.dart';
 import 'package:smartresource/data/models/product/product_model.dart';
 import 'package:smartresource/presentation/product_details_two_screen/product_details_two_screen.dart';
+import 'package:smartresource/widgets/custom_elevated_button.dart';
 
 import 'widgets/shop_item_widget.dart';
 import 'package:flutter/material.dart';
@@ -22,19 +23,6 @@ class ShopScreen extends StatelessWidget {
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
   @override
-  // Widget build(BuildContext context) {
-  //   return SafeArea(
-  //     child: Navigator(
-  //       key: navigatorKey,
-  //       onGenerateRoute: (settings) {
-  //         return MaterialPageRoute(
-  //           settings: settings,
-  //           builder: (context) => _buildShopScreenContent(context),
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,6 +43,18 @@ class ShopScreen extends StatelessWidget {
           ),
         ),
       ),
+      floatingActionButton: InkWell(
+        onTap: () {
+          Navigator.pushNamed(context, AppRoutes.addPrpdcutScreen);
+        }, 
+        child: CustomIconButton(
+          height: 40.0,
+          width: 40.0,
+          padding: const EdgeInsets.all(8.0),
+          decoration: IconButtonStyleHelper.fillPrimaryTL12,
+          child: const Icon(Icons.add, color: Colors.white),
+        ),
+      )
     );
   }
 

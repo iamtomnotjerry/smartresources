@@ -51,7 +51,15 @@ class _ProductDetailsTwoScreenState extends State<ProductDetailsTwoScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: _buildAppBar(context),
+        appBar: AppBar(title: Text(
+            "Seller: ${widget.seller}",
+            style: TextStyle(
+              color: theme.colorScheme.primary,
+            ),
+          ),
+          centerTitle: true,
+        ),
+        // _buildAppBar(context),
         body: Container(
           width: double.maxFinite,
           padding: EdgeInsets.symmetric(
@@ -155,14 +163,14 @@ class _ProductDetailsTwoScreenState extends State<ProductDetailsTwoScreen> {
   }
 
   /// Section Widget
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return CustomAppBar(
-      leadingWidth: double.maxFinite,
-      leading: AppbarLeadingIconbutton(
-        margin: EdgeInsets.fromLTRB(24.h, 10.v, 370.h, 10.v),
-      ),
-    );
-  }
+  // PreferredSizeWidget _buildAppBar(BuildContext context) {
+  //   return CustomAppBar(
+  //     leadingWidth: double.maxFinite,
+  //     leading: AppbarLeadingIconbutton(
+  //       margin: EdgeInsets.fromLTRB(24.h, 10.v, 370.h, 10.v),
+  //     ),
+  //   );
+  // }
 
   /// Section Widget
   Widget _buildSettings(BuildContext context) {
@@ -173,28 +181,6 @@ class _ProductDetailsTwoScreenState extends State<ProductDetailsTwoScreen> {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: SizedBox(
-              height: 20.v,
-              child: Text(
-                "Seller: ${widget.seller}",
-              )
-              // AnimatedSmoothIndicator(
-              //   activeIndex: widget.sliderIndex,
-              //   count: 5,
-              //   effect: ScrollingDotsEffect(
-              //     spacing: 4.64,
-              //     activeDotColor: theme.colorScheme.primary,
-              //     dotColor: appTheme.gray30001,
-              //     activeDotScale: 1.375,
-              //     dotHeight: 8.v,
-              //     dotWidth: 9.h,
-              //   ),
-              // ),
-            ),
-          ),
-          // SizedBox(height: 100.v, child: const Text("Seller"),),
           CarouselSlider.builder(
             options: CarouselOptions(
               height: 260.v,
@@ -260,11 +246,6 @@ class _ProductDetailsTwoScreenState extends State<ProductDetailsTwoScreen> {
             leftIcon: Container(
               margin: const EdgeInsets.symmetric(horizontal: 4.0),
               child: const Icon(Icons.shopping_cart, color: Colors.white,),
-              // CustomImageView(
-              //   imagePath: ImageConstant.imgGrid,
-              //   height: 24.adaptSize,
-              //   width: 24.adaptSize,
-              // ),
             ),
           ),
         ],

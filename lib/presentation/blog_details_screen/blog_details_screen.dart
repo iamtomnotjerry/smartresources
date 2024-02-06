@@ -15,6 +15,14 @@ class BlogDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(title: Text(
+            'Blog',
+            style: TextStyle(
+              color: theme.colorScheme.primary,
+            ),
+          ),
+          centerTitle: true,
+        ),
         body: SizedBox(
           width: double.maxFinite,
           child: SingleChildScrollView(
@@ -100,23 +108,6 @@ class BlogDetailsScreen extends StatelessWidget {
               8.h,
             ),
             alignment: Alignment.center,
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              left: 24.h,
-              top: 21.v,
-            ),
-            child: CustomIconButton(
-              height: 36.adaptSize,
-              width: 36.adaptSize,
-              alignment: Alignment.topLeft,
-              child: InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Icon(Icons.arrow_back),
-              )
-            ),// child: Icon(Icons.arrow_back),
           ),
         ],
       ),
