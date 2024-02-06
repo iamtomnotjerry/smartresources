@@ -48,6 +48,7 @@ class _TutorialWidgetState extends State<TutorialWidget> {
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InkWell(
             onTap: widget.onTap,

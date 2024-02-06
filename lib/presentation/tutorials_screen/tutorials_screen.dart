@@ -1,42 +1,68 @@
 import 'package:flutter/material.dart' hide SearchBar;
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:smartresource/core/app_export.dart';
-import 'package:smartresource/data/data_sources/tutorial/tutorial_source.dart';
+import 'package:smartresource/data/data_sources/tutorial/materials_purposes.dart';
 import 'package:smartresource/data/models/tutorial/tutorial_model.dart';
 import 'package:smartresource/presentation/add_tutorial_screen/add_tutorial_screen.dart';
+import 'package:smartresource/services/tutorials_service.dart';
 import 'package:smartresource/widgets/search_bar.dart';
 
 import 'widgets/chip.dart';
 import 'widgets/tutorial_item.dart';
 
-const List<String> materials = [
-  'Bottles',
-  'Plastic',
-  'Wood',
-  'Metal',
-  'Glass',
-  'Paper',
-  'Cardboard',
-];
-
-const List<String> purposes = [
-  'Decoration',
-  'Storage',
-  'Furniture',
-  'Lighting',
-  'Toys',
-  'Stationery',
-  'Others',
-];
-
-class TutorialsScreen extends StatelessWidget {
+class TutorialsScreen extends StatefulWidget {
   TutorialsScreen({Key? key})
       : super(
           key: key,
         );
 
-  TextEditingController searchController = TextEditingController();
+  @override
+  State<TutorialsScreen> createState() => _TutorialsScreenState();
+}
 
-  GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+class _TutorialsScreenState extends State<TutorialsScreen> {
+  final PagingController<int, TutorialModel> _pagingController =
+      PagingController(firstPageKey: 1);
+
+  final int limit = 10;
+
+  Future<void> _fetchPage(int pageKey) async {
+    try {
+      final currentItems = _pagingController.value.itemList;
+
+      final newItems = await TutorialService().getTutorialsWithPagination(
+        page: pageKey,
+        limit: limit,
+        lastVisibleId: currentItems != null && currentItems.isNotEmpty
+            ? currentItems.last.id
+            : null,
+      );
+      final isLastPage = newItems.length < limit;
+
+      if (isLastPage) {
+        _pagingController.appendLastPage(newItems);
+      } else {
+        final nextPageKey = pageKey + newItems.length;
+        _pagingController.appendPage(newItems, nextPageKey);
+      }
+    } catch (error) {
+      _pagingController.error = error;
+    }
+  }
+
+  @override
+  void initState() {
+    _pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,8 +114,10 @@ class TutorialsScreen extends StatelessWidget {
               runSpacing: -4,
               spacing: 8,
               children: List<Widget>.generate(
-                materials.length,
-                (index) => CustomChip(text: materials[index]),
+                tutorialMaterials.take(10).length,
+                (index) => CustomChip(
+                  text: tutorialMaterials.take(10).toList()[index],
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -105,24 +133,22 @@ class TutorialsScreen extends StatelessWidget {
               runSpacing: -4,
               spacing: 8,
               children: List<Widget>.generate(
-                purposes.length,
-                (index) => CustomChip(text: purposes[index]),
+                tutorialPurposes.take(10).length,
+                (index) => CustomChip(
+                  text: tutorialPurposes.take(10).toList()[index],
+                ),
               ),
             ),
             const SizedBox(height: 32),
-            ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
+            PagedListView<int, TutorialModel>(
               shrinkWrap: true,
-              itemCount: tutorialsList.length,
-              itemBuilder: (context, index) {
-                TutorialModel tutorialItem = tutorialsList[index];
-                return TutorialItem(
-                  videoId: tutorialItem.videoId,
-                  title: tutorialItem.title,
-                  materials: tutorialItem.materials,
-                  instructions: tutorialItem.instructions,
-                );
-              },
+              physics: const NeverScrollableScrollPhysics(),
+              pagingController: _pagingController,
+              builderDelegate: PagedChildBuilderDelegate<TutorialModel>(
+                itemBuilder: (context, item, index) => TutorialItem(
+                  tutorial: item,
+                ),
+              ),
             ),
           ],
         ),

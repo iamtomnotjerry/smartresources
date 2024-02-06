@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:smartresource/core/app_export.dart';
 import 'package:smartresource/data/data_sources/blog/blog_source.dart';
 import 'package:smartresource/data/data_sources/product/product_source.dart';
-import 'package:smartresource/data/data_sources/tutorial/tutorial_source.dart';
 import 'package:smartresource/data/models/blog/blog_model.dart';
 import 'package:smartresource/data/models/product/product_model.dart';
 import 'package:smartresource/data/models/tutorial/tutorial_model.dart';
@@ -12,6 +11,7 @@ import 'package:smartresource/navigation_menu.dart';
 import 'package:smartresource/presentation/blog_details_screen/blog_details_screen.dart';
 import 'package:smartresource/presentation/tutorial_details_screen/tutorial_details_screen.dart';
 import 'package:smartresource/providers/auth_provider.dart';
+import 'package:smartresource/providers/tutorials_provider.dart';
 import 'package:smartresource/widgets/search_bar.dart';
 
 import 'widgets/blog_widget.dart';
@@ -24,6 +24,8 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<MyAuthProvider>(context).user;
+    final tutorials =
+        Provider.of<TutorialsProvider>(context).tutorials.take(10).toList();
 
     return SafeArea(
         child: Scaffold(
@@ -85,51 +87,49 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(
                     height: 32,
                   ),
-                  buildSection(
-                    title: 'Tutorials',
-                    onSeeAll: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => NavigationMenu(
-                          initialPage: 1,
+                  if (tutorials.isNotEmpty)
+                    buildSection(
+                      title: 'Tutorials',
+                      onSeeAll: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NavigationMenu(
+                            initialPage: 1,
+                          ),
                         ),
                       ),
-                    ),
-                    body: CarouselSlider.builder(
-                      options: CarouselOptions(
-                        autoPlay: true,
-                        viewportFraction: 1,
-                        aspectRatio: 1.4,
-                      ),
-                      itemCount: tutorialsList.length,
-                      itemBuilder: (
-                        BuildContext context,
-                        int itemIndex,
-                        int pageViewIndex,
-                      ) {
-                        TutorialModel tutorialItem = tutorialsList[itemIndex];
-                        return TutorialWidget(
-                          videoId: tutorialItem.videoId,
-                          title: tutorialItem.title,
-                          materials: tutorialItem.materials,
-                          instructions: tutorialItem.instructions,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => TutorialDetailsScreen(
-                                  videoId: tutorialItem.videoId,
-                                  title: tutorialItem.title,
-                                  materials: tutorialItem.materials,
-                                  instructions: tutorialItem.instructions,
+                      body: CarouselSlider.builder(
+                        options: CarouselOptions(
+                          autoPlay: true,
+                          viewportFraction: 1,
+                          aspectRatio: 1.3,
+                        ),
+                        itemCount: tutorials.length,
+                        itemBuilder: (
+                          BuildContext context,
+                          int itemIndex,
+                          int pageViewIndex,
+                        ) {
+                          TutorialModel tutorialItem = tutorials[itemIndex];
+                          return TutorialWidget(
+                            videoId: tutorialItem.videoId,
+                            title: tutorialItem.title,
+                            materials: tutorialItem.materials,
+                            instructions: tutorialItem.instructions,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TutorialDetailsScreen(
+                                    tutorial: tutorialItem,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        );
-                      },
+                              );
+                            },
+                          );
+                        },
+                      ),
                     ),
-                  ),
                   const SizedBox(
                     height: 32,
                   ),

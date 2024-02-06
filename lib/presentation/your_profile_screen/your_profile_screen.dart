@@ -51,8 +51,12 @@ class _CompleteProfileScreenState extends State<MyProfileScreen> {
         () {
           nameController.text = user.name;
           phoneNumberController.text = user.phoneNumber;
-          gender = user.gender[0].toUpperCase() + user.gender.substring(1);
-          dateOfBirth = DateTime.parse(user.dateOfBirth);
+          gender = user.gender.isNotEmpty
+              ? user.gender[0].toUpperCase() + user.gender.substring(1)
+              : null;
+          dateOfBirth = user.dateOfBirth.isNotEmpty
+              ? DateTime.parse(user.dateOfBirth)
+              : null;
         },
       );
     }
@@ -192,7 +196,7 @@ class _CompleteProfileScreenState extends State<MyProfileScreen> {
           child: CustomElevatedButton(
             onPressed: () => onSubmit(),
             height: 56.v,
-            text: "Complete Profile",
+            text: "Update Profile",
             margin: EdgeInsets.only(left: 2.h),
             buttonStyle: CustomButtonStyles.fillPrimary,
             buttonTextStyle:

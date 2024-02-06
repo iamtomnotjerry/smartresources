@@ -1,22 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:smartresource/core/app_export.dart';
+import 'package:smartresource/data/models/tutorial/tutorial_model.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../tutorial_details_screen/widgets/framenine2_item_widget.dart';
 
 class TutorialDetailsScreen extends StatefulWidget {
-  final String videoId;
-  final String title;
-  final List<String> materials;
-  final String instructions;
+  final TutorialModel tutorial;
 
   const TutorialDetailsScreen({
     super.key,
-    required this.videoId,
-    required this.title,
-    required this.materials,
-    required this.instructions,
+    required this.tutorial,
   });
 
   @override
@@ -29,7 +24,7 @@ class _TutorialDetailsScreenState extends State<TutorialDetailsScreen> {
   @override
   void initState() {
     videoController = YoutubePlayerController(
-      initialVideoId: widget.videoId,
+      initialVideoId: widget.tutorial.videoId,
       flags: const YoutubePlayerFlags(
         autoPlay: true,
         mute: false,
@@ -94,7 +89,7 @@ class _TutorialDetailsScreenState extends State<TutorialDetailsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.title,
+                        widget.tutorial.title,
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w600,
@@ -105,10 +100,14 @@ class _TutorialDetailsScreenState extends State<TutorialDetailsScreen> {
                         runSpacing: -8,
                         spacing: 8,
                         children: List<Widget>.generate(
-                          widget.materials.length,
+                          widget.tutorial.materials.length +
+                              widget.tutorial.purposes.length,
                           (index) {
                             return Framenine2ItemWidget(
-                              materialItem: widget.materials[index],
+                              materialItem: [
+                                ...widget.tutorial.materials,
+                                ...widget.tutorial.purposes
+                              ][index],
                             );
                           },
                         ),
@@ -117,16 +116,20 @@ class _TutorialDetailsScreenState extends State<TutorialDetailsScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Row(
+                          Row(
                             children: [
                               CircleAvatar(
                                 backgroundImage:
-                                    NetworkImage('https://picsum.photos/200'),
+                                    widget.tutorial.avatar.isNotEmpty
+                                        ? NetworkImage(widget.tutorial.avatar)
+                                        : AssetImage(
+                                                ImageConstant.avatarPlaceholder)
+                                            as ImageProvider,
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Text(
-                                'John Doe',
-                                style: TextStyle(
+                                widget.tutorial.username,
+                                style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -141,7 +144,7 @@ class _TutorialDetailsScreenState extends State<TutorialDetailsScreen> {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                '10',
+                                widget.tutorial.likes.length.toString(),
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: appTheme.gray600,
@@ -165,12 +168,9 @@ class _TutorialDetailsScreenState extends State<TutorialDetailsScreen> {
                           color: theme.colorScheme.primary,
                         ),
                       ),
-                      SizedBox(height: 14.v),
+                      const SizedBox(height: 8),
                       Text(
-                        widget.instructions,
-                        maxLines: 21,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.justify,
+                        widget.tutorial.instructions,
                         style: TextStyle(
                           fontSize: 16,
                           color: appTheme.gray600,

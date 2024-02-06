@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:smartresource/core/app_export.dart';
+import 'package:smartresource/data/models/tutorial/tutorial_model.dart';
 import 'package:smartresource/presentation/tutorial_details_screen/tutorial_details_screen.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class TutorialItem extends StatefulWidget {
-  final String videoId;
-  final String title;
-  final List<String> materials;
-  final String instructions;
+  final TutorialModel tutorial;
 
   const TutorialItem({
     super.key,
-    required this.videoId,
-    required this.title,
-    required this.materials,
-    required this.instructions,
+    required this.tutorial,
   });
 
   @override
@@ -26,7 +22,7 @@ class _TutorialItemState extends State<TutorialItem> {
   @override
   void initState() {
     videoController = YoutubePlayerController(
-      initialVideoId: widget.videoId,
+      initialVideoId: widget.tutorial.videoId,
       flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
@@ -65,10 +61,7 @@ class _TutorialItemState extends State<TutorialItem> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => TutorialDetailsScreen(
-                    videoId: widget.videoId,
-                    title: widget.title,
-                    materials: widget.materials,
-                    instructions: widget.instructions,
+                    tutorial: widget.tutorial,
                   ),
                 ),
               );
@@ -106,16 +99,13 @@ class _TutorialItemState extends State<TutorialItem> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => TutorialDetailsScreen(
-                    videoId: widget.videoId,
-                    title: widget.title,
-                    materials: widget.materials,
-                    instructions: widget.instructions,
+                    tutorial: widget.tutorial,
                   ),
                 ),
               );
             },
             child: Text(
-              widget.title,
+              widget.tutorial.title,
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
@@ -129,15 +119,18 @@ class _TutorialItemState extends State<TutorialItem> {
           ),
           Row(
             children: [
-              const CircleAvatar(
-                backgroundImage: NetworkImage('https://i.pravatar.cc/100'),
+              CircleAvatar(
+                backgroundImage: widget.tutorial.avatar.isNotEmpty
+                    ? NetworkImage(widget.tutorial.avatar)
+                    : AssetImage(ImageConstant.avatarPlaceholder)
+                        as ImageProvider,
                 radius: 16,
               ),
               const SizedBox(
                 width: 8,
               ),
               Text(
-                'John Doe',
+                widget.tutorial.username,
                 style: TextStyle(
                   color: Colors.blueGrey.shade700,
                   fontWeight: FontWeight.w500,
@@ -152,7 +145,8 @@ class _TutorialItemState extends State<TutorialItem> {
             runSpacing: 8,
             spacing: 8,
             children: List<Widget>.generate(
-              widget.materials.length,
+              widget.tutorial.materials.length +
+                  widget.tutorial.purposes.length,
               (index) => Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
@@ -162,7 +156,10 @@ class _TutorialItemState extends State<TutorialItem> {
                   horizontal: 12,
                   vertical: 4,
                 ),
-                child: Text(widget.materials[index]),
+                child: Text([
+                  ...widget.tutorial.materials,
+                  ...widget.tutorial.purposes
+                ][index]),
               ),
             ),
           ),

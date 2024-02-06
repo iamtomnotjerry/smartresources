@@ -10,6 +10,7 @@ import 'package:smartresource/navigation_menu.dart';
 import 'package:smartresource/presentation/sign_in_screen/sign_in_screen.dart';
 import 'package:smartresource/presentation/welcome_screen/welcome_screen.dart';
 import 'package:smartresource/providers/auth_provider.dart';
+import 'package:smartresource/providers/tutorials_provider.dart';
 
 import 'core/app_export.dart';
 import 'firebase_options.dart';
@@ -55,7 +56,8 @@ class MyApp extends StatelessWidget {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => MyAuthProvider())
+        ChangeNotifierProvider(create: (context) => MyAuthProvider()),
+        ChangeNotifierProvider(create: (context) => TutorialsProvider()),
       ],
       child: Sizer(
         builder: (context, orientation, deviceType) {
@@ -75,7 +77,7 @@ class MyApp extends StatelessWidget {
 
                 if (snapshot.connectionState == ConnectionState.active) {
                   if (snapshot.hasData) {
-                    return NavigationMenu();
+                    return NavigationMenu(initialPage: 1);
                   }
 
                   if (snapshot.hasError) {

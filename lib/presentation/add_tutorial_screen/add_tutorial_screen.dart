@@ -1,7 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:smartresource/core/app_export.dart';
+import 'package:smartresource/data/models/tutorial/tutorial_model.dart';
+import 'package:smartresource/presentation/tutorial_details_screen/tutorial_details_screen.dart';
+import 'package:smartresource/providers/auth_provider.dart';
+import 'package:smartresource/providers/tutorials_provider.dart';
+import 'package:smartresource/services/tutorials_service.dart';
 import 'package:smartresource/widgets/custom_elevated_button.dart';
 import 'package:smartresource/widgets/custom_text_form_field.dart';
+import 'package:smartresource/widgets/multi_select.dart';
+import 'package:uuid/uuid.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:smartresource/data/data_sources/tutorial/materials_purposes.dart';
 
 class AddTutorialScreen extends StatefulWidget {
   const AddTutorialScreen({super.key});
@@ -16,6 +27,106 @@ class _AddTutorialScreenState extends State<AddTutorialScreen> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController videoUrlController = TextEditingController();
   final TextEditingController instructionController = TextEditingController();
+
+  List<String> selectedMaterials = [];
+  List<String> selectedPurposes = [];
+
+  bool isLoading = false;
+
+  void onSubmit(BuildContext context) async {
+    if (formKey.currentState!.validate()) {
+      if (selectedMaterials.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please select at least one material'),
+          ),
+        );
+      } else if (selectedPurposes.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please select at least one purpose'),
+          ),
+        );
+      } else {
+        try {
+          setState(() {
+            isLoading = true;
+          });
+          final user = Provider.of<MyAuthProvider>(
+            context,
+            listen: false,
+          ).user;
+
+          final videoId = YoutubePlayer.convertUrlToId(
+            videoUrlController.text,
+          );
+
+          if (videoId == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Invalid youtube video URL'),
+              ),
+            );
+            setState(() {
+              isLoading = false;
+            });
+            return;
+          }
+
+          if (user != null) {
+            final tutorial = TutorialModel(
+              id: Uuid().v1(),
+              videoId: videoId,
+              title: titleController.text,
+              materials: selectedMaterials,
+              instructions: instructionController.text,
+              purposes: selectedPurposes,
+              username: user.name,
+              uid: FirebaseAuth.instance.currentUser!.uid,
+              avatar: user.avatar,
+              likes: [],
+              createdAt: DateTime.now().toString(),
+            );
+
+            await TutorialService().addTutorial(tutorial);
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Tutorial added successfully'),
+              ),
+            );
+
+            setState(() {
+              isLoading = false;
+            });
+
+            Navigator.of(context).pop(
+              MaterialPageRoute(
+                builder: (context) => TutorialDetailsScreen(
+                  tutorial: tutorial,
+                ),
+              ),
+            );
+
+            Provider.of<TutorialsProvider>(
+              context,
+              listen: false,
+            ).refreshTutorials();
+          }
+        } catch (e) {
+          print(e.toString());
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Something went wrong, please try again later.'),
+            ),
+          );
+          setState(() {
+            isLoading = false;
+          });
+        }
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -34,34 +145,76 @@ class _AddTutorialScreenState extends State<AddTutorialScreen> {
           style: TextStyle(color: theme.colorScheme.primary),
         ),
       ),
-      bottomNavigationBar: const BottomNavigationBar(),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Form(
-            key: formKey,
-            child: Column(children: [
-              buildFormGroup(
-                label: 'Title',
-                hintText: 'Tutorial title',
-                controller: titleController,
+      bottomNavigationBar: BottomNavigationBar(
+        onPressed: () => onSubmit(context),
+      ),
+      body: Column(
+        children: [
+          if (isLoading) const LinearProgressIndicator(),
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    buildFormGroup(
+                      label: 'Title',
+                      hintText: 'Tutorial title',
+                      controller: titleController,
+                      validator: (value) => value == null || value.isEmpty
+                          ? 'Please enter tutorial title'
+                          : null,
+                    ),
+                    buildFormGroup(
+                      label: 'Youtube Video URL',
+                      hintText: 'https://www.youtube.com/watch?v=...',
+                      controller: videoUrlController,
+                      validator: (value) => value == null || value.isEmpty
+                          ? 'Please enter youtube video URL'
+                          : null,
+                    ),
+                    MultiSelect(
+                      label: 'Materials',
+                      selectedItems: selectedMaterials,
+                      items: tutorialMaterials,
+                      onChange: (values) {
+                        setState(() {
+                          selectedMaterials = values;
+                        });
+                      },
+                      title: 'Select Materials',
+                      hintText: 'Select materials',
+                    ),
+                    MultiSelect(
+                      label: 'Purposes',
+                      selectedItems: selectedPurposes,
+                      items: tutorialPurposes,
+                      onChange: (values) {
+                        setState(() {
+                          selectedPurposes = values;
+                        });
+                      },
+                      title: 'Select Purposes',
+                      hintText: 'Select purposes',
+                    ),
+                    buildFormGroup(
+                      label: 'Instructions',
+                      hintText: 'Write tutorial instructions',
+                      controller: instructionController,
+                      multiple: true,
+                      minLines: 5,
+                      maxLines: 1000,
+                      validator: (value) => value == null || value.isEmpty
+                          ? 'Please enter tutorial instructions'
+                          : null,
+                    ),
+                  ],
+                ),
               ),
-              buildFormGroup(
-                label: 'Youtube Video URL',
-                hintText: 'https://www.youtube.com/watch?v=...',
-                controller: videoUrlController,
-              ),
-              buildFormGroup(
-                label: 'Instruction',
-                hintText: 'Write instruction here',
-                controller: instructionController,
-                multiple: true,
-                minLines: 10,
-                maxLines: 1000,
-              ),
-            ]),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -73,6 +226,7 @@ class _AddTutorialScreenState extends State<AddTutorialScreen> {
     bool multiple = false,
     int? minLines,
     int? maxLines,
+    String? Function(String?)? validator,
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 24),
@@ -88,6 +242,7 @@ class _AddTutorialScreenState extends State<AddTutorialScreen> {
           ),
           const SizedBox(height: 4),
           CustomTextFormField(
+            validator: validator,
             controller: controller,
             hintText: hintText,
             textInputType: multiple ? TextInputType.multiline : null,
@@ -108,7 +263,10 @@ class _AddTutorialScreenState extends State<AddTutorialScreen> {
 class BottomNavigationBar extends StatelessWidget {
   const BottomNavigationBar({
     super.key,
+    this.onPressed,
   });
+
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +290,7 @@ class BottomNavigationBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(32),
         ),
         child: CustomElevatedButton(
-          onPressed: () => {},
+          onPressed: onPressed,
           height: 56.v,
           text: "Publish",
           margin: EdgeInsets.only(left: 2.h),

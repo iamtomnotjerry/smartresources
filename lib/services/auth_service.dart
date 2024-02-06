@@ -91,12 +91,15 @@ class AuthService {
       final userCredential = await FirebaseAuth.instance
           .signInWithCredential(facebookAuthCredential);
 
+      dynamic birthday = userData['birthday'].toString().split('/');
+      birthday = '${birthday[2]}-${birthday[0]}-${birthday[1]}';
+
       _firestore.collection('users').doc(userCredential.user!.uid).set({
         'uid': userCredential.user!.uid,
         'email': userData['email'],
         'name': userData['name'],
         'avatar': userData['picture']['data']['url'],
-        'dateOfBirth': userData['birthday'],
+        'dateOfBirth': birthday,
         'gender': userData['gender'],
       });
     }
@@ -125,9 +128,18 @@ class AuthService {
             "https://people.googleapis.com/v1/people/me?personFields=genders,birthdays,phoneNumbers,&key="),
         headers: {"Authorization": headers["Authorization"] as String});
     final response = json.decode(r.body);
-    final String gender =
-        response["genders"][0]["formattedValue"].toString().toLowerCase();
-    final Map<String, dynamic> birthdays = response["birthdays"][0]["date"];
+
+    String gender = '';
+    if (response['gender'] != null) {
+      gender =
+          response["genders"][0]["formattedValue"].toString().toLowerCase();
+    }
+    String birthdays = '';
+    if (response["birthdays"] != null) {
+      final _birthdays = response["birthdays"][0]["date"];
+      birthdays =
+          "${_birthdays['year']}-${_birthdays['month']}-${_birthdays['day']} 00:00:00.000";
+    }
     String phoneNumber = '';
     if (response["phoneNumbers"] != null) {
       phoneNumber = response["phoneNumbers"][0]["value"];
@@ -141,8 +153,7 @@ class AuthService {
       'email': userCredential.additionalUserInfo!.profile!['email'],
       'name': userCredential.user!.displayName,
       'avatar': userCredential.user!.photoURL,
-      'dateOfBirth':
-          "${birthdays['year']}-${birthdays['month']}-${birthdays['day']} 00:00:00.000",
+      'dateOfBirth': birthdays,
       'gender': gender,
       'phoneNumber': phoneNumber,
     });

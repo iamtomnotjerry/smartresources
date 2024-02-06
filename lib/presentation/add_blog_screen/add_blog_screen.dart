@@ -1,15 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore package
 import 'package:dotted_border/dotted_border.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:smartresource/core/app_export.dart';
 import 'package:smartresource/widgets/custom_elevated_button.dart';
 import 'package:smartresource/widgets/custom_text_form_field.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore package
-
-
 
 class AddBlogScreen extends StatelessWidget {
-  
   AddBlogScreen({Key? key}) : super(key: key);
 
   TextEditingController blogTitleController = TextEditingController();
@@ -26,13 +22,12 @@ class AddBlogScreen extends StatelessWidget {
         'thumbnail': thumbnailImageURLController.text,
         'content': blogContentController.text,
         'timestamp': Timestamp.now(), // Optionally, you can add a timestamp
-         'userEmail': currentUser?.email,
+        'userEmail': currentUser?.email,
       });
       // Reset the text controllers after successful addition
       blogTitleController.clear();
       thumbnailImageURLController.clear();
       blogContentController.clear();
-      
     } catch (e) {
       print('Error adding blog post: $e');
     }
@@ -41,7 +36,6 @@ class AddBlogScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
 
     return SafeArea(
       child: Scaffold(
@@ -92,7 +86,8 @@ class AddBlogScreen extends StatelessWidget {
             ],
           ),
         ),
-        bottomNavigationBar: BottomNavigationBar(onPressed: addBlogPost), // Passing onPressed callback
+        bottomNavigationBar: BottomNavigationBar(
+            onPressed: addBlogPost), // Passing onPressed callback
       ),
     );
   }
@@ -171,7 +166,8 @@ class BottomNavigationBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(32),
         ),
         child: CustomElevatedButton(
-          onPressed: onPressed, // Call onPressed callback when button is pressed
+          onPressed:
+              onPressed, // Call onPressed callback when button is pressed
           height: 56,
           text: "Publish",
           margin: EdgeInsets.zero,

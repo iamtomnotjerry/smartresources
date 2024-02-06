@@ -104,31 +104,42 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void onGoogleSignIn(BuildContext context) async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
+    setState(() {
+      isLoading = true;
+    });
 
-      await AuthService().signInWithGoogle();
+    await AuthService().signInWithGoogle();
 
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => NavigationMenu(),
-        ),
-      );
-    } catch (e) {
-      print(e.toString());
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => NavigationMenu(),
+      ),
+    );
+    // try {
+    //   setState(() {
+    //     isLoading = true;
+    //   });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Something went wrong.'),
-        ),
-      );
+    //   await AuthService().signInWithGoogle();
 
-      setState(() {
-        isLoading = false;
-      });
-    }
+    //   Navigator.of(context).pushReplacement(
+    //     MaterialPageRoute(
+    //       builder: (context) => NavigationMenu(),
+    //     ),
+    //   );
+    // } catch (e) {
+    //   print(e.toString());
+
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(
+    //       content: Text('Something went wrong.'),
+    //     ),
+    //   );
+
+    //   setState(() {
+    //     isLoading = false;
+    //   });
+    // }
   }
 
   @override
