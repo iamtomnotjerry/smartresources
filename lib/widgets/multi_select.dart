@@ -44,6 +44,7 @@ class MultiSelect extends StatelessWidget {
             ),
             buttonIcon: const Icon(Icons.unfold_more),
             searchable: true,
+            initialValue: selectedItems,
             title: title != null ? Text(title!) : null,
             buttonText: hintText != null
                 ? Text(

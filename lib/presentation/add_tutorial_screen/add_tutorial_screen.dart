@@ -14,8 +14,17 @@ import 'package:uuid/uuid.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:smartresource/data/data_sources/tutorial/materials_purposes.dart';
 
+enum AddTutorialAction { add, update }
+
 class AddTutorialScreen extends StatefulWidget {
-  const AddTutorialScreen({super.key});
+  const AddTutorialScreen({
+    super.key,
+    this.action = AddTutorialAction.add,
+    this.tutorial,
+  });
+
+  final AddTutorialAction action;
+  final TutorialModel? tutorial;
 
   @override
   State<AddTutorialScreen> createState() => _AddTutorialScreenState();
@@ -32,6 +41,19 @@ class _AddTutorialScreenState extends State<AddTutorialScreen> {
   List<String> selectedPurposes = [];
 
   bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.action == AddTutorialAction.update) {
+      titleController.text = widget.tutorial!.title;
+      instructionController.text = widget.tutorial!.instructions;
+      videoUrlController.text =
+          'https://www.youtube.com/watch?v=${widget.tutorial!.videoId}';
+      selectedMaterials = widget.tutorial!.materials;
+      selectedPurposes = widget.tutorial!.purposes;
+    }
+  }
 
   void onSubmit(BuildContext context) async {
     if (formKey.currentState!.validate()) {
@@ -75,7 +97,9 @@ class _AddTutorialScreenState extends State<AddTutorialScreen> {
 
           if (user != null) {
             final tutorial = TutorialModel(
-              id: Uuid().v1(),
+              id: widget.action == AddTutorialAction.add
+                  ? Uuid().v1()
+                  : widget.tutorial!.id,
               videoId: videoId,
               title: titleController.text,
               materials: selectedMaterials,
@@ -84,15 +108,25 @@ class _AddTutorialScreenState extends State<AddTutorialScreen> {
               username: user.name,
               uid: FirebaseAuth.instance.currentUser!.uid,
               avatar: user.avatar,
-              likes: [],
-              createdAt: DateTime.now().toString(),
+              likes: widget.action == AddTutorialAction.add
+                  ? []
+                  : widget.tutorial!.likes,
+              createdAt: widget.action == AddTutorialAction.add
+                  ? DateTime.now().toString()
+                  : widget.tutorial!.createdAt,
             );
 
-            await TutorialService().addTutorial(tutorial);
+            if (widget.action == AddTutorialAction.add) {
+              await TutorialService().addTutorial(tutorial);
+            } else {
+              await TutorialService().updateTutorial(tutorial);
+            }
 
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Tutorial added successfully'),
+              SnackBar(
+                content: Text(widget.action == AddTutorialAction.add
+                    ? 'Tutorial added successfully'
+                    : 'Tutorial updated successfully'),
               ),
             );
 
@@ -100,7 +134,7 @@ class _AddTutorialScreenState extends State<AddTutorialScreen> {
               isLoading = false;
             });
 
-            Navigator.of(context).pop(
+            Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (context) => TutorialDetailsScreen(
                   tutorial: tutorial,
@@ -114,7 +148,7 @@ class _AddTutorialScreenState extends State<AddTutorialScreen> {
             ).refreshTutorials();
           }
         } catch (e) {
-          print(e.toString());
+          print('---------------' + e.toString());
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Something went wrong, please try again later.'),
@@ -141,18 +175,21 @@ class _AddTutorialScreenState extends State<AddTutorialScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Add New Tutorial',
+          widget.action == AddTutorialAction.add
+              ? 'Add New Tutorial'
+              : 'Update Tutorial',
           style: TextStyle(color: theme.colorScheme.primary),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         onPressed: () => onSubmit(context),
+        action: widget.action,
       ),
-      body: Column(
-        children: [
-          if (isLoading) const LinearProgressIndicator(),
-          SingleChildScrollView(
-            child: Padding(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            isLoading ? const LinearProgressIndicator() : Container(),
+            Padding(
               padding: const EdgeInsets.all(24),
               child: Form(
                 key: formKey,
@@ -213,8 +250,8 @@ class _AddTutorialScreenState extends State<AddTutorialScreen> {
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -264,9 +301,11 @@ class BottomNavigationBar extends StatelessWidget {
   const BottomNavigationBar({
     super.key,
     this.onPressed,
+    this.action = AddTutorialAction.add,
   });
 
   final VoidCallback? onPressed;
+  final AddTutorialAction action;
 
   @override
   Widget build(BuildContext context) {
@@ -292,7 +331,7 @@ class BottomNavigationBar extends StatelessWidget {
         child: CustomElevatedButton(
           onPressed: onPressed,
           height: 56.v,
-          text: "Publish",
+          text: action == AddTutorialAction.add ? "Publish" : 'Update',
           margin: EdgeInsets.only(left: 2.h),
           buttonStyle: CustomButtonStyles.fillPrimary,
           buttonTextStyle:

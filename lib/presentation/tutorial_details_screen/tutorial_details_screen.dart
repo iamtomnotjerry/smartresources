@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:smartresource/core/app_export.dart';
 import 'package:smartresource/data/models/tutorial/tutorial_model.dart';
+import 'package:smartresource/presentation/add_tutorial_screen/add_tutorial_screen.dart';
+import 'package:smartresource/services/tutorials_service.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../tutorial_details_screen/widgets/framenine2_item_widget.dart';
@@ -62,8 +65,67 @@ class _TutorialDetailsScreenState extends State<TutorialDetailsScreen> {
       ),
       builder: (context, player) => Scaffold(
         appBar: AppBar(
-          actions: const [
-            Icon(Icons.more_vert),
+          actions: [
+            widget.tutorial.uid == FirebaseAuth.instance.currentUser!.uid
+                ? PopupMenuButton(
+                    offset: const Offset(0, 56),
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddTutorialScreen(
+                                action: AddTutorialAction.update,
+                                tutorial: widget.tutorial,
+                              ),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          'Edit',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ),
+                      PopupMenuItem(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('Delete Tutorial'),
+                                content: const Text(
+                                  'Are you sure you want to delete this tutorial?',
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      TutorialService().deleteTutorial(
+                                        widget.tutorial.id,
+                                      );
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('Delete'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: const Text(
+                          'Delete',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ),
+                    ],
+                  )
+                : const Icon(Icons.more_vert),
           ],
           title: Text(
             'Tutorial',
