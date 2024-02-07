@@ -79,9 +79,7 @@ class MyApp extends StatelessWidget {
 
                 if (snapshot.connectionState == ConnectionState.active) {
                   if (snapshot.hasData) {
-                    return NavigationMenu(
-                      initialPage: 2,
-                    );
+                    return NavigationMenu();
                   }
 
                   if (snapshot.hasError) {
