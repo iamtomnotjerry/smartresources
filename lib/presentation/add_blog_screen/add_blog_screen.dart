@@ -1,148 +1,310 @@
-import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore package
-import 'package:dotted_border/dotted_border.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:smartresource/core/app_export.dart';
+import 'package:smartresource/data/models/blog/blog_model.dart';
+import 'package:smartresource/presentation/blog_details_screen/blog_details_screen.dart';
+import 'package:smartresource/providers/auth_provider.dart';
+import 'package:smartresource/providers/blogs_provider.dart';
+import 'package:smartresource/services/blog_service.dart';
 import 'package:smartresource/widgets/custom_elevated_button.dart';
 import 'package:smartresource/widgets/custom_text_form_field.dart';
+import 'package:uuid/uuid.dart';
 
-class AddBlogScreen extends StatelessWidget {
-  AddBlogScreen({Key? key}) : super(key: key);
+enum AddBlogAction { add, update }
 
-  TextEditingController blogTitleController = TextEditingController();
-  TextEditingController thumbnailImageURLController = TextEditingController();
-  TextEditingController blogContentController = TextEditingController();
+class AddBlogScreen extends StatefulWidget {
+  const AddBlogScreen({
+    super.key,
+    this.action = AddBlogAction.add,
+    this.blog,
+  });
 
-  // Function to add blog post to Firestore
-  Future<void> addBlogPost() async {
-    final currentUser = FirebaseAuth.instance.currentUser;
-    print(currentUser?.displayName);
-    try {
-      await FirebaseFirestore.instance.collection('blogs').add({
-        'title': blogTitleController.text,
-        'thumbnail': thumbnailImageURLController.text,
-        'content': blogContentController.text,
-        'timestamp': Timestamp.now(), // Optionally, you can add a timestamp
-        'userEmail': currentUser?.email,
-      });
-      // Reset the text controllers after successful addition
-      blogTitleController.clear();
-      thumbnailImageURLController.clear();
-      blogContentController.clear();
-    } catch (e) {
-      print('Error adding blog post: $e');
+  final AddBlogAction action;
+  final BlogModel? blog;
+
+  @override
+  State<AddBlogScreen> createState() => _AddBlogScreenState();
+}
+
+class _AddBlogScreenState extends State<AddBlogScreen> {
+  final formKey = GlobalKey<FormState>();
+
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController contentController = TextEditingController();
+  final TextEditingController thumbnailUrlController = TextEditingController();
+
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.action == AddBlogAction.update) {
+      contentController.text = widget.blog!.content;
+      titleController.text = widget.blog!.title;
+      thumbnailUrlController.text = widget.blog!.thumbnail;
+    }
+  }
+
+  void onSubmit(BuildContext context) async {
+    if (formKey.currentState!.validate()) {
+      try {
+        setState(() {
+          isLoading = true;
+        });
+        final user = Provider.of<MyAuthProvider>(
+          context,
+          listen: false,
+        ).user;
+
+        if (user != null) {
+          final blog = BlogModel(
+            id: widget.action == AddBlogAction.add
+                ? Uuid().v1()
+                : widget.blog!.id,
+            thumbnail: thumbnailUrlController.text,
+            title: titleController.text,
+            username: user.name,
+            content: contentController.text,
+            uid: FirebaseAuth.instance.currentUser!.uid,
+            avatar: user.avatar,
+            likes: widget.action == AddBlogAction.add ? [] : widget.blog!.likes,
+            createdAt: widget.action == AddBlogAction.add
+                ? DateTime.now().toString()
+                : widget.blog!.createdAt,
+          );
+
+          if (widget.action == AddBlogAction.add) {
+            await BlogsService().addBlog(blog);
+          } else {
+            await BlogsService().updateBlog(blog);
+          }
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(widget.action == AddBlogAction.add
+                  ? 'Blog added successfully'
+                  : 'Blog updated successfully'),
+            ),
+          );
+
+          setState(() {
+            isLoading = false;
+          });
+
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => BlogDetailsScreen(
+                blog: blog,
+              ),
+            ),
+          );
+
+          Provider.of<BlogsProvider>(
+            context,
+            listen: false,
+          ).refreshBlogs();
+        }
+      } catch (e) {
+        print('---------------' + e.toString());
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Something went wrong, please try again later.'),
+          ),
+        );
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
   @override
+  void dispose() {
+    titleController.dispose();
+    contentController.dispose();
+    thumbnailUrlController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Add New Blog',
-            style: TextStyle(color: theme.colorScheme.primary),
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          widget.action == AddBlogAction.add ? 'Add New Blog' : 'Update Blog',
+          style: TextStyle(color: theme.colorScheme.primary),
         ),
-        resizeToAvoidBottomInset: false,
-        body: Container(
-          width: double.maxFinite,
-          padding: EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildInputWithLabel(context),
-              SizedBox(height: 23),
-              Text(
-                "Thumbnail",
-                style: theme.textTheme.headline6,
-              ),
-              SizedBox(height: 7),
-              _buildInput(context),
-              SizedBox(height: 9),
-              Text(
-                "Or import from URL",
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-              SizedBox(height: 6),
-              CustomTextFormField(
-                controller: thumbnailImageURLController,
-                hintText: "Thumbnail image URL",
-              ),
-              SizedBox(height: 23),
-              Text(
-                "Content",
-                style: theme.textTheme.headline6,
-              ),
-              SizedBox(height: 7),
-              CustomTextFormField(
-                controller: blogContentController,
-                hintText: "Blog content...",
-                textInputAction: TextInputAction.done,
-                maxLines: 7,
-              ),
-              SizedBox(height: 5),
-            ],
-          ),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-            onPressed: addBlogPost), // Passing onPressed callback
       ),
-    );
-  }
-
-  Widget _buildInputWithLabel(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Title",
-          style: Theme.of(context).textTheme.headline6,
-        ),
-        SizedBox(height: 7),
-        CustomTextFormField(
-          controller: blogTitleController,
-          hintText: "Blog title",
-        ),
-      ],
-    );
-  }
-
-  Widget _buildInput(BuildContext context) {
-    return DottedBorder(
-      color: Theme.of(context).colorScheme.error,
-      padding: EdgeInsets.all(8),
-      strokeWidth: 1,
-      radius: Radius.circular(12),
-      borderType: BorderType.RRect,
-      dashPattern: [8, 8],
-      child: Container(
-        padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Theme.of(context).colorScheme.error),
-        ),
+      bottomNavigationBar: BottomNavigationBar(
+        onPressed: () => onSubmit(context),
+        action: widget.action,
+      ),
+      body: SingleChildScrollView(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.add_photo_alternate, size: 48),
-            SizedBox(height: 11),
-            Text(
-              "Choose file to upload",
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+            isLoading ? const LinearProgressIndicator() : Container(),
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    buildFormGroup(
+                      label: 'Title',
+                      hintText: 'Tutorial title',
+                      controller: titleController,
+                      validator: (value) => value == null || value.isEmpty
+                          ? 'Please enter tutorial title'
+                          : null,
+                    ),
+                    buildFormGroup(
+                        validator: (value) => value == null || value.isEmpty
+                            ? 'Please enter blog thumbnail URL'
+                            : null,
+                        label: 'Thumbnail Url',
+                        hintText: 'https://www.example.com/thumbnail.jpg',
+                        controller: thumbnailUrlController),
+                    buildFormGroup(
+                      label: 'Content',
+                      hintText: 'Write your blog content here',
+                      controller: contentController,
+                      multiple: true,
+                      minLines: 5,
+                      maxLines: 1000,
+                      validator: (value) => value == null || value.isEmpty
+                          ? 'Please enter blog content'
+                          : null,
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
       ),
     );
   }
+
+  // Widget buildThumbnailInput() {
+  //   return Padding(
+  //     padding: const EdgeInsets.only(bottom: 24),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         const Text(
+  //           'Thumbnail',
+  //           style: TextStyle(
+  //             fontWeight: FontWeight.w500,
+  //             fontSize: 16,
+  //           ),
+  //         ),
+  //         const SizedBox(height: 4),
+  //         AspectRatio(
+  //           aspectRatio: 16 / 7,
+  //           child: DottedBorder(
+  //             color: Colors.blueGrey.shade100,
+  //             strokeWidth: 2,
+  //             borderType: BorderType.RRect,
+  //             radius: const Radius.circular(16),
+  //             dashPattern: const [10, 5],
+  //             child: Container(
+  //               width: double.infinity,
+  //               decoration: BoxDecoration(
+  //                 color: Colors.blueGrey.shade50,
+  //                 borderRadius: BorderRadius.circular(16),
+  //               ),
+  //               child: Column(
+  //                 mainAxisAlignment: MainAxisAlignment.center,
+  //                 crossAxisAlignment: CrossAxisAlignment.center,
+  //                 children: [
+  //                   Icon(
+  //                     Icons.add_photo_alternate_outlined,
+  //                     size: 48,
+  //                     color: Colors.blueGrey.shade100,
+  //                   ),
+  //                   const SizedBox(height: 16),
+  //                   Text(
+  //                     'Upload a thumbnail image',
+  //                     style: TextStyle(
+  //                       color: Colors.blueGrey.shade500,
+  //                       fontSize: 14,
+  //                       fontWeight: FontWeight.w300,
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //         const SizedBox(height: 8),
+  //         Text(
+  //           'Or enter a URL',
+  //           style: TextStyle(
+  //             color: Colors.blueGrey.shade500,
+  //             fontSize: 14,
+  //           ),
+  //         ),
+  //         const SizedBox(height: 8),
+  //         CustomTextFormField(
+  //           controller: thumbnailUrlController,
+  //           hintText: 'https://www.example.com/thumbnail.jpg',
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  Widget buildFormGroup({
+    required String label,
+    required String hintText,
+    required TextEditingController controller,
+    bool multiple = false,
+    int? minLines,
+    int? maxLines,
+    String? Function(String?)? validator,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 16,
+            ),
+          ),
+          const SizedBox(height: 4),
+          CustomTextFormField(
+            validator: validator,
+            controller: controller,
+            hintText: hintText,
+            textInputType: multiple ? TextInputType.multiline : null,
+            maxLines: maxLines,
+            minLines: minLines,
+            textCapitalization: multiple
+                ? TextCapitalization.sentences
+                : TextCapitalization.none,
+            textInputAction:
+                multiple ? TextInputAction.newline : TextInputAction.next,
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class BottomNavigationBar extends StatelessWidget {
-  final VoidCallback? onPressed; // Callback function to execute on button press
-  const BottomNavigationBar({Key? key, this.onPressed}) : super(key: key);
+  const BottomNavigationBar({
+    super.key,
+    this.onPressed,
+    this.action = AddBlogAction.add,
+  });
+
+  final VoidCallback? onPressed;
+  final AddBlogAction action;
 
   @override
   Widget build(BuildContext context) {
@@ -166,12 +328,13 @@ class BottomNavigationBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(32),
         ),
         child: CustomElevatedButton(
-          onPressed:
-              onPressed, // Call onPressed callback when button is pressed
-          height: 56,
-          text: "Publish",
-          margin: EdgeInsets.zero,
-          // Add your button styles here
+          onPressed: onPressed,
+          height: 56.v,
+          text: action == AddBlogAction.add ? "Publish" : 'Update',
+          margin: EdgeInsets.only(left: 2.h),
+          buttonStyle: CustomButtonStyles.fillPrimary,
+          buttonTextStyle:
+              CustomTextStyles.titleMediumOnPrimaryContainerSemiBold,
         ),
       ),
     );

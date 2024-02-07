@@ -1,62 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:smartresource/core/app_export.dart';
+import 'package:smartresource/data/models/blog/blog_model.dart';
 import 'package:smartresource/presentation/blog_details_screen/blog_details_screen.dart';
 
 // ignore: must_be_immutable
 class BlogWidget extends StatelessWidget {
-  final String title;
-  final String content;
-  final String author;
-  final String image;
-  final String date;
-  final String readTime;
-  Function() ? onTap;
+  final BlogModel blog;
 
-  BlogWidget({super.key, required this.title, required this.image, required this.content, required this.author, required this.date, required this.readTime, required this.onTap});
+  BlogWidget({super.key, required this.blog});
 
   @override
   Widget build(BuildContext context) {
-    // return InkWell(
-    //   onTap: () {
-    //     Navigator.push(context, MaterialPageRoute(builder: (context) => BlogDetailsScreen(
-    //       title: title,
-    //       content: content,
-    //       author: author,
-    //       image: image
-    //     )));
-    //   },
-    //   child:SizedBox(
-    //   width: 170.h,
-    //   child: Padding(
-    //     padding: EdgeInsets.only(bottom: 1.v),
-    //     child: Column(
-    //       children: [
-    //         CustomImageView(
-    //           imagePath: image,
-    //           height: 134.v,
-    //           width: 170.h,
-    //           radius: BorderRadius.circular(
-    //             10.h,
-    //           ),
-    //         ),
-    //         SizedBox(height: 9.v),
-    //         SizedBox(
-    //           width: 170.h,
-    //           child: Text(
-    //             // "Lorem ipsum dolor sit amet, consectetur adipiscing",
-    //             title,
-    //             maxLines: 3,
-    //             overflow: TextOverflow.ellipsis,
-    //             textAlign: TextAlign.justify,
-    //             style: theme.textTheme.titleSmall!.copyWith(
-    //               height: 1.14,
-    //             ),
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    // ));
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Column(
@@ -72,14 +26,20 @@ class BlogWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                   child: Image(
                     width: double.infinity,
-                    image: NetworkImage(image),
+                    image: NetworkImage(blog.thumbnail),
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
               Positioned(
                 child: InkWell(
-                  onTap: onTap,
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => BlogDetailsScreen(blog: blog),
+                      ),
+                    );
+                  },
                   child: Container(
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary.withOpacity(0.8),
@@ -103,9 +63,15 @@ class BlogWidget extends StatelessWidget {
             height: 8,
           ),
           InkWell(
-            onTap: onTap,
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => BlogDetailsScreen(blog: blog),
+                ),
+              );
+            },
             child: Text(
-              title,
+              blog.title,
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
@@ -118,7 +84,7 @@ class BlogWidget extends StatelessWidget {
             height: 4,
           ),
           Text(
-            'By $author  •  $date  •  $readTime min read',
+            'By ${blog.username}  •  ${DateTime.parse(blog.createdAt).format()}  •  5 min read',
             style: const TextStyle(
               fontSize: 14,
             ),

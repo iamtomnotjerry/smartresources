@@ -8,6 +8,7 @@ import 'package:smartresource/presentation/profile_screen/profile_screen.dart';
 import 'package:smartresource/presentation/shop_screen/shop_screen.dart';
 import 'package:smartresource/presentation/tutorials_screen/tutorials_screen.dart';
 import 'package:smartresource/providers/auth_provider.dart';
+import 'package:smartresource/providers/blogs_provider.dart';
 import 'package:smartresource/providers/tutorials_provider.dart';
 
 class NavigationMenu extends StatefulWidget {
@@ -31,6 +32,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
 
     Provider.of<MyAuthProvider>(context, listen: false).refreshUser();
     Provider.of<TutorialsProvider>(context, listen: false).refreshTutorials();
+    Provider.of<BlogsProvider>(context, listen: false).refreshBlogs();
 
     super.initState();
   }

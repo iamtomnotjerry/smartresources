@@ -11,6 +11,7 @@ import 'package:smartresource/navigation_menu.dart';
 import 'package:smartresource/presentation/blog_details_screen/blog_details_screen.dart';
 import 'package:smartresource/presentation/tutorial_details_screen/tutorial_details_screen.dart';
 import 'package:smartresource/providers/auth_provider.dart';
+import 'package:smartresource/providers/blogs_provider.dart';
 import 'package:smartresource/providers/tutorials_provider.dart';
 import 'package:smartresource/widgets/search_bar.dart';
 
@@ -26,6 +27,7 @@ class HomeScreen extends StatelessWidget {
     final user = Provider.of<MyAuthProvider>(context).user;
     final tutorials =
         Provider.of<TutorialsProvider>(context).tutorials.take(10).toList();
+    final blogs = Provider.of<BlogsProvider>(context).blogs.take(10).toList();
 
     return SafeArea(
         child: Scaffold(
@@ -133,52 +135,36 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(
                     height: 32,
                   ),
-                  buildSection(
-                    title: 'Blogs',
-                    onSeeAll: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => NavigationMenu(
-                          initialPage: 2,
+                  if (blogs.isNotEmpty)
+                    buildSection(
+                      title: 'Blogs',
+                      onSeeAll: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NavigationMenu(
+                            initialPage: 2,
+                          ),
                         ),
                       ),
-                    ),
-                    body: CarouselSlider.builder(
+                      body: CarouselSlider.builder(
                         options: CarouselOptions(
                           autoPlay: true,
                           viewportFraction: 1,
                           aspectRatio: 1.2,
                         ),
-                        itemCount: blogList.length,
+                        itemCount: blogs.length,
                         itemBuilder: (
                           BuildContext context,
                           int itemIndex,
                           int pageViewIndex,
                         ) {
-                          BlogModel blogItem = blogList[itemIndex];
+                          BlogModel blogItem = blogs[itemIndex];
                           return BlogWidget(
-                            title: blogItem.title,
-                            image: blogItem.image,
-                            content: blogItem.content,
-                            author: blogItem.author,
-                            date: 'Jan 1, 2022',
-                            readTime: '${itemIndex + 1}',
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => BlogDetailsScreen(
-                                    title: blogItem.title,
-                                    content: blogItem.content,
-                                    author: blogItem.author,
-                                    image: blogItem.image,
-                                  ),
-                                ),
-                              );
-                            },
+                            blog: blogItem,
                           );
-                        }),
-                  ),
+                        },
+                      ),
+                    ),
                   const SizedBox(
                     height: 32,
                   ),

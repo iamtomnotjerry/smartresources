@@ -10,6 +10,7 @@ import 'package:smartresource/navigation_menu.dart';
 import 'package:smartresource/presentation/sign_in_screen/sign_in_screen.dart';
 import 'package:smartresource/presentation/welcome_screen/welcome_screen.dart';
 import 'package:smartresource/providers/auth_provider.dart';
+import 'package:smartresource/providers/blogs_provider.dart';
 import 'package:smartresource/providers/tutorials_provider.dart';
 
 import 'core/app_export.dart';
@@ -58,6 +59,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => MyAuthProvider()),
         ChangeNotifierProvider(create: (context) => TutorialsProvider()),
+        ChangeNotifierProvider(create: (context) => BlogsProvider()),
       ],
       child: Sizer(
         builder: (context, orientation, deviceType) {

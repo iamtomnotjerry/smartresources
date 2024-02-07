@@ -1,146 +1,153 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:smartresource/core/app_export.dart';
-import 'package:smartresource/widgets/custom_icon_button.dart';
+import 'package:smartresource/data/models/blog/blog_model.dart';
+import 'package:smartresource/presentation/add_blog_screen/add_blog_screen.dart';
+import 'package:smartresource/services/blog_service.dart';
 
 class BlogDetailsScreen extends StatelessWidget {
-  final String title;
-  final String content;
-  final String author;
-  final String image;
+  final BlogModel blog;
 
-  const BlogDetailsScreen({super.key, required this.title, required this.content, required this.author, required this.image});
+  const BlogDetailsScreen({
+    super.key,
+    required this.blog,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(title: Text(
-            'Blog',
-            style: TextStyle(
-              color: theme.colorScheme.primary,
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Blog',
+          style: TextStyle(
+            color: theme.colorScheme.primary,
           ),
-          centerTitle: true,
         ),
-        body: SizedBox(
-          width: double.maxFinite,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                _buildImageStack(context),
-                SizedBox(height: 23.v),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    width: 362.h,
-                    margin: EdgeInsets.only(
-                      left: 24.h,
-                      right: 43.h,
-                    ),
-                    child: Text(
-                      title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: CustomTextStyles.titleLargeBluegray70001,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 5.v),
-                _buildRowFrameSixtySeven(context),
-                SizedBox(height: 25.v),
-                SizedBox(
-                  height: 563.v,
-                  width: double.maxFinite,
-                  child: Stack(
-                    alignment: Alignment.bottomCenter,
-                    children: [
-                      Align(
-                        alignment: Alignment.topCenter,
-                        child: SizedBox(
-                          width: 382.h,
-                          child: Text(
-                            content,
-                            maxLines: 24,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.justify,
-                            style: CustomTextStyles.bodyLargeBlack900.copyWith(
-                              height: 1.50,
+        centerTitle: true,
+        actions: [
+          blog.uid == FirebaseAuth.instance.currentUser!.uid
+              ? PopupMenuButton(
+                  offset: const Offset(0, 56),
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddBlogScreen(
+                              action: AddBlogAction.update,
+                              blog: blog,
                             ),
                           ),
-                        ),
+                        );
+                      },
+                      child: const Text(
+                        'Edit',
+                        style: TextStyle(fontSize: 14),
                       ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          height: 12.v,
-                          width: double.maxFinite,
-                          margin: EdgeInsets.only(bottom: 4.v),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.onPrimaryContainer,
-                          ),
+                    ),
+                    PopupMenuItem(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('Delete Blog'),
+                              content: const Text(
+                                'Are you sure you want to delete this blog?',
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    BlogsService().deleteBlog(
+                                      blog.id,
+                                    );
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Delete'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: const Text(
+                        'Delete',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  ],
+                )
+              : const Icon(Icons.more_vert),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            AspectRatio(
+              aspectRatio: 16 / 9,
+              child: Image.network(
+                blog.thumbnail,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    blog.title,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "By: ",
+                              style: CustomTextStyles.bodyMediumff495057,
+                            ),
+                            TextSpan(
+                              text: blog.username,
+                              style: CustomTextStyles.bodyMediumff52b788,
+                            ),
+                          ],
                         ),
+                        textAlign: TextAlign.left,
+                      ),
+                      Text(
+                        DateTime.parse(blog.createdAt).format(),
+                        style: theme.textTheme.bodyMedium,
                       ),
                     ],
                   ),
-                ),
-              ],
+                  const SizedBox(height: 24),
+                  Text(
+                    blog.content,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: appTheme.gray600,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
+          ],
         ),
-      ),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildImageStack(BuildContext context) {
-    return SizedBox(
-      height: 240.v,
-      width: double.maxFinite,
-      child: Stack(
-        alignment: Alignment.topLeft,
-        children: [
-          CustomImageView(
-            imagePath: image,
-            height: 240.v,
-            width: 430.h,
-            radius: BorderRadius.circular(
-              8.h,
-            ),
-            alignment: Alignment.center,
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildRowFrameSixtySeven(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: "By: ",
-                  style: CustomTextStyles.bodyMediumff495057,
-                ),
-                TextSpan(
-                  text: author,
-                  style: CustomTextStyles.bodyMediumff52b788,
-                ),
-              ],
-            ),
-            textAlign: TextAlign.left,
-          ),
-          Text(
-            "21/1/2024",
-            style: theme.textTheme.bodyMedium,
-          ),
-        ],
       ),
     );
   }
