@@ -55,9 +55,9 @@ class _BlogsScreenState extends State<BlogsScreen> {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () => Future.sync(
-        () => _pagingController.refresh(),
-      ),
+      onRefresh: () async {
+        _pagingController.refresh();
+      },
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -95,7 +95,7 @@ class _BlogsScreenState extends State<BlogsScreen> {
               children: [
                 const SearchBar(),
                 const SizedBox(
-                  height: 32,
+                  height: 64,
                 ),
                 PagedListView<int, BlogModel>(
                   shrinkWrap: true,

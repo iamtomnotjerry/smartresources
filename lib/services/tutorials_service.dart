@@ -56,4 +56,16 @@ class TutorialService {
   Future<void> deleteTutorial(String id) async {
     await _firestore.collection('tutorials').doc(id).delete();
   }
+
+  Future<void> like(String id, String uid) async {
+    await _firestore.collection('tutorials').doc(id).update({
+      'likes': FieldValue.arrayUnion([uid]),
+    });
+  }
+
+  Future<void> unlike(String id, String uid) async {
+    await _firestore.collection('tutorials').doc(id).update({
+      'likes': FieldValue.arrayRemove([uid]),
+    });
+  }
 }

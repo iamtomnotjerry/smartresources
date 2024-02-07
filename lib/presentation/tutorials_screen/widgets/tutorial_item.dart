@@ -118,24 +118,49 @@ class _TutorialItemState extends State<TutorialItem> {
             height: 8,
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CircleAvatar(
-                backgroundImage: widget.tutorial.avatar.isNotEmpty
-                    ? NetworkImage(widget.tutorial.avatar)
-                    : AssetImage(ImageConstant.avatarPlaceholder)
-                        as ImageProvider,
-                radius: 16,
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: widget.tutorial.avatar.isNotEmpty
+                        ? NetworkImage(widget.tutorial.avatar)
+                        : AssetImage(ImageConstant.avatarPlaceholder)
+                            as ImageProvider,
+                    radius: 16,
+                  ),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  Text(
+                    widget.tutorial.username,
+                    style: TextStyle(
+                      color: Colors.blueGrey.shade700,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(
-                width: 8,
-              ),
-              Text(
-                widget.tutorial.username,
-                style: TextStyle(
-                  color: Colors.blueGrey.shade700,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.favorite,
+                    size: 18,
+                    color: Colors.blueGrey.shade200,
+                  ),
+                  const SizedBox(
+                    width: 4,
+                  ),
+                  Text(
+                    widget.tutorial.likes.length.toString(),
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.blueGrey.shade500,
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
           const SizedBox(

@@ -24,6 +24,8 @@ class TutorialDetailsScreen extends StatefulWidget {
 class _TutorialDetailsScreenState extends State<TutorialDetailsScreen> {
   late YoutubePlayerController videoController;
 
+  late List<String> _likes;
+
   @override
   void initState() {
     videoController = YoutubePlayerController(
@@ -33,6 +35,7 @@ class _TutorialDetailsScreenState extends State<TutorialDetailsScreen> {
         mute: false,
       ),
     );
+    _likes = widget.tutorial.likes;
     super.initState();
   }
 
@@ -189,25 +192,68 @@ class _TutorialDetailsScreenState extends State<TutorialDetailsScreen> {
                                                 ImageConstant.avatarPlaceholder)
                                             as ImageProvider,
                               ),
-                              const SizedBox(width: 8),
-                              Text(
-                                widget.tutorial.username,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                              const SizedBox(width: 16),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    widget.tutorial.username,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  Text(
+                                    DateTime.parse(widget.tutorial.createdAt)
+                                        .format(),
+                                  )
+                                ],
                               ),
                             ],
                           ),
                           Row(
                             children: [
-                              Icon(
-                                Icons.thumb_up_outlined,
-                                color: appTheme.blueGray200,
-                              ),
+                              GestureDetector(
+                                  onTap: () {
+                                    if (_likes.contains(
+                                      FirebaseAuth.instance.currentUser!.uid,
+                                    )) {
+                                      TutorialService().unlike(
+                                        widget.tutorial.id,
+                                        FirebaseAuth.instance.currentUser!.uid,
+                                      );
+                                      setState(() {
+                                        _likes.remove(
+                                          FirebaseAuth
+                                              .instance.currentUser!.uid,
+                                        );
+                                      });
+                                    } else {
+                                      TutorialService().like(
+                                        widget.tutorial.id,
+                                        FirebaseAuth.instance.currentUser!.uid,
+                                      );
+                                      setState(() {
+                                        _likes.add(
+                                          FirebaseAuth
+                                              .instance.currentUser!.uid,
+                                        );
+                                      });
+                                    }
+                                  },
+                                  child: _likes.contains(FirebaseAuth
+                                          .instance.currentUser!.uid)
+                                      ? const Icon(
+                                          Icons.favorite,
+                                          color: Colors.red,
+                                        )
+                                      : Icon(
+                                          Icons.favorite_outline_rounded,
+                                          color: appTheme.blueGray200,
+                                        )),
                               const SizedBox(width: 8),
                               Text(
-                                widget.tutorial.likes.length.toString(),
+                                _likes.length.toString(),
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: appTheme.gray600,

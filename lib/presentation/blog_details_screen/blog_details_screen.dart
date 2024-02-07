@@ -5,13 +5,26 @@ import 'package:smartresource/data/models/blog/blog_model.dart';
 import 'package:smartresource/presentation/add_blog_screen/add_blog_screen.dart';
 import 'package:smartresource/services/blog_service.dart';
 
-class BlogDetailsScreen extends StatelessWidget {
+class BlogDetailsScreen extends StatefulWidget {
   final BlogModel blog;
 
   const BlogDetailsScreen({
     super.key,
     required this.blog,
   });
+
+  @override
+  State<BlogDetailsScreen> createState() => _BlogDetailsScreenState();
+}
+
+class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
+  late List<String> _likes;
+
+  @override
+  void initState() {
+    super.initState();
+    _likes = widget.blog.likes;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +38,7 @@ class BlogDetailsScreen extends StatelessWidget {
         ),
         centerTitle: true,
         actions: [
-          blog.uid == FirebaseAuth.instance.currentUser!.uid
+          widget.blog.uid == FirebaseAuth.instance.currentUser!.uid
               ? PopupMenuButton(
                   offset: const Offset(0, 56),
                   itemBuilder: (context) => [
@@ -36,7 +49,7 @@ class BlogDetailsScreen extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (context) => AddBlogScreen(
                               action: AddBlogAction.update,
-                              blog: blog,
+                              blog: widget.blog,
                             ),
                           ),
                         );
@@ -66,7 +79,7 @@ class BlogDetailsScreen extends StatelessWidget {
                                 TextButton(
                                   onPressed: () {
                                     BlogsService().deleteBlog(
-                                      blog.id,
+                                      widget.blog.id,
                                     );
                                     Navigator.pop(context);
                                     Navigator.pop(context);
@@ -94,7 +107,7 @@ class BlogDetailsScreen extends StatelessWidget {
             AspectRatio(
               aspectRatio: 16 / 9,
               child: Image.network(
-                blog.thumbnail,
+                widget.blog.thumbnail,
                 fit: BoxFit.cover,
               ),
             ),
@@ -104,45 +117,106 @@ class BlogDetailsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    blog.title,
+                    widget.blog.title,
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: "By: ",
-                              style: CustomTextStyles.bodyMediumff495057,
-                            ),
-                            TextSpan(
-                              text: blog.username,
-                              style: CustomTextStyles.bodyMediumff52b788,
-                            ),
-                          ],
-                        ),
-                        textAlign: TextAlign.left,
+                      Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: widget.blog.avatar.isNotEmpty
+                                ? NetworkImage(widget.blog.avatar)
+                                : AssetImage(ImageConstant.avatarPlaceholder)
+                                    as ImageProvider,
+                          ),
+                          const SizedBox(width: 16),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.blog.username,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                DateTime.parse(widget.blog.createdAt).format(),
+                              )
+                            ],
+                          ),
+                        ],
                       ),
-                      Text(
-                        DateTime.parse(blog.createdAt).format(),
-                        style: theme.textTheme.bodyMedium,
-                      ),
+                      Row(
+                        children: [
+                          GestureDetector(
+                              onTap: () {
+                                if (_likes.contains(
+                                  FirebaseAuth.instance.currentUser!.uid,
+                                )) {
+                                  BlogsService().unlike(
+                                    widget.blog.id,
+                                    FirebaseAuth.instance.currentUser!.uid,
+                                  );
+                                  setState(() {
+                                    _likes.remove(
+                                      FirebaseAuth.instance.currentUser!.uid,
+                                    );
+                                  });
+                                } else {
+                                  BlogsService().like(
+                                    widget.blog.id,
+                                    FirebaseAuth.instance.currentUser!.uid,
+                                  );
+                                  setState(() {
+                                    _likes.add(
+                                      FirebaseAuth.instance.currentUser!.uid,
+                                    );
+                                  });
+                                }
+                              },
+                              child: _likes.contains(
+                                      FirebaseAuth.instance.currentUser!.uid)
+                                  ? const Icon(
+                                      Icons.favorite,
+                                      color: Colors.red,
+                                    )
+                                  : Icon(
+                                      Icons.favorite_outline_rounded,
+                                      color: appTheme.blueGray200,
+                                    )),
+                          const SizedBox(width: 8),
+                          Text(
+                            _likes.length.toString(),
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: appTheme.gray600,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Icon(
+                            Icons.more_vert,
+                            color: appTheme.gray600,
+                          ),
+                        ],
+                      )
                     ],
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 32),
                   Text(
-                    blog.content,
+                    widget.blog.content,
                     style: TextStyle(
-                      fontSize: 16,
-                      color: appTheme.gray600,
+                      fontSize: 18,
+                      color: Colors.blueGrey.shade700,
                     ),
                   ),
+                  const SizedBox(height: 100),
                 ],
               ),
             ),

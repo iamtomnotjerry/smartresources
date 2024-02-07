@@ -11,13 +11,13 @@ class BlogsService {
   }
   
    Future<List<BlogModel>> getBlogs() async {
-    final tutorials = await _firestore
+    final blogs = await _firestore
         .collection('blogs')
         .orderBy('createdAt', descending: true)
         .limit(10)
         .get();
-    return tutorials.docs
-        .map((tutorial) => BlogModel.fromMap(tutorial.data()))
+    return blogs.docs
+        .map((blog) => BlogModel.fromMap(blog.data()))
         .toList();
   }
 
@@ -38,12 +38,12 @@ class BlogsService {
 
     query = await query.limit(limit);
 
-    final tutorials = await query.get();
+    final blogs = await query.get();
 
-    print('------------' + tutorials.toString());
+    print('------------' + blogs.toString());
 
-    return tutorials.docs
-        .map((tutorial) => BlogModel.fromMap(tutorial.data()))
+    return blogs.docs
+        .map((blog) => BlogModel.fromMap(blog.data()))
         .toList();
   }
 
@@ -55,5 +55,17 @@ class BlogsService {
 
   Future<void> deleteBlog(String id) async {
     await _firestore.collection('blogs').doc(id).delete();
+  }
+
+   Future<void> like(String id, String uid) async {
+    await _firestore.collection('blogs').doc(id).update({
+      'likes': FieldValue.arrayUnion([uid]),
+    });
+  }
+
+  Future<void> unlike(String id, String uid) async {
+    await _firestore.collection('blogs').doc(id).update({
+      'likes': FieldValue.arrayRemove([uid]),
+    });
   }
 }
