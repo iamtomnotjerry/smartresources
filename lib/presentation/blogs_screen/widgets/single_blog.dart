@@ -8,7 +8,13 @@ class SingleBlogWidget extends StatelessWidget {
   final String author;
   final String image;
 
-  const SingleBlogWidget({super.key, required this.title, required this.content, required this.author, required this.image});
+  const SingleBlogWidget({
+    Key? key,
+    required this.title,
+    required this.content,
+    required this.author,
+    required this.image,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,73 +24,59 @@ class SingleBlogWidget extends StatelessWidget {
           title: title,
           content: content,
           author: author,
-          image: image
+          image: image,
         )));
       },
-      child:Container(
-      height: 400.v,
-      // decoration: AppDecoration.fillOnPrimaryContainer.copyWith(
-      //   borderRadius: BorderRadiusStyle.roundedBorder12,
-      // ),
-      margin: EdgeInsets.all(16.0),
-      decoration: BoxDecoration(                                                                                                                                                                                             
-        border: Border.all(
-          color: Colors.grey, // Set border color here
-          width: 2.0, // Set border width here
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
         ),
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CustomImageView(
-            imagePath: image,
-            height: 217.v,
-            width: 383.h,
-          ),
-          SizedBox(height: 17.v),
-          Container(
-            width: 343.h,
-            margin: EdgeInsets.only(
-              left: 16.h,
-              right: 23.h,
-            ),
-            child: Text(
-              title,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.titleMedium!.copyWith(
-                color: appTheme.blueGray70001,
+        margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
+              child: Image(
+                image: NetworkImage(image),
+                fit: BoxFit.cover,
+                height: 200, // Adjusted height for the image
+                width: double.infinity,
               ),
             ),
-          ),
-          SizedBox(height: 9.v),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.h),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "Author: ",
-                        style: CustomTextStyles.bodyMediumff495057,
-                      ),
-                      TextSpan(
-                        // text: "Anonymous",
-                        text: author,
-                        style: CustomTextStyles.titleSmallff52b788,
-                      ),
-                    ],
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
-                  textAlign: TextAlign.left,
-                ),
-              ],
+                  SizedBox(height: 8),
+                  Text(
+                    'By $author',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ));
+    );
   }
 }
