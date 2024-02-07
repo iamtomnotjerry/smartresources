@@ -11,10 +11,7 @@ import 'widgets/chip.dart';
 import 'widgets/tutorial_item.dart';
 
 class TutorialsScreen extends StatefulWidget {
-  TutorialsScreen({Key? key})
-      : super(
-          key: key,
-        );
+  TutorialsScreen({Key? key});
 
   @override
   State<TutorialsScreen> createState() => _TutorialsScreenState();
@@ -59,100 +56,105 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
   }
 
   @override
-  void dispose() {
-    _pagingController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(
-          'Tutorials',
-          style: TextStyle(
-            color: theme.colorScheme.primary,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AddTutorialScreen(),
-                ),
-              );
-            },
-            icon: Icon(
-              Icons.add_rounded,
-              size: 32,
+    return RefreshIndicator(
+      onRefresh: () async {
+        _pagingController.refresh();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Text(
+            'Tutorials',
+            style: TextStyle(
               color: theme.colorScheme.primary,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SearchBar(),
-            const SizedBox(height: 32),
-            const Text(
-              "Materials",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Wrap(
-              runSpacing: -4,
-              spacing: 8,
-              children: List<Widget>.generate(
-                tutorialMaterials.take(10).length,
-                (index) => CustomChip(
-                  text: tutorialMaterials.take(10).toList()[index],
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              "Purposes",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Wrap(
-              runSpacing: -4,
-              spacing: 8,
-              children: List<Widget>.generate(
-                tutorialPurposes.take(10).length,
-                (index) => CustomChip(
-                  text: tutorialPurposes.take(10).toList()[index],
-                ),
-              ),
-            ),
-            const SizedBox(height: 32),
-            PagedListView<int, TutorialModel>(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              pagingController: _pagingController,
-              builderDelegate: PagedChildBuilderDelegate<TutorialModel>(
-                itemBuilder: (context, item, index) => TutorialItem(
-                  tutorial: item,
-                ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddTutorialScreen(),
+                  ),
+                );
+              },
+              icon: Icon(
+                Icons.add_rounded,
+                size: 32,
+                color: theme.colorScheme.primary,
               ),
             ),
           ],
         ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SearchBar(),
+              const SizedBox(height: 32),
+              const Text(
+                "Materials",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                runSpacing: -4,
+                spacing: 8,
+                children: List<Widget>.generate(
+                  tutorialMaterials.take(10).length,
+                  (index) => CustomChip(
+                    text: tutorialMaterials.take(10).toList()[index],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                "Purposes",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                runSpacing: -4,
+                spacing: 8,
+                children: List<Widget>.generate(
+                  tutorialPurposes.take(10).length,
+                  (index) => CustomChip(
+                    text: tutorialPurposes.take(10).toList()[index],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 32),
+              PagedListView<int, TutorialModel>(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                pagingController: _pagingController,
+                builderDelegate: PagedChildBuilderDelegate<TutorialModel>(
+                  itemBuilder: (context, item, index) => TutorialItem(
+                    tutorial: item,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
   }
 }

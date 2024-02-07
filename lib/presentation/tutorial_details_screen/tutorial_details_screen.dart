@@ -110,6 +110,7 @@ class _TutorialDetailsScreenState extends State<TutorialDetailsScreen> {
                                         widget.tutorial.id,
                                       );
                                       Navigator.pop(context);
+                                      Navigator.pop(context);
                                     },
                                     child: const Text('Delete'),
                                   ),

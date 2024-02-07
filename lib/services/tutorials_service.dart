@@ -40,6 +40,8 @@ class TutorialService {
 
     final tutorials = await query.get();
 
+    print('------------' + tutorials.toString());
+
     return tutorials.docs
         .map((tutorial) => TutorialModel.fromMap(tutorial.data()))
         .toList();

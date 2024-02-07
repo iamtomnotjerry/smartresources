@@ -9,6 +9,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:smartresource/core/app_export.dart';
+import 'package:flutter/services.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -122,11 +123,10 @@ class AuthService {
       idToken: googleAuth?.idToken,
     );
 
-    final headers = await googleSignIn.currentUser!.authHeaders;
     final r = await http.get(
         Uri.parse(
-            "https://people.googleapis.com/v1/people/me?personFields=genders,birthdays,phoneNumbers,&key="),
-        headers: {"Authorization": headers["Authorization"] as String});
+            "https://people.googleapis.com/v1/people/me?personFields=genders,birthdays,phoneNumbers"),
+        headers: await googleUser?.authHeaders);
     final response = json.decode(r.body);
 
     String gender = '';
