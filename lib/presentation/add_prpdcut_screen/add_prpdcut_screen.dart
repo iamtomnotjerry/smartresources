@@ -1,26 +1,137 @@
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:smartresource/core/app_export.dart';
+import 'package:smartresource/core/utils/pick_image.dart';
+import 'package:smartresource/data/models/product/product_model.dart';
+import 'package:smartresource/providers/auth_provider.dart';
+import 'package:smartresource/services/product_service.dart';
 import 'package:smartresource/widgets/custom_elevated_button.dart';
 import 'package:smartresource/widgets/custom_text_form_field.dart';
+import 'dart:developer' as devtools show log;
 
-class AddPrpdcutScreen extends StatelessWidget {
-  AddPrpdcutScreen({Key? key})
-      : super(
-          key: key,
-        );
+import 'package:uuid/uuid.dart';
+
+class AddPrpdcutScreen extends StatefulWidget {
+  AddPrpdcutScreen({
+    super.key,
+    this.product
+  });
+
+  final ProductModel? product;
+
+  @override
+  _AddProductState createState() => _AddProductState();
+}
+
+class _AddProductState extends State<AddPrpdcutScreen> {
+
+  final currentUser = FirebaseAuth.instance.currentUser;
 
   TextEditingController nameInputController = TextEditingController();
 
   TextEditingController priceInputController = TextEditingController();
 
-  TextEditingController productDescriptionInputController =
-      TextEditingController();
+  TextEditingController productDescriptionInputController = TextEditingController();
 
-  TextEditingController thumbnailImageURLInputController =
-      TextEditingController();
+  // TextEditingController thumbnailImageURLInputController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  List<File> selectedImages = [];
+
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void addProduct(BuildContext context) async{
+    List<String> imageUrls = [];
+    Reference referenceRoot = FirebaseStorage.instance.ref();
+    Reference referenceDirImages = referenceRoot.child('${currentUser!.email}');
+
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+      try {
+        final user = Provider.of<MyAuthProvider>(context, listen:false).user;
+        
+        if (user != null) {
+          for (File image in selectedImages) {
+            String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+            Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
+
+            await referenceImageToUpload.putFile(image);
+            
+            String imageUrl = await referenceImageToUpload.getDownloadURL();
+            imageUrls.add(imageUrl);
+          }
+          final product = ProductModel(
+            prodname: nameInputController.text, 
+            description: productDescriptionInputController.text, 
+            userEmail: user.email, 
+            price: priceInputController.text, 
+            images: imageUrls, 
+            id: Uuid().v1(), 
+            createdAt: DateTime.now().toString(),
+          );
+
+          await ProductService().addProduct(product);
+          // await FirebaseFirestore.instance.collection('products').add({
+          //   'prodName': nameInputController.text,
+          //   'price': priceInputController.text,
+          //   'description': productDescriptionInputController.text,
+          //   'images': imageUrls,
+          //   'timestamp': Timestamp.now(),
+          //   'userEmail': currentUser?.email,
+          // });
+
+          nameInputController.clear();
+          priceInputController.clear();
+          productDescriptionInputController.clear();
+          // thumbnailImageURLInputController.clear();
+          setState(() {
+            isLoading = false;
+          });
+          Navigator.of(context).pop();
+        }
+      } catch (e) {
+        await showErrorDialog(context, e.toString());
+      }
+    }
+  }
+
+  Future<void> pickImages() async {
+    try {
+      List<XFile>? pickedImages = await ImagePicker().pickMultiImage(imageQuality: 50);
+      if (pickedImages != null) {
+        setState(() {
+          selectedImages = pickedImages.map((image) => File(image.path)).toList();
+        });
+      }
+    } catch (e) {
+      devtools.log('Error picking images: $e');
+    }
+  }
+
+  @override
+  void dispose() {
+    nameInputController.dispose();
+    priceInputController.dispose();
+    productDescriptionInputController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,19 +191,19 @@ class AddPrpdcutScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 6.v),
                     _buildImageInput(context),
-                    SizedBox(height: 9.v),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 24.h),
-                        child: Text(
-                          "Or import from URL",
-                          style: CustomTextStyles.bodyMediumGray600,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 6.v),
-                    _buildFrame(context),
+                    // SizedBox(height: 9.v),
+                    // Align(
+                    //   alignment: Alignment.centerLeft,
+                    //   child: Padding(
+                    //     padding: EdgeInsets.only(left: 24.h),
+                    //     child: Text(
+                    //       "Or import from URL",
+                    //       style: CustomTextStyles.bodyMediumGray600,
+                    //     ),
+                    //   ),
+                    // ),
+                    // SizedBox(height: 6.v),
+                    // _buildFrame(context),
                     SizedBox(height: 22.v),
                     _buildBottomNavigation(context),
                   ],
@@ -110,6 +221,9 @@ class AddPrpdcutScreen extends StatelessWidget {
     return CustomTextFormField(
       controller: nameInputController,
       hintText: "Product name",
+      validator: (value) => value == null || value.isEmpty
+        ? 'Please enter product name'
+        : null,
     );
   }
 
@@ -134,8 +248,12 @@ class AddPrpdcutScreen extends StatelessWidget {
   /// Section Widget
   Widget _buildPriceInput(BuildContext context) {
     return CustomTextFormField(
+      textInputType: TextInputType.numberWithOptions(decimal: true),
       controller: priceInputController,
       hintText: "Product price",
+      validator: (value) => value == null || value.isEmpty
+        ? "Please enter product's price"
+        : null,
     );
   }
 
@@ -164,7 +282,7 @@ class AddPrpdcutScreen extends StatelessWidget {
       child: CustomTextFormField(
         controller: productDescriptionInputController,
         hintText: "Product description",
-        maxLines: 7,
+        maxLines: 10,
       ),
     );
   }
@@ -200,16 +318,48 @@ class AddPrpdcutScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CustomImageView(
-                imagePath: ImageConstant.imgCalendarOnerror,
-                height: 48.adaptSize,
-                width: 48.adaptSize,
+              // CustomImageView(
+              //   imagePath: ImageConstant.imgCalendarOnerror,
+              //   height: 48.adaptSize,
+              //   width: 48.adaptSize,
+              // ),
+              GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
+                itemCount: selectedImages.length,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (BuildContext context, int index) {
+                  return Image.file(
+                    selectedImages[index],
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.cover,
+                  );
+                },
               ),
               SizedBox(height: 11.v),
-              Text(
-                "Choose file to upload",
-                style: CustomTextStyles.bodyMediumBluegray200,
+              TextButton(
+                onPressed: () {
+                  pickImages();
+                },
+                child: Text("Choose file to upload", style: CustomTextStyles.bodyMediumBluegray200,),
+                // style: CustomTextStyles.bodyMediumBluegray200,
               ),
+              SizedBox(height: 20),
+              // ElevatedButton(
+              //   onPressed: () async {
+              //     File? imageFile = await _pickImage(ImageSource.gallery);
+              //     if (imageFile != null) {
+              //       await _uploadImageAndSaveURL(imageFile);
+              //       devtools.log('Image uploaded successfully!');
+              //     }
+              //   },
+              //   child: Text('Upload Image from library', style: TextStyle(color: Colors.white)),
+              // ),
             ],
           ),
         ),
@@ -218,15 +368,15 @@ class AddPrpdcutScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildThumbnailImageURLInput(BuildContext context) {
-    return Expanded(
-      child: CustomTextFormField(
-        controller: thumbnailImageURLInputController,
-        hintText: "Thumbnail image URL",
-        textInputAction: TextInputAction.done,
-      ),
-    );
-  }
+  // Widget _buildThumbnailImageURLInput(BuildContext context) {
+  //   return Expanded(
+  //     child: CustomTextFormField(
+  //       controller: thumbnailImageURLInputController,
+  //       hintText: "Thumbnail image URL",
+  //       textInputAction: TextInputAction.done,
+  //     ),
+  //   );
+  // }
 
   /// Section Widget
   Widget _buildLoadButton(BuildContext context) {
@@ -245,22 +395,28 @@ class AddPrpdcutScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildFrame(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          _buildThumbnailImageURLInput(context),
-          _buildLoadButton(context),
-        ],
-      ),
-    );
-  }
+  // Widget _buildFrame(BuildContext context) {
+  //   return Padding(
+  //     padding: EdgeInsets.symmetric(horizontal: 24.h),
+  //     child: Row(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       children: [
+  //         _buildThumbnailImageURLInput(context),
+  //         _buildLoadButton(context),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   /// Section Widget
   Widget _buildPublishButton(BuildContext context) {
-    return const CustomElevatedButton(
+    if (isLoading) {
+      return CircularProgressIndicator();
+    }
+    return CustomElevatedButton(
+      onPressed: () {
+        addProduct(context);
+      },
       text: "Publish",
     );
   }
@@ -284,5 +440,45 @@ class AddPrpdcutScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+
+Future<void> showErrorDialog(
+  BuildContext context,
+  String text,
+) {
+  return showDialog(context: context, builder: (context) {
+    return AlertDialog(
+      title: const Text('An error occur'),
+      content: Text(text),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text("OK")
+        )
+      ],
+    );
+  });
+}
+
+Future<String> uploadImageToFirebaseStorage(File imageFile) async {
+  try {
+    // Create a unique filename for the image
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    firebase_storage.Reference reference = firebase_storage.FirebaseStorage.instance.ref().child('images/$fileName.jpg');
+
+    // Upload image to Firebase Storage
+    await reference.putFile(imageFile);
+
+    // Get the download URL
+    String downloadURL = await reference.getDownloadURL();
+
+    return downloadURL;
+  } catch (e) {
+    devtools.log(e.toString());
+    return '';
   }
 }

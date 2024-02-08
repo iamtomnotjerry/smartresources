@@ -1,31 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smartresource/core/app_export.dart';
+import 'package:smartresource/data/models/product/product_model.dart';
+import 'package:smartresource/presentation/product_details_two_screen/product_details_two_screen.dart';
 import 'package:smartresource/widgets/custom_icon_button.dart';
 
 // ignore: must_be_immutable
 class ShopItemWidget extends StatelessWidget {
-  final String prodname;
-  final String description;
-  final String seller;
-  final double price;
-  final String image;
-  Function() ? onTap;
+  final ProductModel product;
 
-  ShopItemWidget({
-    super.key, 
-    required this.prodname, 
-    required this.description, 
-    required this.seller, 
-    required this.price, 
-    required this.image,
-    required this.onTap
-  });
+  ShopItemWidget({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ProductDetailsTwoScreen(
+              product: product,
+            ),
+          ),
+        );
+      },
       child:Container(
       padding: EdgeInsets.symmetric(vertical: 9.v),
       decoration: AppDecoration.fillOnPrimaryContainer.copyWith(
@@ -42,7 +39,7 @@ class ShopItemWidget extends StatelessWidget {
               alignment: Alignment.topRight,
               children: [
                 CustomImageView(
-                  imagePath: image,
+                  imagePath: product.images[0],
                   height: 100.0,
                   width: 100.0,
                   radius: BorderRadius.circular(
@@ -79,7 +76,7 @@ class ShopItemWidget extends StatelessWidget {
                   width: 182.h,
                   child: Text(
                     // "Đèn trang trí làm bằng chai nhựa",
-                    prodname,
+                    product.prodname,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: CustomTextStyles.titleSmallSemiBold,
@@ -90,7 +87,7 @@ class ShopItemWidget extends StatelessWidget {
                   width: 210.h,
                   child: Text(
                     // "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut congue scelerisque sodales. Praesent non arcu erat. Aliquam erat volutpat. Praesent facilisis felis sed convallis venenatis. Mauris sit amet quam ultrices ipsum viverra dignissim. Donec risus lorem, euismod quis quam id, sagittis varius neque. Nunc eu dapibus nisi, non efficitur nibh. Donec et leo vitae eros semper dictum. Nulla interdum et tortor quis eleifend. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Ut ut volutpat justo. Phasellus non ipsum vitae nunc varius interdum. Morbi malesuada sit amet velit a tristique. In hac habitasse platea dictumst.",
-                    description,
+                    product.description,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: CustomTextStyles.bodySmallGray600_1,
@@ -110,7 +107,7 @@ class ShopItemWidget extends StatelessWidget {
                               style: CustomTextStyles.bodySmallff495057,
                             ),
                             TextSpan(
-                              text: seller,
+                              text: product.userEmail,
                               // text: "Jackie",
                               style: CustomTextStyles.bodySmallff6c757d,
                             ),
@@ -118,16 +115,16 @@ class ShopItemWidget extends StatelessWidget {
                         ),
                         textAlign: TextAlign.left,
                       ),
-                      Text(
-                        "21/1/2024",
-                        style: theme.textTheme.bodySmall,
-                      ),
+                      // Text(
+                      //   product.createdAt,
+                      //   style: theme.textTheme.bodySmall,
+                      // ),
                     ],
                   ),
                 ),
                 SizedBox(height: 9.v),
                 Text(
-                  NumberFormat.currency(locale: 'vi-VN').format(price),
+                  NumberFormat.currency(locale: 'vi-VN').format(double.parse(product.price)),
                   // "20",
                   style: theme.textTheme.labelLarge,
                 ),

@@ -1,4 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:smartresource/data/models/product/product_model.dart';
+import 'package:smartresource/providers/auth_provider.dart';
 
 import '../product_details_two_screen/widgets/thirtyfour_item_widget.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -9,23 +13,15 @@ import 'package:smartresource/widgets/app_bar/custom_app_bar.dart';
 import 'package:smartresource/widgets/custom_elevated_button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+enum MenuAction {delete_prod}
 class ProductDetailsTwoScreen extends StatefulWidget {
   int sliderIndex = 1;
   
-  final String prodname;
-  final String description;
-  final String seller;
-  final double price;
-  final List<String> image;
+  final ProductModel product;
 
-  ProductDetailsTwoScreen({
-    super.key, 
-    required this.prodname, 
-    required this.description, 
-    required this.seller, 
-    required this.price, 
-    required this.image
-  });
+  User? currentUser = FirebaseAuth.instance.currentUser;
+
+  ProductDetailsTwoScreen({super.key, required this.product});
 
   @override
   _ProductDetailsTwoScreenState createState() => _ProductDetailsTwoScreenState();
@@ -49,18 +45,31 @@ class _ProductDetailsTwoScreenState extends State<ProductDetailsTwoScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(title: Text(
-            "Seller: ${widget.seller}",
+            "Seller: ${widget.product.userEmail}",
             style: TextStyle(
               color: theme.colorScheme.primary,
             ),
           ),
+          actions: [
+            if (widget.currentUser?.email == widget.product.userEmail)
+              PopupMenuButton<MenuAction>(
+                onSelected: (value) {}, 
+                itemBuilder: (context) {
+                  return const [
+                    PopupMenuItem<MenuAction>(
+                      value: MenuAction.delete_prod, 
+                      child: Text('Delete Product')
+                    ),
+                  ];
+                },
+              ),
+          ],
           centerTitle: true,
         ),
         // _buildAppBar(context),
-        body: Container(
+        body: SingleChildScrollView(child:Container(
           width: double.maxFinite,
           padding: EdgeInsets.symmetric(
             horizontal: 14.h,
@@ -75,10 +84,14 @@ class _ProductDetailsTwoScreenState extends State<ProductDetailsTwoScreen> {
                 padding: EdgeInsets.only(left: 11.h),
                 child: Text(
                   // "Đèn trang trí làm bằng chai nhựa",
-                  widget.prodname,
+                  widget.product.prodname,
                   style: CustomTextStyles.titleLargeBluegray7000123,
                 ),
               ),
+              Center(child: Text(
+                DateFormat('dd/MM/yyyy').format(DateTime.parse(widget.product.createdAt)),
+                style: theme.textTheme.bodySmall,
+              ),),
               SizedBox(height: 34.v),
               Padding(
                 padding: EdgeInsets.only(left: 9.h),
@@ -93,7 +106,7 @@ class _ProductDetailsTwoScreenState extends State<ProductDetailsTwoScreen> {
                 margin: EdgeInsets.symmetric(horizontal: 9.h),
                 child: Text(
                   // "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dapibus suscipit augue sit amet suscipit.\nSed sollicitudin mauris et eros imperdiet ullamcorper.\nAliquam risus metus, maximus eu mauris vel, gravida vulputate velit.\nNullam in mi dictum, dictum libero sed, auctor nunc. Sed ut tincidunt augue, eget convallis sapien. Ut fringilla volutpat finibus.",
-                  widget.description,
+                  widget.product.description,
                   maxLines: 11,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.justify,
@@ -156,10 +169,9 @@ class _ProductDetailsTwoScreenState extends State<ProductDetailsTwoScreen> {
               SizedBox(height: 5.v),
             ],
           ),
-        ),
+        )),
         bottomNavigationBar: _buildBottomNavigation(context),
-      ),
-    );
+      );
   }
 
   /// Section Widget
@@ -193,12 +205,13 @@ class _ProductDetailsTwoScreenState extends State<ProductDetailsTwoScreen> {
                 widget.sliderIndex = index;
               },
             ),
-            itemCount: widget.image.length,
+            itemCount: widget.product.images.length,
             itemBuilder: (context, index, realIndex) {
               widget.sliderIndex = index;
-              return ThirtyfourItemWidget(image: widget.image[index]);
+              return ThirtyfourItemWidget(image: widget.product.images[index]);
             },
           ),
+          // ThirtyfourItemWidget(image: widget.image),
         ],
       ),
     );
@@ -232,7 +245,7 @@ class _ProductDetailsTwoScreenState extends State<ProductDetailsTwoScreen> {
                   padding: EdgeInsets.only(top: 3.v),
                   child: Text(
                     // "24,000đ",
-                    NumberFormat.currency(locale: 'vi-VN').format(widget.price),
+                    NumberFormat.currency(locale: 'vi-VN').format(double.parse(widget.product.price)),
                     style: CustomTextStyles.titleMediumPrimary,
                   ),
                 ),

@@ -179,7 +179,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     body: GridView.builder(
-                      itemCount: productslist.length,
+                      // itemCount: productslist.length,
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       gridDelegate:
@@ -190,14 +190,14 @@ class HomeScreen extends StatelessWidget {
                         childAspectRatio: 0.52,
                       ),
                       itemBuilder: (context, index) {
-                        ProductModel prodItem = productslist[index];
-                        return ProductWidget(
-                          prodname: prodItem.prodname,
-                          description: prodItem.description,
-                          seller: prodItem.seller,
-                          price: prodItem.price,
-                          image: prodItem.image[0],
-                        );
+                        // ProductModel prodItem = productslist[index];
+                        // return ProductWidget(
+                        //   prodname: prodItem.prodname,
+                        //   description: prodItem.description,
+                        //   seller: prodItem.userEmail,
+                        //   price: prodItem.price,
+                        //   image: prodItem.images[0],
+                        // );
                       },
                     ),
                   ),
