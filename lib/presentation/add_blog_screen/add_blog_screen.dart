@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smartresource/core/app_export.dart';
+import 'package:smartresource/core/utils/validation_functions.dart';
 import 'package:smartresource/data/models/blog/blog_model.dart';
 import 'package:smartresource/presentation/blog_details_screen/blog_details_screen.dart';
 import 'package:smartresource/providers/auth_provider.dart';
@@ -82,9 +83,11 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(widget.action == AddBlogAction.add
-                  ? 'Blog added successfully'
-                  : 'Blog updated successfully'),
+              content: Text(
+                widget.action == AddBlogAction.add
+                    ? 'Blog added successfully'
+                    : 'Blog updated successfully',
+              ),
             ),
           );
 
@@ -159,9 +162,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                           : null,
                     ),
                     buildFormGroup(
-                        validator: (value) => value == null || value.isEmpty
-                            ? 'Please enter blog thumbnail URL'
-                            : null,
+                        validator: validateUrl,
                         label: 'Thumbnail Url',
                         hintText: 'https://www.example.com/thumbnail.jpg',
                         controller: thumbnailUrlController),

@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart' hide SearchBar;
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:smartresource/core/app_export.dart';
@@ -20,6 +23,8 @@ class TutorialsScreen extends StatefulWidget {
 class _TutorialsScreenState extends State<TutorialsScreen> {
   final PagingController<int, TutorialModel> _pagingController =
       PagingController(firstPageKey: 1);
+
+  late StreamSubscription<QuerySnapshot> listener;
 
   final int limit = 10;
 
@@ -51,6 +56,12 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
   void initState() {
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
+    });
+    listener = FirebaseFirestore.instance
+        .collection('tutorials')
+        .snapshots()
+        .listen((event) {
+      _pagingController.refresh();
     });
     super.initState();
   }
@@ -155,6 +166,7 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
   @override
   void dispose() {
     _pagingController.dispose();
+    listener.cancel();
     super.dispose();
   }
 }

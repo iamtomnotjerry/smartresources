@@ -57,3 +57,18 @@ String? validateConfirmPassword(String? value, String? confirmValue) {
 
   return null;
 }
+
+String? validateUrl(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'URL is required.';
+  }
+
+  final urlRegex = RegExp(
+      r'^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$');
+
+  if (!urlRegex.hasMatch(value)) {
+    return 'Invalid URL.';
+  }
+
+  return null;
+}
