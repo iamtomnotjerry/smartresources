@@ -4,11 +4,9 @@ import 'package:smartresource/core/app_export.dart';
 // ignore: must_be_immutable
 class CustomChip extends StatelessWidget {
   const CustomChip({
-    Key? key,
+    super.key,
     required this.text,
-  }) : super(
-          key: key,
-        );
+  });
 
   final String text;
 

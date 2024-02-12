@@ -3,7 +3,7 @@ import 'package:smartresource/core/app_export.dart';
 
 class CustomTextFormField extends StatelessWidget {
   const CustomTextFormField({
-    Key? key,
+    super.key,
     this.alignment,
     this.width,
     this.scrollPadding,
@@ -28,9 +28,7 @@ class CustomTextFormField extends StatelessWidget {
     this.validator,
     this.minLines,
     this.textCapitalization = TextCapitalization.none,
-  }) : super(
-          key: key,
-        );
+  });
 
   final Alignment? alignment;
 

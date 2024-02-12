@@ -26,7 +26,7 @@ class TutorialService {
     int limit = 10,
     String? lastVisibleId,
   }) async {
-    var query = await _firestore
+    var query = _firestore
         .collection('tutorials')
         .orderBy('createdAt', descending: true);
 
@@ -36,11 +36,11 @@ class TutorialService {
       query = query.startAfterDocument(lastVisibleSnapshot);
     }
 
-    query = await query.limit(limit);
+    query = query.limit(limit);
 
     final tutorials = await query.get();
 
-    print('------------' + tutorials.toString());
+    print('------------$tutorials');
 
     return tutorials.docs
         .map((tutorial) => TutorialModel.fromMap(tutorial.data()))

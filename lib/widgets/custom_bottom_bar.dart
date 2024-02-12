@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smartresource/core/app_export.dart';
 
 class CustomBottomBar extends StatefulWidget {
-  CustomBottomBar({this.onChanged, this.currentIndex});
+  CustomBottomBar({super.key, this.onChanged, this.currentIndex});
   
   Function(BottomBarEnum)? onChanged;
   int ?currentIndex;
@@ -55,7 +55,7 @@ class CustomBottomBarState extends State<CustomBottomBar> {
   Widget build(BuildContext context) {
     return Container(
       height: 73.v,
-      decoration: BoxDecoration(),
+      decoration: const BoxDecoration(),
       child: BottomNavigationBar(
         backgroundColor: Colors.transparent,
         showSelectedLabels: false,
@@ -186,12 +186,14 @@ class BottomMenuModel {
 }
 
 class DefaultWidget extends StatelessWidget {
+  const DefaultWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      padding: EdgeInsets.all(10),
-      child: Center(
+      padding: const EdgeInsets.all(10),
+      child: const Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,

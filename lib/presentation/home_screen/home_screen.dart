@@ -2,22 +2,21 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart' hide SearchBar;
 import 'package:provider/provider.dart';
 import 'package:smartresource/core/app_export.dart';
-import 'package:smartresource/data/data_sources/blog/blog_source.dart';
-import 'package:smartresource/data/data_sources/product/product_source.dart';
 import 'package:smartresource/data/models/blog/blog_model.dart';
 import 'package:smartresource/data/models/product/product_model.dart';
 import 'package:smartresource/data/models/tutorial/tutorial_model.dart';
 import 'package:smartresource/navigation_menu.dart';
-import 'package:smartresource/presentation/blog_details_screen/blog_details_screen.dart';
+import 'package:smartresource/presentation/home_screen/widgets/product_widget.dart';
 import 'package:smartresource/presentation/tutorial_details_screen/tutorial_details_screen.dart';
 import 'package:smartresource/providers/auth_provider.dart';
 import 'package:smartresource/providers/blogs_provider.dart';
 import 'package:smartresource/providers/tutorials_provider.dart';
+import 'package:smartresource/providers/products_provider.dart';
 import 'package:smartresource/widgets/search_bar.dart';
 
 import 'widgets/blog_widget.dart';
-import 'widgets/product_widget.dart';
 import 'widgets/tutorials_widget.dart';
+import "dart:developer" as devtools show log;
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -25,9 +24,9 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<MyAuthProvider>(context).user;
-    final tutorials =
-        Provider.of<TutorialsProvider>(context).tutorials.take(10).toList();
+    final tutorials =Provider.of<TutorialsProvider>(context).tutorials.take(10).toList();
     final blogs = Provider.of<BlogsProvider>(context).blogs.take(10).toList();
+    final products = Provider.of<ProductsProvider>(context).products.toList();
 
     return SafeArea(
         child: Scaffold(
@@ -95,7 +94,7 @@ class HomeScreen extends StatelessWidget {
                       onSeeAll: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => NavigationMenu(
+                          builder: (context) => const NavigationMenu(
                             initialPage: 1,
                           ),
                         ),
@@ -141,7 +140,7 @@ class HomeScreen extends StatelessWidget {
                       onSeeAll: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => NavigationMenu(
+                          builder: (context) => const NavigationMenu(
                             initialPage: 2,
                           ),
                         ),
@@ -168,39 +167,42 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(
                     height: 32,
                   ),
-                  buildSection(
-                    title: 'Products',
-                    onSeeAll: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => NavigationMenu(
-                          initialPage: 3,
+                  if (products.isNotEmpty)
+                    buildSection(
+                      title: 'Products',
+                      onSeeAll: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const NavigationMenu(
+                            initialPage: 3,
+                          ),
                         ),
                       ),
-                    ),
-                    body: GridView.builder(
-                      // itemCount: productslist.length,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
+                      body: GridView.builder(
+                        itemCount: products.length,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 16,
-                        mainAxisSpacing: 16,
-                        childAspectRatio: 0.52,
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                          childAspectRatio: 0.52,
+                        ),
+                        itemBuilder: (context, index) {
+                          ProductModel product = products[index];
+                          return ProductWidget(product: product,);
+                          // ProductModel prodItem = productslist[index];
+                          // return ProductWidget(
+                          //   prodname: prodItem.prodname,
+                          //   description: prodItem.description,
+                          //   seller: prodItem.userEmail,
+                          //   price: prodItem.price,
+                          //   image: prodItem.images[0],
+                          // );
+                        },
                       ),
-                      itemBuilder: (context, index) {
-                        // ProductModel prodItem = productslist[index];
-                        // return ProductWidget(
-                        //   prodname: prodItem.prodname,
-                        //   description: prodItem.description,
-                        //   seller: prodItem.userEmail,
-                        //   price: prodItem.price,
-                        //   image: prodItem.images[0],
-                        // );
-                      },
                     ),
-                  ),
                 ],
               ),
             )),

@@ -26,7 +26,7 @@ class BlogsService {
     int limit = 10,
     String? lastVisibleId,
   }) async {
-    var query = await _firestore
+    var query = _firestore
         .collection('blogs')
         .orderBy('createdAt', descending: true);
 
@@ -36,11 +36,11 @@ class BlogsService {
       query = query.startAfterDocument(lastVisibleSnapshot);
     }
 
-    query = await query.limit(limit);
+    query = query.limit(limit);
 
     final blogs = await query.get();
 
-    print('------------' + blogs.toString());
+    print('------------$blogs');
 
     return blogs.docs
         .map((blog) => BlogModel.fromMap(blog.data()))

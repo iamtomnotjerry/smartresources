@@ -11,10 +11,7 @@ import 'package:smartresource/widgets/custom_elevated_button.dart';
 import 'package:smartresource/widgets/custom_text_form_field.dart';
 
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({Key? key})
-      : super(
-          key: key,
-        );
+  const SignInScreen({super.key});
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();
@@ -49,7 +46,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => NavigationMenu(),
+            builder: (context) => const NavigationMenu(),
           ),
         );
       } on FirebaseAuthException catch (e) {
@@ -87,7 +84,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => NavigationMenu(),
+          builder: (context) => const NavigationMenu(),
         ),
       );
     } catch (_) {
@@ -113,7 +110,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => NavigationMenu(),
+          builder: (context) => const NavigationMenu(),
         ),
       );
     } catch (e) {

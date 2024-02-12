@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smartresource/core/app_export.dart';
+import 'package:smartresource/data/models/product/product_model.dart';
 
 // ignore: must_be_immutable
 class ProductWidget extends StatelessWidget {
-  final String prodname;
-  final String description;
-  final String seller;
-  final double price;
-  final String image;
+  // final String prodname;
+  // final String description;
+  // final String seller;
+  // final double price;
+  // final String image;
+  final ProductModel product;
 
-  ProductWidget(
-      {super.key,
-      required this.prodname,
-      required this.description,
-      required this.seller,
-      required this.price,
-      required this.image});
+  const ProductWidget({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +27,7 @@ class ProductWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
                 child: Image(
                   image: NetworkImage(
-                    image,
+                    product.images[0],
                   ),
                   fit: BoxFit.cover,
                 ),
@@ -43,7 +39,7 @@ class ProductWidget extends StatelessWidget {
           height: 8,
         ),
         Text(
-          prodname,
+          product.prodname,
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
@@ -55,7 +51,7 @@ class ProductWidget extends StatelessWidget {
           height: 4,
         ),
         Text(
-          NumberFormat.currency(locale: 'vi-VN').format(price),
+          NumberFormat.currency(locale: 'vi-VN').format(double.parse(product.price)),
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,

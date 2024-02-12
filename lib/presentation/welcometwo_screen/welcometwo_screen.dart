@@ -4,10 +4,7 @@ import 'package:smartresource/widgets/custom_icon_button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class WelcometwoScreen extends StatelessWidget {
-  const WelcometwoScreen({Key? key})
-      : super(
-          key: key,
-        );
+  const WelcometwoScreen({super.key});
 
 @override
     Widget build(BuildContext context) {
@@ -38,7 +35,7 @@ class WelcometwoScreen extends StatelessWidget {
                               text: "Smart",
                               style: CustomTextStyles.headlineSmallBaloo,
                             ),
-                            TextSpan(
+                            const TextSpan(
                               text: " ",
                             ),
                             TextSpan(
@@ -109,7 +106,7 @@ class WelcometwoScreen extends StatelessWidget {
                     style: CustomTextStyles.bodyLargeRobotoBlack900,
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
                 SizedBox(height: 27.v),
                 _buildFrameSeventeen(context),
               ],
@@ -132,7 +129,7 @@ class WelcometwoScreen extends StatelessWidget {
             width: 48.adaptSize,
             padding: EdgeInsets.all(12.h),
             decoration: IconButtonStyleHelper.fillBlueGray,
-            child: Icon(Icons.arrow_back)
+            child: const Icon(Icons.arrow_back)
           ),
           Container(
             height: 16.v,
@@ -157,7 +154,7 @@ class WelcometwoScreen extends StatelessWidget {
             width: 48.adaptSize,
             padding: EdgeInsets.all(12.h),
             decoration: IconButtonStyleHelper.fillPrimary,
-            child: Icon(Icons.arrow_forward)
+            child: const Icon(Icons.arrow_forward)
           ),
         ],
       );

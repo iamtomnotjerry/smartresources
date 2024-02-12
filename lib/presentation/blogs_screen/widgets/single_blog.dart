@@ -6,7 +6,7 @@ import 'package:smartresource/presentation/blog_details_screen/blog_details_scre
 class SingleBlogWidget extends StatelessWidget {
   final BlogModel blog;
 
-  const SingleBlogWidget({Key? key, required this.blog}) : super(key: key);
+  const SingleBlogWidget({super.key, required this.blog});
 
   @override
   Widget build(BuildContext context) {

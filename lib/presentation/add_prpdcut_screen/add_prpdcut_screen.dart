@@ -1,16 +1,12 @@
 import 'dart:io';
-import 'dart:typed_data';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:smartresource/core/app_export.dart';
-import 'package:smartresource/core/utils/pick_image.dart';
 import 'package:smartresource/data/models/product/product_model.dart';
 import 'package:smartresource/providers/auth_provider.dart';
 import 'package:smartresource/services/product_service.dart';
@@ -21,7 +17,7 @@ import 'dart:developer' as devtools show log;
 import 'package:uuid/uuid.dart';
 
 class AddPrpdcutScreen extends StatefulWidget {
-  AddPrpdcutScreen({
+  const AddPrpdcutScreen({
     super.key,
     this.product
   });
@@ -83,7 +79,7 @@ class _AddProductState extends State<AddPrpdcutScreen> {
             userEmail: user.email, 
             price: priceInputController.text, 
             images: imageUrls, 
-            id: Uuid().v1(), 
+            id: const Uuid().v1(), 
             createdAt: DateTime.now().toString(),
           );
 
@@ -115,12 +111,10 @@ class _AddProductState extends State<AddPrpdcutScreen> {
   Future<void> pickImages() async {
     try {
       List<XFile>? pickedImages = await ImagePicker().pickMultiImage(imageQuality: 50);
-      if (pickedImages != null) {
-        setState(() {
-          selectedImages = pickedImages.map((image) => File(image.path)).toList();
-        });
-      }
-    } catch (e) {
+      setState(() {
+        selectedImages = pickedImages.map((image) => File(image.path)).toList();
+      });
+        } catch (e) {
       devtools.log('Error picking images: $e');
     }
   }
@@ -248,7 +242,7 @@ class _AddProductState extends State<AddPrpdcutScreen> {
   /// Section Widget
   Widget _buildPriceInput(BuildContext context) {
     return CustomTextFormField(
-      textInputType: TextInputType.numberWithOptions(decimal: true),
+      textInputType: const TextInputType.numberWithOptions(decimal: true),
       controller: priceInputController,
       hintText: "Product price",
       validator: (value) => value == null || value.isEmpty
@@ -324,14 +318,14 @@ class _AddProductState extends State<AddPrpdcutScreen> {
               //   width: 48.adaptSize,
               // ),
               GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),
                 itemCount: selectedImages.length,
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (BuildContext context, int index) {
                   return Image.file(
                     selectedImages[index],
@@ -349,7 +343,7 @@ class _AddProductState extends State<AddPrpdcutScreen> {
                 child: Text("Choose file to upload", style: CustomTextStyles.bodyMediumBluegray200,),
                 // style: CustomTextStyles.bodyMediumBluegray200,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               // ElevatedButton(
               //   onPressed: () async {
               //     File? imageFile = await _pickImage(ImageSource.gallery);
@@ -411,7 +405,7 @@ class _AddProductState extends State<AddPrpdcutScreen> {
   /// Section Widget
   Widget _buildPublishButton(BuildContext context) {
     if (isLoading) {
-      return CircularProgressIndicator();
+      return const CircularProgressIndicator();
     }
     return CustomElevatedButton(
       onPressed: () {
@@ -457,7 +451,7 @@ Future<void> showErrorDialog(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text("OK")
+          child: const Text("OK")
         )
       ],
     );

@@ -3,7 +3,6 @@ import 'package:smartresource/presentation/blogs_screen/blogs_screen.dart';
 import 'package:smartresource/presentation/home_screen/home_screen.dart';
 import 'package:smartresource/presentation/profile_screen/profile_screen.dart';
 import 'package:smartresource/presentation/shop_screen/shop_screen.dart';
-import 'package:smartresource/routes/app_routes.dart';
 import 'package:smartresource/widgets/custom_bottom_bar.dart';
 
 class MainScreen extends StatefulWidget {
@@ -17,10 +16,10 @@ class _MainScreenState extends State<MainScreen> {
   int currentIndex = 0;
 
   final List<Widget> pages = [
-    HomeScreen(),
-    BlogsScreen(),
-    ShopScreen(),
-    ProfileScreen(),
+    const HomeScreen(),
+    const BlogsScreen(),
+    const ShopScreen(),
+    const ProfileScreen(),
   ];
 
 

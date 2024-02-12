@@ -12,10 +12,7 @@ import 'package:smartresource/widgets/custom_elevated_button.dart';
 import 'package:smartresource/widgets/custom_text_form_field.dart';
 
 class CompleteProfileScreen extends StatefulWidget {
-  const CompleteProfileScreen({Key? key, required this.uid})
-      : super(
-          key: key,
-        );
+  const CompleteProfileScreen({super.key, required this.uid});
 
   final String uid;
 

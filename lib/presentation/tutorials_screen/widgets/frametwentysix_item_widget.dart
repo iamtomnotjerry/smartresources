@@ -3,10 +3,7 @@ import 'package:smartresource/core/app_export.dart';
 
 // ignore: must_be_immutable
 class FrametwentysixItemWidget extends StatelessWidget {
-  const FrametwentysixItemWidget({Key? key})
-      : super(
-          key: key,
-        );
+  const FrametwentysixItemWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

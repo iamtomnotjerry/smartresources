@@ -5,13 +5,11 @@ import 'package:smartresource/widgets/custom_icon_button.dart';
 // ignore: must_be_immutable
 class AppbarLeadingIconbutton extends StatelessWidget {
   AppbarLeadingIconbutton({
-    Key? key,
+    super.key,
     this.imagePath,
     this.margin,
     this.onTap,
-  }) : super(
-          key: key,
-        );
+  });
 
   String? imagePath;
 

@@ -1,17 +1,15 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
+import 'package:smartresource/data/local_storage/cart_storage.dart';
 import 'package:smartresource/data/models/product/product_model.dart';
-import 'package:smartresource/providers/auth_provider.dart';
+import 'package:smartresource/services/product_service.dart';
 
 import '../product_details_two_screen/widgets/thirtyfour_item_widget.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:smartresource/core/app_export.dart';
-import 'package:smartresource/widgets/app_bar/appbar_leading_iconbutton.dart';
-import 'package:smartresource/widgets/app_bar/custom_app_bar.dart';
 import 'package:smartresource/widgets/custom_elevated_button.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 enum MenuAction {delete_prod}
 class ProductDetailsTwoScreen extends StatefulWidget {
@@ -43,6 +41,34 @@ class _ProductDetailsTwoScreenState extends State<ProductDetailsTwoScreen> {
       });
     }
   }
+
+  // void addToCart() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   // Retrieve existing cart items from local storage
+  //   // List<String> cartItems = prefs.getStringList('cart_products') ?? [];
+  //   List<String> cartItems = prefs.getStringList('user_cart') ?? [];
+
+  //   // Serialize the product and quantity
+  //   // CartProductModel cartItem = CartProductModel(prodname: widget.product.prodname, seller: widget.product.userEmail, image: widget.product.images[0], createdAt: widget.product.createdAt, price: widget.product.price, prodid: widget.product.id, quantity: quantity);
+  //   // List<String> convertToList = cartItem.toList();
+  //   // String productWithQuantity = convertToList.join(',');
+
+  //   for (var i = 0; i < quantity; i++) {
+  //     devtools.log(widget.product.id);
+  //     // Add the serialized product and quantity to the cart items list
+  //     cartItems.add(widget.product.id);
+  //   }
+    
+  //   // Save the updated cart items list to local storage
+  //   prefs.setStringList('user_cart', cartItems);
+
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     const SnackBar(
+  //       content: Text('Product added.'),
+  //     ),
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +81,16 @@ class _ProductDetailsTwoScreenState extends State<ProductDetailsTwoScreen> {
           actions: [
             if (widget.currentUser?.email == widget.product.userEmail)
               PopupMenuButton<MenuAction>(
-                onSelected: (value) {}, 
+                onSelected: (value) async{
+                  switch(value) {
+                    case MenuAction.delete_prod:
+                      final shouldDelete = await showDeleteDialog(context);
+                      if (shouldDelete) {
+                        await ProductService().deleteProduct(widget.product.id);
+                        Navigator.of(context).pop();
+                      }
+                  }
+                }, 
                 itemBuilder: (context) {
                   return const [
                     PopupMenuItem<MenuAction>(
@@ -174,15 +209,31 @@ class _ProductDetailsTwoScreenState extends State<ProductDetailsTwoScreen> {
       );
   }
 
-  /// Section Widget
-  // PreferredSizeWidget _buildAppBar(BuildContext context) {
-  //   return CustomAppBar(
-  //     leadingWidth: double.maxFinite,
-  //     leading: AppbarLeadingIconbutton(
-  //       margin: EdgeInsets.fromLTRB(24.h, 10.v, 370.h, 10.v),
-  //     ),
-  //   );
-  // }
+  Future<bool> showDeleteDialog(BuildContext context) {
+    return showDialog<bool>(
+      context: context, 
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Sign Out"),
+          content: const Text("Are you sure you want to delete your product?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: Text('Delete'),
+            ),
+          ]
+        );
+      },
+    ).then((value) => value ?? false);
+  }
 
   /// Section Widget
   Widget _buildSettings(BuildContext context) {
@@ -253,6 +304,7 @@ class _ProductDetailsTwoScreenState extends State<ProductDetailsTwoScreen> {
             ),
           ),
           CustomElevatedButton(
+            onPressed: () {addToCart(context, widget.product.id, quantity);},
             height: 44.v,
             width: 150.h,
             text: "Add to cart",

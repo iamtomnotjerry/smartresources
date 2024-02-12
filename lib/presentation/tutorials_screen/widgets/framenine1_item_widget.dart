@@ -5,7 +5,7 @@ import 'package:smartresource/core/app_export.dart';
 class Framenine1ItemWidget extends StatelessWidget {
   final String materialItem;
 
-  Framenine1ItemWidget({
+  const Framenine1ItemWidget({
     super.key,
     required this.materialItem
   });

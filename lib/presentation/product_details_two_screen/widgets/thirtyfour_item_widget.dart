@@ -5,7 +5,7 @@ import 'package:smartresource/core/app_export.dart';
 class ThirtyfourItemWidget extends StatelessWidget {
   final String image;
   
-  ThirtyfourItemWidget({super.key, required this.image});
+  const ThirtyfourItemWidget({super.key, required this.image});
 
   @override
   Widget build(BuildContext context) {

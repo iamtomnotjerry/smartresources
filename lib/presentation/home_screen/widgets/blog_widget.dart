@@ -7,7 +7,7 @@ import 'package:smartresource/presentation/blog_details_screen/blog_details_scre
 class BlogWidget extends StatelessWidget {
   final BlogModel blog;
 
-  BlogWidget({super.key, required this.blog});
+  const BlogWidget({super.key, required this.blog});
 
   @override
   Widget build(BuildContext context) {

@@ -15,10 +15,7 @@ import 'package:smartresource/widgets/custom_elevated_button.dart';
 import 'package:smartresource/widgets/custom_text_form_field.dart';
 
 class MyProfileScreen extends StatefulWidget {
-  const MyProfileScreen({Key? key})
-      : super(
-          key: key,
-        );
+  const MyProfileScreen({super.key});
 
   @override
   State<MyProfileScreen> createState() => _CompleteProfileScreenState();

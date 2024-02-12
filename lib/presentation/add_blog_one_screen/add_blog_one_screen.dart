@@ -4,10 +4,7 @@ import 'package:smartresource/widgets/custom_elevated_button.dart';
 import 'package:smartresource/widgets/custom_text_form_field.dart';
 
 class AddBlogOneScreen extends StatelessWidget {
-  AddBlogOneScreen({Key? key})
-      : super(
-          key: key,
-        );
+  AddBlogOneScreen({super.key});
 
   TextEditingController titlevalueController = TextEditingController();
 

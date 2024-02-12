@@ -9,10 +9,11 @@ import 'package:smartresource/presentation/shop_screen/shop_screen.dart';
 import 'package:smartresource/presentation/tutorials_screen/tutorials_screen.dart';
 import 'package:smartresource/providers/auth_provider.dart';
 import 'package:smartresource/providers/blogs_provider.dart';
+import 'package:smartresource/providers/products_provider.dart';
 import 'package:smartresource/providers/tutorials_provider.dart';
 
 class NavigationMenu extends StatefulWidget {
-  NavigationMenu({super.key, this.initialPage = 0});
+  const NavigationMenu({super.key, this.initialPage = 0});
 
   final int initialPage;
 
@@ -33,6 +34,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
     Provider.of<MyAuthProvider>(context, listen: false).refreshUser();
     Provider.of<TutorialsProvider>(context, listen: false).refreshTutorials();
     Provider.of<BlogsProvider>(context, listen: false).refreshBlogs();
+    Provider.of<ProductsProvider>(context, listen: false).refreshProducts();
 
     super.initState();
   }
@@ -109,12 +111,12 @@ class _NavigationMenuState extends State<NavigationMenu> {
         },
         physics: const NeverScrollableScrollPhysics(),
         controller: pageController,
-        children: [
+        children: const [
           HomeScreen(),
           TutorialsScreen(),
           BlogsScreen(),
           ShopScreen(),
-          const ProfileScreen(),
+          ProfileScreen(),
         ],
       ),
     );

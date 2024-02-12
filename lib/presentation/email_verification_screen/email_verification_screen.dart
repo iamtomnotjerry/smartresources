@@ -4,12 +4,10 @@ import 'package:smartresource/widgets/custom_elevated_button.dart';
 
 class EmailVerificationScreen extends StatelessWidget {
   const EmailVerificationScreen({
-    Key? key,
+    super.key,
     required this.email,
      this.onPressed,
-  }) : super(
-          key: key,
-        );
+  });
 
   final String email;
   final void Function()? onPressed;

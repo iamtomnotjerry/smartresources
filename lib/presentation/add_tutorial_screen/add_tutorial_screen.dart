@@ -98,7 +98,7 @@ class _AddTutorialScreenState extends State<AddTutorialScreen> {
           if (user != null) {
             final tutorial = TutorialModel(
               id: widget.action == AddTutorialAction.add
-                  ? Uuid().v1()
+                  ? const Uuid().v1()
                   : widget.tutorial!.id,
               videoId: videoId,
               title: titleController.text,
@@ -148,7 +148,7 @@ class _AddTutorialScreenState extends State<AddTutorialScreen> {
             ).refreshTutorials();
           }
         } catch (e) {
-          print('---------------' + e.toString());
+          print('---------------$e');
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Something went wrong, please try again later.'),

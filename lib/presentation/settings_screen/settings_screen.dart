@@ -49,7 +49,7 @@ class AccountSettingsScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(24),
+          padding: const EdgeInsets.all(24),
           child: Container(
             padding: const EdgeInsets.symmetric(
               horizontal: 24,

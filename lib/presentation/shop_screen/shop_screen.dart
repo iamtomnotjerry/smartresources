@@ -2,23 +2,20 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:smartresource/data/data_sources/product/product_source.dart';
 import 'package:smartresource/data/models/product/product_model.dart';
-import 'package:smartresource/presentation/product_details_two_screen/product_details_two_screen.dart';
 import 'package:smartresource/services/product_service.dart';
-import 'package:smartresource/widgets/custom_elevated_button.dart';
 
 import 'widgets/shop_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:smartresource/core/app_export.dart';
-import 'package:smartresource/widgets/custom_bottom_bar.dart';
 import 'package:smartresource/widgets/custom_icon_button.dart';
 import 'package:smartresource/widgets/custom_search_view.dart';
+import 'dart:developer' as devtools show log;
 
 // import '../shop_screen/widgets/userprofilelist_item_widget.dart';
 
 class ShopScreen extends StatefulWidget {
-  ShopScreen({Key? key}) : super(key: key);
+  const ShopScreen({super.key});
 
   @override
   State<ShopScreen> createState() => _ShopScreenState();
@@ -35,15 +32,19 @@ class _ShopScreenState extends State<ShopScreen> {
 
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
-  Future<void> _fetchPage(int pageKey) async {
+  Future<void> _fetchPage(int pageKey, {String? searchTerm}) async {
     try {
       final currentItems = _pagingController.value.itemList;
-
-      final newItems = await ProductService().getProductWithPagination(
-        page: pageKey,
-        limit: limit,
-        lastVisisbleId: currentItems != null && currentItems.isNotEmpty ? currentItems.last.id : null,
-      );
+      List<ProductModel> newItems = [];
+      if (searchTerm == null) {
+        newItems = await ProductService().getProductWithPagination(
+          page: pageKey,
+          limit: limit,
+          lastVisisbleId: currentItems != null && currentItems.isNotEmpty ? currentItems.last.id : null,
+        );
+      } else {
+        newItems = await ProductService().searchProducts(searchTerm);
+      }
 
       final isLastPage = newItems.length < limit;
 
@@ -54,6 +55,7 @@ class _ShopScreenState extends State<ShopScreen> {
         _pagingController.appendPage(newItems, nextPageKey);
       }
     } catch (error) {
+      devtools.log(error.toString());
       _pagingController.error = error;
     }
   }
@@ -61,7 +63,7 @@ class _ShopScreenState extends State<ShopScreen> {
   @override 
   void initState() {
     _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
+      _fetchPage(pageKey, searchTerm: searchController.text);
     });
     listener = FirebaseFirestore.instance.collection('products').snapshots().listen(
       (event) {
@@ -122,10 +124,13 @@ class _ShopScreenState extends State<ShopScreen> {
           height: 28.adaptSize,
           width: 28.adaptSize,
           margin: EdgeInsets.only(bottom: 3.v),
-          child: const Stack(
+          child: Stack(
             alignment: Alignment.topRight,
             children: [
-                Icon(Icons.shopping_cart),
+              IconButton(
+                onPressed: () {Navigator.pushNamed(context, AppRoutes.cartScreen);}, 
+                icon: const Icon(Icons.shopping_cart)
+              )
             ],
           ),
         ),
@@ -144,6 +149,7 @@ class _ShopScreenState extends State<ShopScreen> {
             hintText: "Search",
             borderDecoration: SearchViewStyleHelper.fillGray,
             fillColor: appTheme.gray100,
+            textStyle: CustomTextStyles.bodyLargeBlack900,
           ),
         ),
         Padding(
@@ -154,6 +160,11 @@ class _ShopScreenState extends State<ShopScreen> {
             padding: EdgeInsets.all(12.h),
             decoration: IconButtonStyleHelper.fillPrimaryTL12,
             child: const Icon(Icons.search, color: Colors.white),
+            onTap: () {
+              setState(() {
+                _pagingController.refresh();
+              });
+            },
           ),
         ),
       ],
@@ -166,51 +177,7 @@ class _ShopScreenState extends State<ShopScreen> {
       alignment: Alignment.center,
       child: Container (
         decoration: AppDecoration.outlineBlack,
-        child: 
-        // StreamBuilder<QuerySnapshot>(
-        //   stream: FirebaseFirestore.instance.collection('products').snapshots(),
-        //   builder: (context, snapshot) {
-        //     if (snapshot.hasError) {
-        //       return Text('Error: ${snapshot.error}');
-        //     }
-        //     switch (snapshot.connectionState) {
-        //       case ConnectionState.waiting:
-        //         return CircularProgressIndicator();
-        //       default:
-        //         if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
-        //           return Center(child:Text('No product Found', style: CustomTextStyles.headlineSmallPrimary));
-        //         }
-        //         return Column (
-        //           children: snapshot.data!.docs.map((DocumentSnapshot document) {
-        //             final Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-        //             List<String> images = [];
-        //             if (data['images'] != null) {
-        //               images = (data['images'] as List).map((e) => e.toString()).toList();
-        //             }
-        //             return ShopItemWidget(
-        //               prodname: data['prodName'], 
-        //               description: data['description'], 
-        //               seller: data['userEmail'], 
-        //               price: data['price'], 
-        //               images: images, 
-        //               onTap: () {
-        //                 Navigator.push(context, MaterialPageRoute(
-        //                   builder: (context) => ProductDetailsTwoScreen(
-        //                     prodname: data['prodName'], 
-        //                     description: data['description'], 
-        //                     seller: data['userEmail'], 
-        //                     price: data['price'], 
-        //                     images: images, 
-        //                   )
-        //                 ));
-        //               }
-        //             );
-        //           }).toList(),
-        //         );
-        //     }
-        //   }
-        // )
-        PagedListView<int, ProductModel> (
+        child: PagedListView<int, ProductModel> (
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           pagingController: _pagingController,

@@ -61,7 +61,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
         if (user != null) {
           final blog = BlogModel(
             id: widget.action == AddBlogAction.add
-                ? Uuid().v1()
+                ? const Uuid().v1()
                 : widget.blog!.id,
             thumbnail: thumbnailUrlController.text,
             title: titleController.text,
@@ -109,7 +109,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
           ).refreshBlogs();
         }
       } catch (e) {
-        print('---------------' + e.toString());
+        print('---------------$e');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Something went wrong, please try again later.'),

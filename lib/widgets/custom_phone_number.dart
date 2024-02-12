@@ -7,13 +7,11 @@ import 'package:smartresource/widgets/custom_text_form_field.dart';
 // ignore: must_be_immutable
 class CustomPhoneNumber extends StatelessWidget {
   CustomPhoneNumber({
-    Key? key,
+    super.key,
     required this.country,
     required this.onTap,
     required this.controller,
-  }) : super(
-          key: key,
-        );
+  });
 
   Country country;
 

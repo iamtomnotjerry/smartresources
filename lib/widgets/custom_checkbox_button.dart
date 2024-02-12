@@ -3,7 +3,7 @@ import 'package:smartresource/core/app_export.dart';
 
 class CustomCheckboxButton extends StatelessWidget {
   CustomCheckboxButton({
-    Key? key,
+    super.key,
     required this.onChange,
     this.decoration,
     this.alignment,
@@ -16,9 +16,7 @@ class CustomCheckboxButton extends StatelessWidget {
     this.textStyle,
     this.textAlignment,
     this.isExpandedText = false,
-  }) : super(
-          key: key,
-        );
+  });
 
   final BoxDecoration? decoration;
 

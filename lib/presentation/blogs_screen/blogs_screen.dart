@@ -11,7 +11,7 @@ import 'package:smartresource/services/blog_service.dart';
 import 'package:smartresource/widgets/search_bar.dart';
 
 class BlogsScreen extends StatefulWidget {
-  BlogsScreen({Key? key}) : super(key: key);
+  const BlogsScreen({super.key});
 
   @override
   State<BlogsScreen> createState() => _BlogsScreenState();
@@ -86,7 +86,7 @@ class _BlogsScreenState extends State<BlogsScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AddBlogScreen(),
+                    builder: (context) => const AddBlogScreen(),
                   ),
                 );
               },

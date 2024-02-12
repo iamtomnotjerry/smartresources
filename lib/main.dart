@@ -11,6 +11,7 @@ import 'package:smartresource/presentation/sign_in_screen/sign_in_screen.dart';
 import 'package:smartresource/presentation/welcome_screen/welcome_screen.dart';
 import 'package:smartresource/providers/auth_provider.dart';
 import 'package:smartresource/providers/blogs_provider.dart';
+import 'package:smartresource/providers/products_provider.dart';
 import 'package:smartresource/providers/tutorials_provider.dart';
 
 import 'core/app_export.dart';
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => MyAuthProvider()),
         ChangeNotifierProvider(create: (context) => TutorialsProvider()),
         ChangeNotifierProvider(create: (context) => BlogsProvider()),
+        ChangeNotifierProvider(create: (context) => ProductsProvider()),
       ],
       child: Sizer(
         builder: (context, orientation, deviceType) {
@@ -79,7 +81,7 @@ class MyApp extends StatelessWidget {
 
                 if (snapshot.connectionState == ConnectionState.active) {
                   if (snapshot.hasData) {
-                    return NavigationMenu();
+                    return const NavigationMenu();
                   }
 
                   if (snapshot.hasError) {

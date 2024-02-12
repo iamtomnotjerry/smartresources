@@ -14,7 +14,7 @@ import 'widgets/chip.dart';
 import 'widgets/tutorial_item.dart';
 
 class TutorialsScreen extends StatefulWidget {
-  TutorialsScreen({Key? key});
+  const TutorialsScreen({super.key,});
 
   @override
   State<TutorialsScreen> createState() => _TutorialsScreenState();
@@ -89,7 +89,7 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AddTutorialScreen(),
+                    builder: (context) => const AddTutorialScreen(),
                   ),
                 );
               },

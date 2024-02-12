@@ -13,10 +13,7 @@ import 'package:smartresource/widgets/custom_elevated_button.dart';
 import 'package:smartresource/widgets/custom_text_form_field.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key})
-      : super(
-          key: key,
-        );
+  const SignUpScreen({super.key});
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -50,7 +47,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => NavigationMenu(),
+          builder: (context) => const NavigationMenu(),
         ),
       );
     } catch (_) {
@@ -79,7 +76,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => NavigationMenu(),
+          builder: (context) => const NavigationMenu(),
         ),
       );
     } catch (_) {

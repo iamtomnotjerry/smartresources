@@ -4,7 +4,7 @@ import 'package:smartresource/presentation/onboarding_screen/widgets/onboarding_
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  OnboardingScreen({super.key});
+  const OnboardingScreen({super.key});
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -119,7 +119,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   IconButton(
                     onPressed: () {
                       pageController.previousPage(
-                        duration: Duration(milliseconds: 500),
+                        duration: const Duration(milliseconds: 500),
                         curve: Curves.easeOut,
                       );
                     },
@@ -150,7 +150,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         Navigator.pushNamed(context, AppRoutes.signInScreen);
                       } else {
                         pageController.nextPage(
-                          duration: Duration(milliseconds: 500),
+                          duration: const Duration(milliseconds: 500),
                           curve: Curves.easeOut,
                         );
                       }

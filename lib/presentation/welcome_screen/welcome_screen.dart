@@ -4,10 +4,7 @@ import 'package:smartresource/presentation/onboarding_screen/onboarding_screen.d
 import 'package:smartresource/widgets/custom_elevated_button.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({Key? key})
-      : super(
-          key: key,
-        );
+  const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +84,7 @@ class WelcomeScreen extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => OnboardingScreen()));
+                        builder: (context) => const OnboardingScreen()));
               },
               height: 56.v,
               text: "Get Started",

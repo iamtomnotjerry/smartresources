@@ -45,19 +45,19 @@ class AuthService {
     required String gender,
     bool avatarChanged = true,
   }) async {
-    String _avatar = '';
+    String avatar0 = '';
     if (avatar != null && avatarChanged) {
       final ref = _storage.ref().child('avatars').child(uid);
       final uploadTask = ref.putData(avatar);
       final snapshot = await uploadTask;
       final url = await snapshot.ref.getDownloadURL();
-      _avatar = url;
+      avatar0 = url;
     }
 
     if (avatarChanged) {
       await _firestore.collection('users').doc(uid).update({
         'name': name,
-        'avatar': _avatar,
+        'avatar': avatar0,
         'dateOfBirth': dateOfBirth,
         'phoneNumber': phoneNumber,
         'gender': gender,
@@ -136,9 +136,9 @@ class AuthService {
     }
     String birthdays = '';
     if (response["birthdays"] != null) {
-      final _birthdays = response["birthdays"][0]["date"];
+      final birthdays0 = response["birthdays"][0]["date"];
       birthdays =
-          "${_birthdays['year']}-${_birthdays['month']}-${_birthdays['day']} 00:00:00.000";
+          "${birthdays0['year']}-${birthdays0['month']}-${birthdays0['day']} 00:00:00.000";
     }
     String phoneNumber = '';
     if (response["phoneNumbers"] != null) {

@@ -3,7 +3,7 @@ import 'package:smartresource/core/app_export.dart';
 
 class CustomDropDown extends StatelessWidget {
   const CustomDropDown({
-    Key? key,
+    super.key,
     this.alignment,
     this.width,
     this.focusNode,
@@ -24,9 +24,7 @@ class CustomDropDown extends StatelessWidget {
     this.validator,
     this.onChanged,
     this.value,
-  }) : super(
-          key: key,
-        );
+  });
 
   final String? value;
 

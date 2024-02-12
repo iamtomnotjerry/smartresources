@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:smartresource/core/app_export.dart';
 
 class SplashScreen extends StatelessWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     // Using a Future.delayed to wait for 2 seconds
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushReplacementNamed(
           context, AppRoutes.welcomeScreen); // Use the route directly
     });
@@ -29,11 +29,11 @@ class SplashScreen extends StatelessWidget {
                     color: Colors.black.withOpacity(0.3),
                     spreadRadius: 2,
                     blurRadius: 8,
-                    offset: Offset(0, 3),
+                    offset: const Offset(0, 3),
                   ),
                 ],
               ),
-              padding: EdgeInsets.all(16.0), // Adjust padding as needed
+              padding: const EdgeInsets.all(16.0), // Adjust padding as needed
               child:
                   Icon(Icons.eco, size: 72.0, color: theme.colorScheme.primary),
             ),
