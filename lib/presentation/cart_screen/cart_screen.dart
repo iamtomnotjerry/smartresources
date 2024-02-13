@@ -1,9 +1,12 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smartresource/data/local_storage/cart_storage.dart';
 import 'package:smartresource/data/models/product/product_model.dart';
+import 'package:smartresource/providers/auth_provider.dart';
 
 import 'widgets/cart_item_widget.dart';
 import 'package:flutter/material.dart';
@@ -20,28 +23,29 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   double total = 0;
+  String userId = FirebaseAuth.instance.currentUser!.uid;
 
   Future<void> clearStorage() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList('cart_items', []);
+    await prefs.setStringList(userId, []);
     initData();
     setState(() {}); // This clears all key-value pairs from SharedPreferences
   }
 
   void deleteOneProduct(String prodid) {
-    deleteFirstOccurrence(prodid);
+    deleteFirstOccurrence(userId, prodid);
     initData();
     setState(() {});
   }
 
   void deleteDuplicateProduct(String prodid) {
-    deleteAllOccurrences(prodid);
+    deleteAllOccurrences(userId, prodid);
     initData();
     setState(() {});
   }
 
   void addOneProduct(String prodid) {
-    addToCart(context, prodid, 1);
+    addToCart(context, userId, prodid, 1);
     initData();
     setState(() {});
   }
@@ -53,7 +57,7 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   Future<void> initData() async{
-    total = await calculateTotal();
+    total = await calculateTotal(userId);
     setState(() {});
   }
 
@@ -97,7 +101,7 @@ class _CartScreenState extends State<CartScreen> {
         decoration: AppDecoration.outlineBlack,
         child: 
         FutureBuilder<List<ProductModel>>(
-          future: retrieveItemsFromStorage(),
+          future: retrieveItemsFromStorage(userId),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator()); // Show loading indicator while fetching data

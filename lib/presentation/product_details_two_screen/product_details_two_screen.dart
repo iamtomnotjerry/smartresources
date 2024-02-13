@@ -42,33 +42,6 @@ class _ProductDetailsTwoScreenState extends State<ProductDetailsTwoScreen> {
     }
   }
 
-  // void addToCart() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   // Retrieve existing cart items from local storage
-  //   // List<String> cartItems = prefs.getStringList('cart_products') ?? [];
-  //   List<String> cartItems = prefs.getStringList('user_cart') ?? [];
-
-  //   // Serialize the product and quantity
-  //   // CartProductModel cartItem = CartProductModel(prodname: widget.product.prodname, seller: widget.product.userEmail, image: widget.product.images[0], createdAt: widget.product.createdAt, price: widget.product.price, prodid: widget.product.id, quantity: quantity);
-  //   // List<String> convertToList = cartItem.toList();
-  //   // String productWithQuantity = convertToList.join(',');
-
-  //   for (var i = 0; i < quantity; i++) {
-  //     devtools.log(widget.product.id);
-  //     // Add the serialized product and quantity to the cart items list
-  //     cartItems.add(widget.product.id);
-  //   }
-    
-  //   // Save the updated cart items list to local storage
-  //   prefs.setStringList('user_cart', cartItems);
-
-  //   ScaffoldMessenger.of(context).showSnackBar(
-  //     const SnackBar(
-  //       content: Text('Product added.'),
-  //     ),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -304,7 +277,7 @@ class _ProductDetailsTwoScreenState extends State<ProductDetailsTwoScreen> {
             ),
           ),
           CustomElevatedButton(
-            onPressed: () {addToCart(context, widget.product.id, quantity);},
+            onPressed: () {addToCart(context, widget.currentUser!.uid, widget.product.id, quantity);},
             height: 44.v,
             width: 150.h,
             text: "Add to cart",

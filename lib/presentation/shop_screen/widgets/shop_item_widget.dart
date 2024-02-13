@@ -9,8 +9,9 @@ import 'package:smartresource/widgets/custom_icon_button.dart';
 // ignore: must_be_immutable
 class ShopItemWidget extends StatelessWidget {
   final ProductModel product;
+  final String uid;
 
-  const ShopItemWidget({super.key, required this.product});
+  const ShopItemWidget({super.key, required this.product, required this.uid});
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +134,7 @@ class ShopItemWidget extends StatelessWidget {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        addToCart(context, product.id, 1);
+                        addToCart(context, uid, product.id, 1);
                         Navigator.pushNamed(context, AppRoutes.cartScreen);
                       },
                       style: ElevatedButton.styleFrom(
@@ -154,7 +155,7 @@ class ShopItemWidget extends StatelessWidget {
                     ),
                     const SizedBox(width: 30.0,),
                     ElevatedButton(
-                      onPressed: () {addToCart(context, product.id, 1);},
+                      onPressed: () {addToCart(context, uid, product.id, 1);},
                       style: ElevatedButton.styleFrom(
                         backgroundColor: appTheme.gray50,
                           shadowColor: Colors.transparent,

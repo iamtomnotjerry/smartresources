@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:smartresource/core/app_export.dart';
 import 'package:smartresource/data/local_storage/cart_storage.dart';
 import 'package:smartresource/data/models/product/product_model.dart';
+import 'package:smartresource/providers/auth_provider.dart';
 
 // ignore: must_be_immutable
 class CartItemWidget extends StatefulWidget {
@@ -20,7 +23,8 @@ class _CartItemWidgetState extends State<CartItemWidget> {
   int sliderIndex = 0;
   List<String> cartItems = [];
   int ?itemQuantity;
-
+  String userId = FirebaseAuth.instance.currentUser!.uid;
+  
   @override
   void initState() {
     super.initState();
@@ -30,9 +34,9 @@ class _CartItemWidgetState extends State<CartItemWidget> {
 
   Future<void> initData() async {
     // Assuming `initStorage` returns List<String>
-    cartItems = await initStorage();
+    cartItems = await initStorage(userId);
     // Assuming `countItem` calculates the quantity of the product
-    itemQuantity = countItem(cartItems, widget.product.id);
+    itemQuantity = countItem(cartItems, userId, widget.product.id);
     // Update the state after fetching data
     setState(() {});
   }

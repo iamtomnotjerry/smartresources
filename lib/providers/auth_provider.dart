@@ -7,6 +7,7 @@ class MyAuthProvider extends ChangeNotifier {
   UserModel? user;
 
   Future<void> refreshUser() async {
+    if (FirebaseAuth.instance.currentUser == null) return;
     user = await UsersService().getUser(FirebaseAuth.instance.currentUser!.uid);
     notifyListeners();
   }

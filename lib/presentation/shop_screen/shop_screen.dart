@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:smartresource/data/models/product/product_model.dart';
 import 'package:smartresource/services/product_service.dart';
@@ -31,6 +32,8 @@ class _ShopScreenState extends State<ShopScreen> {
   TextEditingController searchController = TextEditingController();
 
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+
+  String userId = FirebaseAuth.instance.currentUser!.uid;
 
   Future<void> _fetchPage(int pageKey, {String? searchTerm}) async {
     try {
@@ -182,7 +185,7 @@ class _ShopScreenState extends State<ShopScreen> {
           physics: const NeverScrollableScrollPhysics(),
           pagingController: _pagingController,
           builderDelegate: PagedChildBuilderDelegate<ProductModel>(
-            itemBuilder: (context, item, index) => ShopItemWidget(product: item)
+            itemBuilder: (context, item, index) => ShopItemWidget(product: item, uid: userId,)
           ),
         )
       )
