@@ -148,6 +148,13 @@ class _ShopScreenState extends State<ShopScreen> {
       children: [
         Expanded(
           child: CustomSearchView(
+            onChanged: (value) {
+              _pagingController.refresh();
+            },
+            onPressed: () {
+              searchController.clear();
+              _pagingController.refresh();
+            },
             controller: searchController,
             hintText: "Search",
             borderDecoration: SearchViewStyleHelper.fillGray,
@@ -155,21 +162,21 @@ class _ShopScreenState extends State<ShopScreen> {
             textStyle: CustomTextStyles.bodyLargeBlack900,
           ),
         ),
-        Padding(
-          padding: EdgeInsets.only(left: 8.h),
-          child: CustomIconButton(
-            height: 48.adaptSize,
-            width: 48.adaptSize,
-            padding: EdgeInsets.all(12.h),
-            decoration: IconButtonStyleHelper.fillPrimaryTL12,
-            child: const Icon(Icons.search, color: Colors.white),
-            onTap: () {
-              setState(() {
-                _pagingController.refresh();
-              });
-            },
-          ),
-        ),
+        // Padding(
+        //   padding: EdgeInsets.only(left: 8.h),
+        //   child: CustomIconButton(
+        //     height: 48.adaptSize,
+        //     width: 48.adaptSize,
+        //     padding: EdgeInsets.all(12.h),
+        //     decoration: IconButtonStyleHelper.fillPrimaryTL12,
+        //     child: const Icon(Icons.search, color: Colors.white),
+        //     onTap: () {
+        //       setState(() {
+        //         _pagingController.refresh();
+        //       });
+        //     },
+        //   ),
+        // ),
       ],
     );
   }

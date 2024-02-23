@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:smartresource/core/app_export.dart';
 import 'package:smartresource/data/models/tutorial/tutorial_model.dart';
@@ -11,6 +15,7 @@ import 'package:smartresource/widgets/custom_elevated_button.dart';
 import 'package:smartresource/widgets/custom_text_form_field.dart';
 import 'package:smartresource/widgets/multi_select.dart';
 import 'package:uuid/uuid.dart';
+import 'package:video_player/video_player.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:smartresource/data/data_sources/tutorial/materials_purposes.dart';
 
@@ -32,7 +37,8 @@ class AddTutorialScreen extends StatefulWidget {
 
 class _AddTutorialScreenState extends State<AddTutorialScreen> {
   final formKey = GlobalKey<FormState>();
-
+  File? _videoFile;
+  String? _videoUrl;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController videoUrlController = TextEditingController();
   final TextEditingController instructionController = TextEditingController();
@@ -48,12 +54,44 @@ class _AddTutorialScreenState extends State<AddTutorialScreen> {
     if (widget.action == AddTutorialAction.update) {
       titleController.text = widget.tutorial!.title;
       instructionController.text = widget.tutorial!.instructions;
-      videoUrlController.text =
-          'https://www.youtube.com/watch?v=${widget.tutorial!.videoId}';
+      videoUrlController.text = widget.tutorial!.videoId;
       selectedMaterials = widget.tutorial!.materials;
       selectedPurposes = widget.tutorial!.purposes;
     }
   }
+
+  Future<void> _chooseVideo() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickVideo(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _videoFile = File(pickedFile.path);
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Video upload successfully'),
+        ),
+      );
+    }
+  } 
+
+  Future<void> _uploadVideo() async {
+    if (_videoFile != null) {
+      try {
+        final storage = FirebaseStorage.instance;
+        final reference = storage.ref().child('videos/${DateTime.now().millisecondsSinceEpoch}.mp4');
+        await reference.putFile(_videoFile!);
+        final url = await reference.getDownloadURL();
+        setState(() {
+          _videoUrl = url;
+        });
+      } catch (error) {
+        // Handle upload error
+        print('Error uploading video: $error');
+      }
+    }
+  }
+
 
   void onSubmit(BuildContext context) async {
     if (formKey.currentState!.validate()) {
@@ -69,6 +107,12 @@ class _AddTutorialScreenState extends State<AddTutorialScreen> {
             content: Text('Please select at least one purpose'),
           ),
         );
+      } else if (_videoFile == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please wait until your video successfully uploaded'),
+          ),
+        );
       } else {
         try {
           setState(() {
@@ -79,28 +123,28 @@ class _AddTutorialScreenState extends State<AddTutorialScreen> {
             listen: false,
           ).user;
 
-          final videoId = YoutubePlayer.convertUrlToId(
-            videoUrlController.text,
-          );
+          // final videoId = YoutubePlayer.convertUrlToId(
+          //   videoUrlController.text,
+          // );
 
-          if (videoId == null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Invalid youtube video URL'),
-              ),
-            );
-            setState(() {
-              isLoading = false;
-            });
-            return;
-          }
-
+          // if (videoId == null) {
+          //   ScaffoldMessenger.of(context).showSnackBar(
+          //     const SnackBar(
+          //       content: Text('Invalid youtube video URL'),
+          //     ),
+          //   );
+          //   setState(() {
+          //     isLoading = false;
+          //   });
+          //   return;
+          // }
           if (user != null) {
+            await _uploadVideo();
             final tutorial = TutorialModel(
               id: widget.action == AddTutorialAction.add
                   ? const Uuid().v1()
                   : widget.tutorial!.id,
-              videoId: videoId,
+              videoId: _videoUrl!,
               title: titleController.text,
               materials: selectedMaterials,
               instructions: instructionController.text,
@@ -184,6 +228,7 @@ class _AddTutorialScreenState extends State<AddTutorialScreen> {
       bottomNavigationBar: BottomNavigationBar(
         onPressed: () => onSubmit(context),
         action: widget.action,
+        isLoading: isLoading,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -203,14 +248,14 @@ class _AddTutorialScreenState extends State<AddTutorialScreen> {
                           ? 'Please enter tutorial title'
                           : null,
                     ),
-                    buildFormGroup(
-                      label: 'Youtube Video URL',
-                      hintText: 'https://www.youtube.com/watch?v=...',
-                      controller: videoUrlController,
-                      validator: (value) => value == null || value.isEmpty
-                          ? 'Please enter youtube video URL'
-                          : null,
-                    ),
+                    // buildFormGroup(
+                    //   label: 'Youtube Video URL',
+                    //   hintText: 'https://www.youtube.com/watch?v=...',
+                    //   controller: videoUrlController,
+                    //   validator: (value) => value == null || value.isEmpty
+                    //       ? 'Please enter youtube video URL'
+                    //       : null,
+                    // ),
                     MultiSelect(
                       label: 'Materials',
                       selectedItems: selectedMaterials,
@@ -246,6 +291,7 @@ class _AddTutorialScreenState extends State<AddTutorialScreen> {
                           ? 'Please enter tutorial instructions'
                           : null,
                     ),
+                    buildFormVideo(label: "Your video"),
                   ],
                 ),
               ),
@@ -295,20 +341,50 @@ class _AddTutorialScreenState extends State<AddTutorialScreen> {
       ),
     );
   }
+
+  Widget buildFormVideo({required String label}) {
+  return Padding(
+      padding: const EdgeInsets.only(bottom: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 16,
+            ),
+          ),
+          const SizedBox(height: 4),
+          ElevatedButton(
+            onPressed: _chooseVideo,
+            child: Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5), child: Text('Choose Video', style: TextStyle(color: Colors.white),),
+          )),
+        ],
+      ),
+    );
 }
+}
+
+
 
 class BottomNavigationBar extends StatelessWidget {
   const BottomNavigationBar({
     super.key,
     this.onPressed,
     this.action = AddTutorialAction.add,
+    required this.isLoading
   });
 
   final VoidCallback? onPressed;
   final AddTutorialAction action;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.only(

@@ -47,6 +47,14 @@ class BlogsService {
         .toList();
   }
 
+  Future<List<BlogModel>>searchBlogs(String searchTerm) async{
+    var query = _firestore.collection('blogs').orderBy('title', descending: true);
+    query = query.where('title', isGreaterThanOrEqualTo: searchTerm);
+    query = query.where('title', isLessThanOrEqualTo: '$searchTerm\uf8ff');
+    final products = await query.get();
+    return products.docs.map((blog) => BlogModel.fromMap(blog.data())).toList();
+  }
+
   Future<void> updateBlog(BlogModel data) async {
     await _firestore.collection('blogs').doc(data.id).update(
           data.toJson(),

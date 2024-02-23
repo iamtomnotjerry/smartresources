@@ -26,6 +26,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
   bool isLoading = false;
 
+  bool _hidePassWord = true;
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   void onSubmit(BuildContext context) async {
@@ -184,35 +186,35 @@ class _SignInScreenState extends State<SignInScreen> {
                         child: const Divider(),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 12.h),
-                      child: Text(
-                        "Or sign in with",
-                        style: CustomTextStyles.bodyMediumBluegray200,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: 6.v,
-                        bottom: 9.v,
-                      ),
-                      child: SizedBox(
-                        width: 91.h,
-                        child: Divider(
-                          indent: 12.h,
-                        ),
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: EdgeInsets.only(left: 12.h),
+                    //   child: Text(
+                    //     "Or sign in with",
+                    //     style: CustomTextStyles.bodyMediumBluegray200,
+                    //   ),
+                    // ),
+                    // Padding(
+                    //   padding: EdgeInsets.only(
+                    //     top: 6.v,
+                    //     bottom: 9.v,
+                    //   ),
+                    //   child: SizedBox(
+                    //     width: 91.h,
+                    //     child: Divider(
+                    //       indent: 12.h,
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
                 SizedBox(height: 24.v),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildGoogleButton(context),
-                    _buildFacebookButton(context),
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     _buildGoogleButton(context),
+                //     _buildFacebookButton(context),
+                //   ],
+                // ),
                 SizedBox(height: 17.v),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -337,16 +339,23 @@ class _SignInScreenState extends State<SignInScreen> {
         textInputType: TextInputType.visiblePassword,
         suffix: Container(
           margin: EdgeInsets.fromLTRB(30.h, 18.v, 24.h, 18.v),
-          child: Icon(
-            Icons.visibility_off,
-            size: 20,
-            color: appTheme.gray600,
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                _hidePassWord = !_hidePassWord;
+              });
+            },
+            child:Icon(
+              _hidePassWord ? Icons.visibility_off : Icons.visibility,
+              size: 20,
+              color: appTheme.gray600,
+            ),
           ),
         ),
         suffixConstraints: BoxConstraints(
           maxHeight: 56.v,
         ),
-        obscureText: true,
+        obscureText: _hidePassWord,
         contentPadding: EdgeInsets.only(
           left: 24.h,
           top: 18.v,

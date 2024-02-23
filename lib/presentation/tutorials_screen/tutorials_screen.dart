@@ -8,6 +8,7 @@ import 'package:smartresource/data/data_sources/tutorial/materials_purposes.dart
 import 'package:smartresource/data/models/tutorial/tutorial_model.dart';
 import 'package:smartresource/presentation/add_tutorial_screen/add_tutorial_screen.dart';
 import 'package:smartresource/services/tutorials_service.dart';
+import 'package:smartresource/widgets/custom_search_view.dart';
 import 'package:smartresource/widgets/search_bar.dart';
 
 import 'widgets/chip.dart';
@@ -28,17 +29,24 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
 
   final int limit = 10;
 
-  Future<void> _fetchPage(int pageKey) async {
+  TextEditingController searchController = TextEditingController();
+
+  Future<void> _fetchPage(int pageKey, {String? searchTerm}) async {
     try {
       final currentItems = _pagingController.value.itemList;
-
-      final newItems = await TutorialService().getTutorialsWithPagination(
-        page: pageKey,
-        limit: limit,
-        lastVisibleId: currentItems != null && currentItems.isNotEmpty
-            ? currentItems.last.id
-            : null,
-      );
+      List<TutorialModel> newItems = [];
+      if (searchTerm == null) {
+        newItems = await TutorialService().getTutorialsWithPagination(
+          page: pageKey,
+          limit: limit,
+          lastVisibleId: currentItems != null && currentItems.isNotEmpty
+              ? currentItems.last.id
+              : null,
+        );
+      }
+      else {
+        newItems = await TutorialService().searchTutorials(searchTerm);
+      }
       final isLastPage = newItems.length < limit;
 
       if (isLastPage) {
@@ -55,7 +63,7 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
   @override
   void initState() {
     _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
+      _fetchPage(pageKey, searchTerm: searchController.text);
     });
     listener = FirebaseFirestore.instance
         .collection('tutorials')
@@ -106,7 +114,20 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SearchBar(),
+              CustomSearchView(
+                onChanged: (value) {
+                  _pagingController.refresh();
+                },
+                onPressed: () {
+                  searchController.clear();
+                  _pagingController.refresh();
+                },
+                controller: searchController,
+                hintText: "Search",
+                borderDecoration: SearchViewStyleHelper.fillGray,
+                fillColor: appTheme.gray100,
+                textStyle: CustomTextStyles.bodyLargeBlack900,
+              ),
               const SizedBox(height: 32),
               const Text(
                 "Materials",

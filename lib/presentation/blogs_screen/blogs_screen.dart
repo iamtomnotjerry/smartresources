@@ -8,6 +8,7 @@ import 'package:smartresource/data/models/blog/blog_model.dart';
 import 'package:smartresource/presentation/add_blog_screen/add_blog_screen.dart';
 import 'package:smartresource/presentation/blogs_screen/widgets/single_blog.dart';
 import 'package:smartresource/services/blog_service.dart';
+import 'package:smartresource/widgets/custom_search_view.dart';
 import 'package:smartresource/widgets/search_bar.dart';
 
 class BlogsScreen extends StatefulWidget {
@@ -25,17 +26,25 @@ class _BlogsScreenState extends State<BlogsScreen> {
 
   final int limit = 10;
 
-  Future<void> _fetchPage(int pageKey) async {
+  TextEditingController searchController = TextEditingController();
+
+  Future<void> _fetchPage(int pageKey, {String? searchTerm}) async {
     try {
       final currentItems = _pagingController.value.itemList;
-
-      final newItems = await BlogsService().getBlogsWithPagination(
+      List<BlogModel> newItems = [];
+      if (searchTerm == null) {
+        newItems = await BlogsService().getBlogsWithPagination(
         page: pageKey,
         limit: limit,
         lastVisibleId: currentItems != null && currentItems.isNotEmpty
             ? currentItems.last.id
             : null,
-      );
+        );
+      }
+      else {
+        newItems = await BlogsService().searchBlogs(searchTerm);
+      }
+
       final isLastPage = newItems.length < limit;
 
       if (isLastPage) {
@@ -52,7 +61,7 @@ class _BlogsScreenState extends State<BlogsScreen> {
   @override
   void initState() {
     _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
+      _fetchPage(pageKey, searchTerm: searchController.text);
     });
     listener =
         FirebaseFirestore.instance.collection('blogs').snapshots().listen(
@@ -104,7 +113,28 @@ class _BlogsScreenState extends State<BlogsScreen> {
             padding: const EdgeInsets.all(24),
             child: Column(
               children: [
-                const SearchBar(),
+                // SearchBar(
+                //   onChanged: () {
+                //     setState(() {
+                //       _pagingController.refresh();
+                //     });
+                //   },
+                //   searchController: searchController,
+                // ),
+                CustomSearchView(
+                  onChanged: (value) {
+                    _pagingController.refresh();
+                  },
+                  onPressed: () {
+                    searchController.clear();
+                    _pagingController.refresh();
+                  },
+                  controller: searchController,
+                  hintText: "Search",
+                  borderDecoration: SearchViewStyleHelper.fillGray,
+                  fillColor: appTheme.gray100,
+                  textStyle: CustomTextStyles.bodyLargeBlack900,
+                ),
                 const SizedBox(
                   height: 64,
                 ),

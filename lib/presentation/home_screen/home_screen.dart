@@ -26,7 +26,9 @@ class HomeScreen extends StatelessWidget {
     final user = Provider.of<MyAuthProvider>(context).user;
     final tutorials =Provider.of<TutorialsProvider>(context).tutorials.take(10).toList();
     final blogs = Provider.of<BlogsProvider>(context).blogs.take(10).toList();
-    final products = Provider.of<ProductsProvider>(context).products.toList();
+    final products = Provider.of<ProductsProvider>(context).products.take(10).toList();
+
+    TextEditingController searchController = TextEditingController();
 
     return SafeArea(
         child: Scaffold(
@@ -84,7 +86,7 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(
                     height: 24,
                   ),
-                  const SearchBar(),
+                  SearchBar(onTap: () {}, searchController: searchController,),
                   const SizedBox(
                     height: 32,
                   ),
@@ -191,7 +193,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                         itemBuilder: (context, index) {
                           ProductModel product = products[index];
-                          return ProductWidget(product: product,);
+                          return ProductWidget(product: product, uid: user.uid);
                           // ProductModel prodItem = productslist[index];
                           // return ProductWidget(
                           //   prodname: prodItem.prodname,

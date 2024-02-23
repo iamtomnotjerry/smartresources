@@ -3,8 +3,11 @@ import 'package:smartresource/core/app_export.dart';
 import 'package:smartresource/widgets/custom_text_form_field.dart';
 
 class SearchBar extends StatelessWidget {
-  const SearchBar({
+  Function() onTap;
+  TextEditingController searchController;
+  SearchBar({
     super.key,
+    required this.onTap, required this.searchController, 
   });
 
   @override
@@ -16,6 +19,8 @@ class SearchBar extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(16),
             child: CustomTextFormField(
+              
+              controller: searchController,
               hintText: 'Search...',
               prefix: Padding(
                 padding: const EdgeInsets.only(
@@ -38,14 +43,14 @@ class SearchBar extends StatelessWidget {
           width: 52,
           height: 52,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: onTap,
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
             child: const Icon(
-              Icons.tune_rounded,
+              Icons.search,
               color: Colors.white,
             ),
           ),

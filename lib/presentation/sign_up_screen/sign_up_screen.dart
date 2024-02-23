@@ -31,6 +31,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   bool isLoading = false;
 
+  bool _hidePassWord = true;
+
+  bool _hideConfirmPassword = false;
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   void onFacebookSignIn() async {
@@ -232,49 +236,49 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   SizedBox(height: 28.v),
                   _buildSignUp(context),
                   SizedBox(height: 13.v),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: 6.v,
-                          bottom: 9.v,
-                        ),
-                        child: SizedBox(
-                          width: 79.h,
-                          child: const Divider(),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 12.h),
-                        child: Text(
-                          "Or sign up with",
-                          style: CustomTextStyles.bodyMediumBluegray200,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: 6.v,
-                          bottom: 9.v,
-                        ),
-                        child: SizedBox(
-                          width: 91.h,
-                          child: Divider(
-                            indent: 12.h,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: [
+                  //     Padding(
+                  //       padding: EdgeInsets.only(
+                  //         top: 6.v,
+                  //         bottom: 9.v,
+                  //       ),
+                  //       child: SizedBox(
+                  //         width: 79.h,
+                  //         child: const Divider(),
+                  //       ),
+                  //     ),
+                  //     Padding(
+                  //       padding: EdgeInsets.only(left: 12.h),
+                  //       child: Text(
+                  //         "Or sign up with",
+                  //         style: CustomTextStyles.bodyMediumBluegray200,
+                  //       ),
+                  //     ),
+                  //     Padding(
+                  //       padding: EdgeInsets.only(
+                  //         top: 6.v,
+                  //         bottom: 9.v,
+                  //       ),
+                  //       child: SizedBox(
+                  //         width: 91.h,
+                  //         child: Divider(
+                  //           indent: 12.h,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                   SizedBox(height: 19.v),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildGoogle(context),
-                      _buildFacebook(context),
-                    ],
-                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     _buildGoogle(context),
+                  //     _buildFacebook(context),
+                  //   ],
+                  // ),
                   SizedBox(height: 41.v),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -376,16 +380,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
         textInputType: TextInputType.visiblePassword,
         suffix: Container(
           margin: EdgeInsets.fromLTRB(30.h, 18.v, 24.h, 18.v),
-          child: Icon(
-            Icons.visibility_off,
-            size: 20,
-            color: appTheme.gray600,
-          ),
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                _hidePassWord = !_hidePassWord;
+              });
+            },
+            child:Icon(
+              _hidePassWord ? Icons.visibility_off : Icons.visibility,
+              size: 20,
+              color: appTheme.gray600,
+            ),
+          )
         ),
         suffixConstraints: BoxConstraints(
           maxHeight: 56.v,
         ),
-        obscureText: true,
+        obscureText: _hidePassWord,
         contentPadding: EdgeInsets.only(
           left: 24.h,
           top: 18.v,
@@ -410,16 +421,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
         textInputType: TextInputType.visiblePassword,
         suffix: Container(
           margin: EdgeInsets.fromLTRB(30.h, 18.v, 24.h, 18.v),
-          child: Icon(
-            Icons.visibility_off,
-            size: 20,
-            color: appTheme.gray600,
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                _hideConfirmPassword = !_hideConfirmPassword;
+              });
+            },
+            child:Icon(
+              _hideConfirmPassword ? Icons.visibility_off : Icons.visibility,
+              size: 20,
+              color: appTheme.gray600,
+            ),
           ),
         ),
         suffixConstraints: BoxConstraints(
           maxHeight: 56.v,
         ),
-        obscureText: true,
+        obscureText: _hideConfirmPassword,
         contentPadding: EdgeInsets.only(
           left: 24.h,
           top: 18.v,

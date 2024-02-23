@@ -1,22 +1,30 @@
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smartresource/core/app_export.dart';
+import 'package:smartresource/data/local_storage/cart_storage.dart';
 import 'package:smartresource/data/models/product/product_model.dart';
+import 'package:smartresource/presentation/product_details_two_screen/product_details_two_screen.dart';
 
 // ignore: must_be_immutable
 class ProductWidget extends StatelessWidget {
-  // final String prodname;
-  // final String description;
-  // final String seller;
-  // final double price;
-  // final String image;
   final ProductModel product;
-
-  const ProductWidget({super.key, required this.product});
+  final String uid;
+  const ProductWidget({super.key, required this.product, required this.uid});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ProductDetailsTwoScreen(
+              product: product,
+            ),
+          ),
+        );
+      },
+      child:Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Stack(
@@ -64,7 +72,10 @@ class ProductWidget extends StatelessWidget {
         SizedBox(
           height: 40,
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              addToCart(context, uid, product.id, 1);
+              Navigator.pushNamed(context, AppRoutes.cartScreen);
+            },
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               backgroundColor: appTheme.gray50,
@@ -84,6 +95,6 @@ class ProductWidget extends StatelessWidget {
           ),
         )
       ],
-    );
+    ));
   }
 }

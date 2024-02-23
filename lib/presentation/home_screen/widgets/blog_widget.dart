@@ -11,7 +11,7 @@ class BlogWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return SingleChildScrollView(child:Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -91,6 +91,6 @@ class BlogWidget extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 }

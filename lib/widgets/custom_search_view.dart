@@ -25,6 +25,7 @@ class CustomSearchView extends StatelessWidget {
     this.filled = true,
     this.validator,
     this.onChanged,
+    this.onPressed
   });
 
   final Alignment? alignment;
@@ -69,6 +70,8 @@ class CustomSearchView extends StatelessWidget {
 
   final Function(String)? onChanged;
 
+  final Function() ? onPressed;
+
   @override
   Widget build(BuildContext context) {
     return alignment != null
@@ -97,9 +100,7 @@ class CustomSearchView extends StatelessWidget {
             }
             return null;
           },
-          // onChanged: (String value) {
-          //   onChanged!.call(value);
-          // },
+          onChanged: onChanged
         ),
       );
   InputDecoration get decoration => InputDecoration(
@@ -124,7 +125,7 @@ class CustomSearchView extends StatelessWidget {
                 right: 15.h,
               ),
               child: IconButton(
-                onPressed: () => controller!.clear(),
+                onPressed: onPressed,
                 icon: Icon(
                   Icons.clear,
                   color: Colors.grey.shade600,

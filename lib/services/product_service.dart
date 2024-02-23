@@ -35,14 +35,6 @@ class ProductService {
   }) async {
     var query = _firestore.collection('products').orderBy('createdAt', descending: true);
 
-    // if (searchTerm != null && searchTerm.isNotEmpty) {
-    //   query = query.where('prodname', isGreaterThanOrEqualTo: searchTerm);
-    //   query = query.where('prodname', isLessThanOrEqualTo: '$searchTerm\uf8ff');
-    // }
-
-    // query = query.orderBy('createdAt', descending: true);
-    // query = query.orderBy('prodname');
-
     if (lastVisisbleId != null) {
       final lastVisibleSnapshot = await _firestore.collection('products').doc(lastVisisbleId).get();
       query = query.startAfterDocument(lastVisibleSnapshot);
