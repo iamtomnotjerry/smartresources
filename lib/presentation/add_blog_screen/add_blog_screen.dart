@@ -220,7 +220,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                     : Text("Pick an image for your blog's cover!"),
                     ElevatedButton(
                       onPressed: _getImage,
-                      child: Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5), child: Text('Choose Video', style: TextStyle(color: Colors.white),),)
+                      child: Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5), child: Text('Choose image', style: TextStyle(color: Colors.white),),)
                     ),
                   ],
                 ),
