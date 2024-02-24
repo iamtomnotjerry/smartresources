@@ -9,7 +9,6 @@ import 'package:smartresource/presentation/add_blog_screen/add_blog_screen.dart'
 import 'package:smartresource/presentation/blogs_screen/widgets/single_blog.dart';
 import 'package:smartresource/services/blog_service.dart';
 import 'package:smartresource/widgets/custom_search_view.dart';
-import 'package:smartresource/widgets/search_bar.dart';
 
 class BlogsScreen extends StatefulWidget {
   const BlogsScreen({super.key});
@@ -34,14 +33,13 @@ class _BlogsScreenState extends State<BlogsScreen> {
       List<BlogModel> newItems = [];
       if (searchTerm == null) {
         newItems = await BlogsService().getBlogsWithPagination(
-        page: pageKey,
-        limit: limit,
-        lastVisibleId: currentItems != null && currentItems.isNotEmpty
-            ? currentItems.last.id
-            : null,
+          page: pageKey,
+          limit: limit,
+          lastVisibleId: currentItems != null && currentItems.isNotEmpty
+              ? currentItems.last.id
+              : null,
         );
-      }
-      else {
+      } else {
         newItems = await BlogsService().searchBlogs(searchTerm);
       }
 
@@ -125,12 +123,24 @@ class _BlogsScreenState extends State<BlogsScreen> {
                   onChanged: (value) {
                     _pagingController.refresh();
                   },
+                  prefix: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 20,
+                      right: 12,
+                    ),
+                    child: Icon(
+                      Icons.search,
+                      color: theme.colorScheme.primary,
+                      size: 24,
+                    ),
+                  ),
                   onPressed: () {
                     searchController.clear();
                     _pagingController.refresh();
                   },
                   controller: searchController,
                   hintText: "Search",
+                  autofocus: false,
                   borderDecoration: SearchViewStyleHelper.fillGray,
                   fillColor: appTheme.gray100,
                   textStyle: CustomTextStyles.bodyLargeBlack900,

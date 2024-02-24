@@ -1,11 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:smartresource/core/app_export.dart';
 import 'package:smartresource/data/local_storage/cart_storage.dart';
 import 'package:smartresource/data/models/product/product_model.dart';
-import 'package:smartresource/providers/auth_provider.dart';
 
 // ignore: must_be_immutable
 class CartItemWidget extends StatefulWidget {

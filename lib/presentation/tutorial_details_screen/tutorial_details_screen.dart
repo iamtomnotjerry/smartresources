@@ -6,9 +6,7 @@ import 'package:smartresource/data/models/tutorial/tutorial_model.dart';
 import 'package:smartresource/presentation/add_tutorial_screen/add_tutorial_screen.dart';
 import 'package:smartresource/services/tutorials_service.dart';
 import 'package:smartresource/widgets/custom_icon_button.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:video_player/video_player.dart';
-import 'package:chewie/chewie.dart';
 
 import '../tutorial_details_screen/widgets/framenine2_item_widget.dart';
 
@@ -33,7 +31,7 @@ class _TutorialDetailsScreenState extends State<TutorialDetailsScreen> {
 
   bool _isFullScreen = false;
 
-  late bool _isDragging = false;
+  late final bool _isDragging = false;
 
   @override
   void initState() {
@@ -406,7 +404,7 @@ class _TutorialDetailsScreenState extends State<TutorialDetailsScreen> {
         ),
         body: Column(
           children: [
-            Container(
+            SizedBox(
               height: _isFullScreen ? 300 : 200,
               width: _isFullScreen ? 500 : 350,
               child: Stack(

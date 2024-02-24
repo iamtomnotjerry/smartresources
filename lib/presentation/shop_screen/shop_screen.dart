@@ -23,7 +23,8 @@ class ShopScreen extends StatefulWidget {
 }
 
 class _ShopScreenState extends State<ShopScreen> {
-  final PagingController<int, ProductModel> _pagingController = PagingController(firstPageKey: 1);
+  final PagingController<int, ProductModel> _pagingController =
+      PagingController(firstPageKey: 1);
 
   late StreamSubscription<QuerySnapshot> listener;
 
@@ -43,7 +44,9 @@ class _ShopScreenState extends State<ShopScreen> {
         newItems = await ProductService().getProductWithPagination(
           page: pageKey,
           limit: limit,
-          lastVisisbleId: currentItems != null && currentItems.isNotEmpty ? currentItems.last.id : null,
+          lastVisisbleId: currentItems != null && currentItems.isNotEmpty
+              ? currentItems.last.id
+              : null,
         );
       } else {
         newItems = await ProductService().searchProducts(searchTerm);
@@ -63,12 +66,13 @@ class _ShopScreenState extends State<ShopScreen> {
     }
   }
 
-  @override 
+  @override
   void initState() {
     _pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey, searchTerm: searchController.text);
     });
-    listener = FirebaseFirestore.instance.collection('products').snapshots().listen(
+    listener =
+        FirebaseFirestore.instance.collection('products').snapshots().listen(
       (event) {
         _pagingController.refresh();
       },
@@ -79,36 +83,56 @@ class _ShopScreenState extends State<ShopScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Shop",
+            style: CustomTextStyles.headlineSmallPrimary,
+          ),
+          actions: [
+            Container(
+              height: 28.adaptSize,
+              width: 28.adaptSize,
+              margin: const EdgeInsets.only(right: 24),
+              child: Stack(
+                alignment: Alignment.topRight,
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, AppRoutes.cartScreen);
+                      },
+                      icon: const Icon(Icons.shopping_cart))
+                ],
+              ),
+            ),
+          ],
+        ),
         resizeToAvoidBottomInset: false,
-        body: SingleChildScrollView (
+        body: SingleChildScrollView(
           child: Container(
             width: double.maxFinite,
             padding: EdgeInsets.symmetric(horizontal: 23.h),
             child: Column(
               children: [
-              SizedBox(height: 54.v),
-              _buildShopRow(context),
-              SizedBox(height: 11.v),
-              _buildSearchBarRow(context),
-              SizedBox(height: 10.v),
-              _buildProductsList(context),
-            ],
+                const SizedBox(height: 24),
+                _buildSearchBarRow(context),
+                const SizedBox(height: 32),
+                _buildProductsList(context),
+              ],
+            ),
           ),
         ),
-      ),
-      floatingActionButton: InkWell(
-        onTap: () {
-          Navigator.pushNamed(context, AppRoutes.addPrpdcutScreen);
-        }, 
-        child: CustomIconButton(
-          height: 40.0,
-          width: 40.0,
-          padding: const EdgeInsets.all(8.0),
-          decoration: IconButtonStyleHelper.fillPrimaryTL12,
-          child: const Icon(Icons.add, color: Colors.white),
-        ),
-      )
-    );
+        floatingActionButton: InkWell(
+          onTap: () {
+            Navigator.pushNamed(context, AppRoutes.addPrpdcutScreen);
+          },
+          child: CustomIconButton(
+            height: 40.0,
+            width: 40.0,
+            padding: const EdgeInsets.all(8.0),
+            decoration: IconButtonStyleHelper.fillPrimaryTL12,
+            child: const Icon(Icons.add, color: Colors.white),
+          ),
+        ));
   }
 
   /// Section Widget
@@ -131,9 +155,10 @@ class _ShopScreenState extends State<ShopScreen> {
             alignment: Alignment.topRight,
             children: [
               IconButton(
-                onPressed: () {Navigator.pushNamed(context, AppRoutes.cartScreen);}, 
-                icon: const Icon(Icons.shopping_cart)
-              )
+                  onPressed: () {
+                    Navigator.pushNamed(context, AppRoutes.cartScreen);
+                  },
+                  icon: const Icon(Icons.shopping_cart))
             ],
           ),
         ),
@@ -155,6 +180,18 @@ class _ShopScreenState extends State<ShopScreen> {
               searchController.clear();
               _pagingController.refresh();
             },
+            prefix: Padding(
+              padding: const EdgeInsets.only(
+                left: 20,
+                right: 12,
+              ),
+              child: Icon(
+                Icons.search,
+                color: theme.colorScheme.primary,
+                size: 24,
+              ),
+            ),
+            autofocus: false,
             controller: searchController,
             hintText: "Search",
             borderDecoration: SearchViewStyleHelper.fillGray,
@@ -184,19 +221,19 @@ class _ShopScreenState extends State<ShopScreen> {
   /// Section Widget
   Widget _buildProductsList(BuildContext context) {
     return Align(
-      alignment: Alignment.center,
-      child: Container (
-        decoration: AppDecoration.outlineBlack,
-        child: PagedListView<int, ProductModel> (
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          pagingController: _pagingController,
-          builderDelegate: PagedChildBuilderDelegate<ProductModel>(
-            itemBuilder: (context, item, index) => ShopItemWidget(product: item, uid: userId,)
-          ),
-        )
-      )
-    );
+        alignment: Alignment.center,
+        child: Container(
+            decoration: AppDecoration.outlineBlack,
+            child: PagedListView<int, ProductModel>(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              pagingController: _pagingController,
+              builderDelegate: PagedChildBuilderDelegate<ProductModel>(
+                  itemBuilder: (context, item, index) => ShopItemWidget(
+                        product: item,
+                        uid: userId,
+                      )),
+            )));
   }
 
   @override
