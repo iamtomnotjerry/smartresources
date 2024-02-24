@@ -33,21 +33,17 @@ class _TutorialDetailsScreenState extends State<TutorialDetailsScreen> {
 
   bool _isFullScreen = false;
 
+  late bool _isDragging = false;
+
   @override
   void initState() {
-    // videoController = YoutubePlayerController(
-    //   initialVideoId: widget.tutorial.videoId,
-    //   flags: const YoutubePlayerFlags(
-    //     autoPlay: true,
-    //     mute: false,
-    //   ),
-    // );
     _likes = widget.tutorial.likes;
     _videoPlayerController = VideoPlayerController.networkUrl(
       Uri.parse(widget.tutorial.videoId,)
     )..initialize().then((_) {
       setState(() {});
     });
+    _videoPlayerController.addListener(_updateUI);
     super.initState();
   }
 
@@ -56,6 +52,12 @@ class _TutorialDetailsScreenState extends State<TutorialDetailsScreen> {
     // videoController.dispose();
     _videoPlayerController.dispose();
     super.dispose();
+  }
+
+  void _updateUI() {
+    if (!_isDragging) {
+      setState(() {}); // Update the UI
+    }
   }
 
   @override
@@ -407,7 +409,25 @@ class _TutorialDetailsScreenState extends State<TutorialDetailsScreen> {
             Container(
               height: _isFullScreen ? 300 : 200,
               width: _isFullScreen ? 500 : 350,
-              child: _videoPlayerController.value.isInitialized ? VideoPlayer(_videoPlayerController) : const Center(child: Text("Loading..."))
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                children:[
+                  _videoPlayerController.value.isInitialized ? VideoPlayer(_videoPlayerController) : const Center(child: Text("Loading...")),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: VideoProgressIndicator(
+                      _videoPlayerController,
+                      allowScrubbing: true, // Allow the user to scrub through the video timeline
+                      colors: const VideoProgressColors(
+                        playedColor: Colors.red, // Color of the played part of the timeline
+                        bufferedColor: Colors.grey, // Color of the buffered part of the timeline
+                        backgroundColor: Colors.transparent, // Background color of the timeline
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    ),
+                  ),
+                ]
+              )
             ),
             Expanded(
               child: SingleChildScrollView(
