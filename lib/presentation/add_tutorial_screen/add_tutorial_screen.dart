@@ -358,8 +358,8 @@ class _AddTutorialScreenState extends State<AddTutorialScreen> {
           const SizedBox(height: 4),
           ElevatedButton(
             onPressed: _chooseVideo,
-            child: Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5), child: Text('Choose Video', style: TextStyle(color: Colors.white),),
-          )),
+            child: Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5), child: Text('Choose Video', style: TextStyle(color: Colors.white),),)
+          ),
         ],
       ),
     );

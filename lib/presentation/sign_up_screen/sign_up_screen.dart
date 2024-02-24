@@ -33,7 +33,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   bool _hidePassWord = true;
 
-  bool _hideConfirmPassword = false;
+  bool _hideConfirmPassword = true;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 

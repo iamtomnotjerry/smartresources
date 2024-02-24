@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:smartresource/core/app_export.dart';
 import 'package:smartresource/core/utils/validation_functions.dart';
@@ -36,6 +40,37 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
   final TextEditingController thumbnailUrlController = TextEditingController();
 
   bool isLoading = false;
+  File? _imageFile;
+  String? _imageUrl;
+
+  Future<void> _getImage() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        _imageFile = File(pickedImage.path);
+      });
+    }
+  }
+
+  Future<void> uploadImageToStorage(File imageFile) async {
+    try {
+      final storage = FirebaseStorage.instance;
+      final Reference reference = storage.ref().child('blogs/${DateTime.now().millisecondsSinceEpoch}.jpg');
+      await reference.putFile(imageFile);
+      final imageUrl = await reference.getDownloadURL();
+      setState(() {
+        _imageUrl = imageUrl;
+      });
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Could not upload the image"),
+        ),
+      );
+      return null;
+    }
+  }
 
   @override
   void initState() {
@@ -58,12 +93,14 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
           listen: false,
         ).user;
 
+        await uploadImageToStorage(_imageFile!);
+
         if (user != null) {
           final blog = BlogModel(
             id: widget.action == AddBlogAction.add
                 ? const Uuid().v1()
                 : widget.blog!.id,
-            thumbnail: thumbnailUrlController.text,
+            thumbnail: _imageUrl!,
             title: titleController.text,
             username: user.name,
             content: contentController.text,
@@ -142,6 +179,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
       bottomNavigationBar: BottomNavigationBar(
         onPressed: () => onSubmit(context),
         action: widget.action,
+        isLoading: isLoading
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -162,11 +200,6 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                           : null,
                     ),
                     buildFormGroup(
-                        validator: validateUrl,
-                        label: 'Thumbnail Url',
-                        hintText: 'https://www.example.com/thumbnail.jpg',
-                        controller: thumbnailUrlController),
-                    buildFormGroup(
                       label: 'Content',
                       hintText: 'Write your blog content here',
                       controller: contentController,
@@ -176,6 +209,18 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                       validator: (value) => value == null || value.isEmpty
                           ? 'Please enter blog content'
                           : null,
+                    ),
+                     _imageFile != null
+                    ? Image.file(
+                      _imageFile!,
+                      height: 200,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    )
+                    : Text("Pick an image for your blog's cover!"),
+                    ElevatedButton(
+                      onPressed: _getImage,
+                      child: Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5), child: Text('Choose Video', style: TextStyle(color: Colors.white),),)
                     ),
                   ],
                 ),
@@ -302,10 +347,12 @@ class BottomNavigationBar extends StatelessWidget {
     super.key,
     this.onPressed,
     this.action = AddBlogAction.add,
+    required this.isLoading
   });
 
   final VoidCallback? onPressed;
   final AddBlogAction action;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {

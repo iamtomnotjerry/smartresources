@@ -86,7 +86,7 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(
                     height: 24,
                   ),
-                  SearchBar(onTap: () {}, searchController: searchController,),
+                  // SearchBar(onTap: () {}, searchController: searchController,),
                   const SizedBox(
                     height: 32,
                   ),
