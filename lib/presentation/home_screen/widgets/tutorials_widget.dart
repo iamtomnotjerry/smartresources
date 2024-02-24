@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:video_player/video_player.dart';
-import 'package:chewie/chewie.dart';
 
 class TutorialWidget extends StatefulWidget {
   final String videoId;
@@ -61,7 +60,7 @@ class _TutorialWidgetState extends State<TutorialWidget> {
         children: [
           InkWell(
             onTap: widget.onTap,
-            child: Container(
+            child: SizedBox(
               height: 200,
               width: 350,
               child: _videoPlayerController.value.isInitialized ? VideoPlayer(_videoPlayerController) : const Center(child: Text("Loading..."))

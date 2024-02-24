@@ -2,11 +2,9 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smartresource/data/local_storage/cart_storage.dart';
 import 'package:smartresource/data/models/product/product_model.dart';
-import 'package:smartresource/providers/auth_provider.dart';
 
 import 'widgets/cart_item_widget.dart';
 import 'package:flutter/material.dart';
@@ -50,46 +48,47 @@ class _CartScreenState extends State<CartScreen> {
     setState(() {});
   }
 
-  @override 
+  @override
   void initState() {
     super.initState();
     initData();
   }
 
-  Future<void> initData() async{
+  Future<void> initData() async {
     total = await calculateTotal(userId);
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
+    return Scaffold(
+      appBar: AppBar(
           title: Text(
             "Your Cart",
             style: theme.textTheme.titleLarge,
           ),
           actions: [
-            TextButton(onPressed: () {clearStorage();}, child: const Text("Empty your cart")),
-          ]
+            TextButton(
+                onPressed: () {
+                  clearStorage();
+                },
+                child: const Text("Empty your cart")),
+          ]),
+      body: Container(
+        width: double.maxFinite,
+        padding: EdgeInsets.only(
+          left: 24.h,
+          top: 61.v,
+          right: 24.h,
         ),
-        body: Container(
-          width: double.maxFinite,
-          padding: EdgeInsets.only(
-            left: 24.h,
-            top: 61.v,
-            right: 24.h,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildUserProfileSection(context),
-            ],
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildUserProfileSection(context),
+          ],
         ),
-        bottomNavigationBar: _buildBottomNavigationSection(context),
       ),
+      bottomNavigationBar: _buildBottomNavigationSection(context),
     );
   }
 
@@ -97,41 +96,53 @@ class _CartScreenState extends State<CartScreen> {
   Widget _buildUserProfileSection(BuildContext context) {
     return Expanded(
       child: Container(
-        margin: EdgeInsets.only(right: 1.h),
-        decoration: AppDecoration.outlineBlack,
-        child: 
-        FutureBuilder<List<ProductModel>>(
-          future: retrieveItemsFromStorage(userId),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator()); // Show loading indicator while fetching data
-            }
+          margin: EdgeInsets.only(right: 1.h),
+          decoration: AppDecoration.outlineBlack,
+          child: FutureBuilder<List<ProductModel>>(
+            future: retrieveItemsFromStorage(userId),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                    child:
+                        CircularProgressIndicator()); // Show loading indicator while fetching data
+              }
 
-            if (snapshot.hasError) {
-              devtools.log(snapshot.error.toString());
-              Center(child: Text("Your cart is empty", style: theme.textTheme.titleLarge),);
-            }
+              if (snapshot.hasError) {
+                devtools.log(snapshot.error.toString());
+                Center(
+                  child: Text("Your cart is empty",
+                      style: theme.textTheme.titleLarge),
+                );
+              }
 
-            List<ProductModel>  items = snapshot.data ?? [];
+              List<ProductModel> items = snapshot.data ?? [];
 
-            if (items.isNotEmpty) {
-              return ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  return CartItemWidget(
-                    product: items[index],
-                    addOne: () {addOneProduct(items[index].id);}, 
-                    deleteOne: () {deleteOneProduct(items[index].id);},
-                    deleteAll: () {deleteDuplicateProduct(items[index].id);},
-                  );
-                },
+              if (items.isNotEmpty) {
+                return ListView.builder(
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    return CartItemWidget(
+                      product: items[index],
+                      addOne: () {
+                        addOneProduct(items[index].id);
+                      },
+                      deleteOne: () {
+                        deleteOneProduct(items[index].id);
+                      },
+                      deleteAll: () {
+                        deleteDuplicateProduct(items[index].id);
+                      },
+                    );
+                  },
+                );
+              }
+
+              return Center(
+                child: Text("Your cart is empty",
+                    style: theme.textTheme.titleLarge),
               );
-            }
-
-            return Center(child: Text("Your cart is empty", style: theme.textTheme.titleLarge),);
-          },
-        )
-      ),
+            },
+          )),
     );
   }
 

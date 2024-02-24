@@ -17,10 +17,7 @@ import 'dart:developer' as devtools show log;
 import 'package:uuid/uuid.dart';
 
 class AddPrpdcutScreen extends StatefulWidget {
-  const AddPrpdcutScreen({
-    super.key,
-    this.product
-  });
+  const AddPrpdcutScreen({super.key, this.product});
 
   final ProductModel? product;
 
@@ -29,14 +26,14 @@ class AddPrpdcutScreen extends StatefulWidget {
 }
 
 class _AddProductState extends State<AddPrpdcutScreen> {
-
   final currentUser = FirebaseAuth.instance.currentUser;
 
   TextEditingController nameInputController = TextEditingController();
 
   TextEditingController priceInputController = TextEditingController();
 
-  TextEditingController productDescriptionInputController = TextEditingController();
+  TextEditingController productDescriptionInputController =
+      TextEditingController();
 
   // TextEditingController thumbnailImageURLInputController = TextEditingController();
 
@@ -51,7 +48,7 @@ class _AddProductState extends State<AddPrpdcutScreen> {
     super.initState();
   }
 
-  void addProduct(BuildContext context) async{
+  void addProduct(BuildContext context) async {
     List<String> imageUrls = [];
     Reference referenceRoot = FirebaseStorage.instance.ref();
     Reference referenceDirImages = referenceRoot.child('${currentUser!.email}');
@@ -61,25 +58,27 @@ class _AddProductState extends State<AddPrpdcutScreen> {
         isLoading = true;
       });
       try {
-        final user = Provider.of<MyAuthProvider>(context, listen:false).user;
-        
+        final user = Provider.of<MyAuthProvider>(context, listen: false).user;
+
         if (user != null) {
           for (File image in selectedImages) {
-            String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
-            Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
+            String uniqueFileName =
+                DateTime.now().millisecondsSinceEpoch.toString();
+            Reference referenceImageToUpload =
+                referenceDirImages.child(uniqueFileName);
 
             await referenceImageToUpload.putFile(image);
-            
+
             String imageUrl = await referenceImageToUpload.getDownloadURL();
             imageUrls.add(imageUrl);
           }
           final product = ProductModel(
-            prodname: nameInputController.text, 
-            description: productDescriptionInputController.text, 
-            userEmail: user.email, 
-            price: priceInputController.text, 
-            images: imageUrls, 
-            id: const Uuid().v1(), 
+            prodname: nameInputController.text,
+            description: productDescriptionInputController.text,
+            userEmail: user.email,
+            price: priceInputController.text,
+            images: imageUrls,
+            id: const Uuid().v1(),
             createdAt: DateTime.now().toString(),
           );
 
@@ -110,11 +109,12 @@ class _AddProductState extends State<AddPrpdcutScreen> {
 
   Future<void> pickImages() async {
     try {
-      List<XFile>? pickedImages = await ImagePicker().pickMultiImage(imageQuality: 50);
+      List<XFile>? pickedImages =
+          await ImagePicker().pickMultiImage(imageQuality: 50);
       setState(() {
         selectedImages = pickedImages.map((image) => File(image.path)).toList();
       });
-        } catch (e) {
+    } catch (e) {
       devtools.log('Error picking images: $e');
     }
   }
@@ -129,79 +129,71 @@ class _AddProductState extends State<AddPrpdcutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SizedBox(
-          width: SizeUtils.width,
-          child: SingleChildScrollView(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-            ),
-            child: Form(
-              key: _formKey,
-              child: SizedBox(
-                width: double.maxFinite,
-                child: Column(
-                  children: [
-                    SizedBox(height: 67.v),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 64.h),
-                        child: Text(
-                          "Add New Product",
-                          style: theme.textTheme.titleLarge,
-                        ),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+          title: Text(
+        "Add New Product",
+        style: theme.textTheme.titleLarge,
+      )),
+      body: SizedBox(
+        width: SizeUtils.width,
+        child: SingleChildScrollView(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Form(
+            key: _formKey,
+            child: SizedBox(
+              width: double.maxFinite,
+              child: Column(
+                children: [
+                  SizedBox(height: 37.v),
+                  _buildInputWithLabel(context),
+                  SizedBox(height: 23.v),
+                  _buildInputWithLabel1(context),
+                  SizedBox(height: 24.v),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 24.h),
+                      child: Text(
+                        "Description",
+                        style: theme.textTheme.titleMedium,
                       ),
                     ),
-                    SizedBox(height: 37.v),
-                    _buildInputWithLabel(context),
-                    SizedBox(height: 23.v),
-                    _buildInputWithLabel1(context),
-                    SizedBox(height: 24.v),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 24.h),
-                        child: Text(
-                          "Description",
-                          style: theme.textTheme.titleMedium,
-                        ),
+                  ),
+                  SizedBox(height: 6.v),
+                  _buildProductDescriptionInput(context),
+                  SizedBox(height: 8.v),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 24.h),
+                      child: Text(
+                        "Images",
+                        style: theme.textTheme.titleMedium,
                       ),
                     ),
-                    SizedBox(height: 6.v),
-                    _buildProductDescriptionInput(context),
-                    SizedBox(height: 8.v),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 24.h),
-                        child: Text(
-                          "Images",
-                          style: theme.textTheme.titleMedium,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 6.v),
-                    _buildImageInput(context),
-                    // SizedBox(height: 9.v),
-                    // Align(
-                    //   alignment: Alignment.centerLeft,
-                    //   child: Padding(
-                    //     padding: EdgeInsets.only(left: 24.h),
-                    //     child: Text(
-                    //       "Or import from URL",
-                    //       style: CustomTextStyles.bodyMediumGray600,
-                    //     ),
-                    //   ),
-                    // ),
-                    // SizedBox(height: 6.v),
-                    // _buildFrame(context),
-                    SizedBox(height: 22.v),
-                    _buildBottomNavigation(context),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: 6.v),
+                  _buildImageInput(context),
+                  // SizedBox(height: 9.v),
+                  // Align(
+                  //   alignment: Alignment.centerLeft,
+                  //   child: Padding(
+                  //     padding: EdgeInsets.only(left: 24.h),
+                  //     child: Text(
+                  //       "Or import from URL",
+                  //       style: CustomTextStyles.bodyMediumGray600,
+                  //     ),
+                  //   ),
+                  // ),
+                  // SizedBox(height: 6.v),
+                  // _buildFrame(context),
+                  SizedBox(height: 22.v),
+                  _buildBottomNavigation(context),
+                ],
               ),
             ),
           ),
@@ -215,9 +207,8 @@ class _AddProductState extends State<AddPrpdcutScreen> {
     return CustomTextFormField(
       controller: nameInputController,
       hintText: "Product name",
-      validator: (value) => value == null || value.isEmpty
-        ? 'Please enter product name'
-        : null,
+      validator: (value) =>
+          value == null || value.isEmpty ? 'Please enter product name' : null,
     );
   }
 
@@ -246,8 +237,8 @@ class _AddProductState extends State<AddPrpdcutScreen> {
       controller: priceInputController,
       hintText: "Product price",
       validator: (value) => value == null || value.isEmpty
-        ? "Please enter product's price"
-        : null,
+          ? "Please enter product's price"
+          : null,
     );
   }
 
@@ -340,7 +331,10 @@ class _AddProductState extends State<AddPrpdcutScreen> {
                 onPressed: () {
                   pickImages();
                 },
-                child: Text("Choose file to upload", style: CustomTextStyles.bodyMediumBluegray200,),
+                child: Text(
+                  "Choose file to upload",
+                  style: CustomTextStyles.bodyMediumBluegray200,
+                ),
                 // style: CustomTextStyles.bodyMediumBluegray200,
               ),
               const SizedBox(height: 20),
@@ -437,32 +431,35 @@ class _AddProductState extends State<AddPrpdcutScreen> {
   }
 }
 
-
 Future<void> showErrorDialog(
   BuildContext context,
   String text,
 ) {
-  return showDialog(context: context, builder: (context) {
-    return AlertDialog(
-      title: const Text('An error occur'),
-      content: Text(text),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text("OK")
-        )
-      ],
-    );
-  });
+  return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('An error occur'),
+          content: Text(text),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("OK"))
+          ],
+        );
+      });
 }
 
 Future<String> uploadImageToFirebaseStorage(File imageFile) async {
   try {
     // Create a unique filename for the image
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    firebase_storage.Reference reference = firebase_storage.FirebaseStorage.instance.ref().child('images/$fileName.jpg');
+    firebase_storage.Reference reference = firebase_storage
+        .FirebaseStorage.instance
+        .ref()
+        .child('images/$fileName.jpg');
 
     // Upload image to Firebase Storage
     await reference.putFile(imageFile);

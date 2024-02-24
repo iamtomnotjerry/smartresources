@@ -9,13 +9,14 @@ import 'package:smartresource/data/models/tutorial/tutorial_model.dart';
 import 'package:smartresource/presentation/add_tutorial_screen/add_tutorial_screen.dart';
 import 'package:smartresource/services/tutorials_service.dart';
 import 'package:smartresource/widgets/custom_search_view.dart';
-import 'package:smartresource/widgets/search_bar.dart';
 
 import 'widgets/chip.dart';
 import 'widgets/tutorial_item.dart';
 
 class TutorialsScreen extends StatefulWidget {
-  const TutorialsScreen({super.key,});
+  const TutorialsScreen({
+    super.key,
+  });
 
   @override
   State<TutorialsScreen> createState() => _TutorialsScreenState();
@@ -43,8 +44,7 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
               ? currentItems.last.id
               : null,
         );
-      }
-      else {
+      } else {
         newItems = await TutorialService().searchTutorials(searchTerm);
       }
       final isLastPage = newItems.length < limit;
@@ -124,6 +124,18 @@ class _TutorialsScreenState extends State<TutorialsScreen> {
                 },
                 controller: searchController,
                 hintText: "Search",
+                autofocus: false,
+                prefix: Padding(
+                  padding: const EdgeInsets.only(
+                    left: 20,
+                    right: 12,
+                  ),
+                  child: Icon(
+                    Icons.search,
+                    color: theme.colorScheme.primary,
+                    size: 24,
+                  ),
+                ),
                 borderDecoration: SearchViewStyleHelper.fillGray,
                 fillColor: appTheme.gray100,
                 textStyle: CustomTextStyles.bodyLargeBlack900,

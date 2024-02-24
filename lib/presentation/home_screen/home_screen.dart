@@ -12,11 +12,9 @@ import 'package:smartresource/providers/auth_provider.dart';
 import 'package:smartresource/providers/blogs_provider.dart';
 import 'package:smartresource/providers/tutorials_provider.dart';
 import 'package:smartresource/providers/products_provider.dart';
-import 'package:smartresource/widgets/search_bar.dart';
 
 import 'widgets/blog_widget.dart';
 import 'widgets/tutorials_widget.dart';
-import "dart:developer" as devtools show log;
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

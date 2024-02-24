@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:smartresource/core/app_export.dart';
-import 'package:smartresource/core/utils/validation_functions.dart';
 import 'package:smartresource/data/models/blog/blog_model.dart';
 import 'package:smartresource/presentation/blog_details_screen/blog_details_screen.dart';
 import 'package:smartresource/providers/auth_provider.dart';
@@ -68,7 +67,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
           content: Text("Could not upload the image"),
         ),
       );
-      return null;
+      return;
     }
   }
 
@@ -217,10 +216,10 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                       width: double.infinity,
                       fit: BoxFit.cover,
                     )
-                    : Text("Pick an image for your blog's cover!"),
+                    : const Text("Pick an image for your blog's cover!"),
                     ElevatedButton(
                       onPressed: _getImage,
-                      child: Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5), child: Text('Choose Video', style: TextStyle(color: Colors.white),),)
+                      child: const Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5), child: Text('Choose Video', style: TextStyle(color: Colors.white),),)
                     ),
                   ],
                 ),

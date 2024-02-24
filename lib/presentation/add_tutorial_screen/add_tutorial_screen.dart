@@ -15,8 +15,6 @@ import 'package:smartresource/widgets/custom_elevated_button.dart';
 import 'package:smartresource/widgets/custom_text_form_field.dart';
 import 'package:smartresource/widgets/multi_select.dart';
 import 'package:uuid/uuid.dart';
-import 'package:video_player/video_player.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:smartresource/data/data_sources/tutorial/materials_purposes.dart';
 
 enum AddTutorialAction { add, update }
@@ -358,7 +356,7 @@ class _AddTutorialScreenState extends State<AddTutorialScreen> {
           const SizedBox(height: 4),
           ElevatedButton(
             onPressed: _chooseVideo,
-            child: Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5), child: Text('Choose Video', style: TextStyle(color: Colors.white),),)
+            child: const Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5), child: Text('Choose Video', style: TextStyle(color: Colors.white),),)
           ),
         ],
       ),

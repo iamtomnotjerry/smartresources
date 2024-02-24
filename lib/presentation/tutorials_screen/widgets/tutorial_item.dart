@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smartresource/core/app_export.dart';
 import 'package:smartresource/data/models/tutorial/tutorial_model.dart';
 import 'package:smartresource/presentation/tutorial_details_screen/tutorial_details_screen.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:video_player/video_player.dart';
-import 'package:chewie/chewie.dart';
 
 class TutorialItem extends StatefulWidget {
   final TutorialModel tutorial;
@@ -77,7 +75,7 @@ class _TutorialItemState extends State<TutorialItem> {
                 ),
               );
             },
-            child: Container(
+            child: SizedBox(
               height: 200,
               width: 350,
               child: _videoPlayerController.value.isInitialized ? VideoPlayer(_videoPlayerController) : const Center(child: Text("Loading..."))

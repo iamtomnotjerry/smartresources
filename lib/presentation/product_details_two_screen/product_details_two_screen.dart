@@ -194,13 +194,13 @@ class _ProductDetailsTwoScreenState extends State<ProductDetailsTwoScreen> {
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: Text('Delete'),
+              child: const Text('Delete'),
             ),
           ]
         );
