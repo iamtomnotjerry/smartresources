@@ -1,3 +1,4 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -11,6 +12,7 @@ import 'package:smartresource/presentation/sign_in_screen/sign_in_screen.dart';
 import 'package:smartresource/presentation/welcome_screen/welcome_screen.dart';
 import 'package:smartresource/providers/auth_provider.dart';
 import 'package:smartresource/providers/blogs_provider.dart';
+import 'package:smartresource/providers/network_manager.dart';
 import 'package:smartresource/providers/products_provider.dart';
 import 'package:smartresource/providers/tutorials_provider.dart';
 
@@ -62,6 +64,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => TutorialsProvider()),
         ChangeNotifierProvider(create: (context) => BlogsProvider()),
         ChangeNotifierProvider(create: (context) => ProductsProvider()),
+        ChangeNotifierProvider(create: (context) => NetworkManager()),
       ],
       child: Sizer(
         builder: (context, orientation, deviceType) {
@@ -70,33 +73,60 @@ class MyApp extends StatelessWidget {
             title: 'smart_resources',
             debugShowCheckedModeBanner: false,
             routes: AppRoutes.routes,
-            home: StreamBuilder(
-              stream: FirebaseAuth.instance.authStateChanges(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
+            home: Builder(builder: (context) {
+              final isConnect = Provider.of<NetworkManager>(context).isConnect;
+              if (!isConnect) {
+                return Scaffold(
+                  body: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          'Oops! No internet connection.',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        const SizedBox(height: 32),
+                        TextButton(
+                          onPressed: () {},
+                          child: const Text(
+                            'Retry',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              }
 
-                if (snapshot.connectionState == ConnectionState.active) {
-                  if (snapshot.hasData) {
-                    return const NavigationMenu();
-                  }
-
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: Text('${snapshot.error}'),
+              return StreamBuilder(
+                stream: FirebaseAuth.instance.authStateChanges(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
                     );
                   }
-                }
 
-                if (isFirstLaunch) {
-                  return const WelcomeScreen();
-                }
-                return const SignInScreen();
-              },
-            ),
+                  if (snapshot.connectionState == ConnectionState.active) {
+                    if (snapshot.hasData) {
+                      return const NavigationMenu();
+                    }
+
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text('${snapshot.error}'),
+                      );
+                    }
+                  }
+
+                  if (isFirstLaunch) {
+                    return const WelcomeScreen();
+                  }
+                  return const SignInScreen();
+                },
+              );
+            }),
           );
         },
       ),
