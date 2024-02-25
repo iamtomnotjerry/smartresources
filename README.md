@@ -6,12 +6,16 @@
 
 ### 1. Description
 
-Description
+Smart Resources is a mobile app made with Flutter and Firebase. It encourages users to creatively use resources and products by connecting them to share ideas and solutions for recycling and making things from recycled materials. The goal is to reduce waste and use resources efficiently. Vendors can also partner with Smart Resources to promote sustainable shopping.
 
 ### 2. Features
 
-- Feature 1
-- Feature 2
+- Explore new content through suggested posts on the homepage.
+- Search for recycling tutorial guides by category, and possibly upload their own recycling idea videos.
+- Read shared posts and potentially create content by posting their articles.
+- Like posts and tutorials.
+- Search for and purchase products made from recycled materials.
+- Post their own recycled products for sale.
 
 ## ⚡️ Setup Instructions
 
