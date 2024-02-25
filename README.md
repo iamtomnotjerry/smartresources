@@ -29,7 +29,7 @@ Follow these steps to install and run Smart Resources on your system.
 
 1. Open your terminal or command prompt.
 
-2. Use the following command to clone the ProjectName repository:
+2. Use the following command to clone the smartresources repository:
 
 ```bash
 git clone https://github.com/iamtomnotjerry/smartresources.git
